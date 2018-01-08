@@ -77,11 +77,11 @@ author:
 
 # Select which links to show in the footer
 footer-links-active:
+  linkedin: true
+  twitter: true
   facebook: true
   email: true
-  twitter: true
   github: true
-  linkedin: true
   stackoverflow: true
   rss: false
   google-plus: false
