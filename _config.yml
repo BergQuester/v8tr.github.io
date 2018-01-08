@@ -61,11 +61,11 @@ author:
   facebook: vadim.bulavin
   github: V8tr
   twitter: V8tr
-  reddit: yourname    # eg. daattali
-  google-plus: +yourname   # eg. +DeanAttali or 109424658772469020925
-  linkedin: vadim-bulavin-18610b6b  # eg. daattali
+  linkedin: vadim-bulavin-18610b6b
+  stackoverflow: 6870041/vadim-bulavin
   # xing: yourname      # eg. daattali
-  stackoverflow: 6870041/vadim-bulavin  # eg. "3943160/daattali"
+  # reddit: yourname    # eg. daattali
+  # google-plus: +yourname   # eg. +DeanAttali or 109424658772469020925
   # snapchat: yourname  # eg. daattali
   # instagram: yourname # eg. daattali
   # youtube: yourlink   # eg. user/daattali or channel/daattali
@@ -84,9 +84,9 @@ footer-links-active:
   google-plus: false
   github: true
   reddit: false
-  linkedin: false
+  linkedin: true
   xing: false
-  stackoverflow: false
+  stackoverflow: true
   snapchat: false
   instagram: false
   youtube: false
