@@ -17,7 +17,7 @@ baseurl: ""
 title: Vadim Bulavin
 
 # Short description of your site
-#description: iOS Development
+description: A blog about Swift development
 
 # --- Navigation bar options --- #
 
@@ -105,11 +105,11 @@ share-links-active:
 
 # How to display the link to the website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "MyWebsite.com"  # eg. "deanattali.com/beautiful-jekyll"
+# url-pretty: "v8tr.github.io"
 
 # --- Misc --- #
 # Fill in your Disqus shortname (NOT the userid) if you want to support Disqus comments
-#disqus: ""
+disqus: "vadimbulavin"
 
 # Fill in your Google Analytics ID to track your website using GA
 #google_analytics: ""
