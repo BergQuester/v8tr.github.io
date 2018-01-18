@@ -12,7 +12,7 @@ I'm a husband and a father. When I’m not programming, you can find me playing 
 
 Apart from software development, I enjoy politology, sociology, psychology and history.
 
-Want to keep in touch? Let's connect [LinkedIn][my-linkedin-profile], [Facebook][my-facebook-profile] or [Twitter][my-twitter-profile].
+Lets stay in touch in [LinkedIn][my-linkedin-profile], [Facebook][my-facebook-profile] and [Twitter][my-twitter-profile].
 
 [my-linkedin-profile]: https://www.linkedin.com/in/vadim-bulavin-18610b6b/
 [my-facebook-profile]: https://www.facebook.com/vadim.bulavin
