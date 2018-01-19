@@ -28,24 +28,6 @@ How about a yummy crepe?
 
 Here's a code chunk:
 
-~~~
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-~~~
-
-And here is the same code with syntax highlighting:
-
-```javascript
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-```
-
-And here is the same code yet again but with line numbers:
-
 {% highlight swift linenos %}
 var foo = function(x) {
   return(x + 5);
