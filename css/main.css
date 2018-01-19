@@ -671,6 +671,7 @@ table tr td :last-child {
 pre {
   font-size: 15px;
   line-height: 1.5em;
+  padding: 10px;
 }
 pre code {
   white-space: pre;
@@ -686,13 +687,12 @@ pre.highlight, .highlight > pre, td.code pre {
 }
 code table, code table td, code table th, code table tbody, code table tr,
 td.gutter pre {
-  padding: 0;
   border: none;
   background-color: #fff;
 }
-.highlight > pre {
-  padding: 0;
-}
+/* .highlight > pre {
+  padding: 10px;
+} */
 td.code pre {
   border-width: 0 0 0 2px;
   border-style: solid;
