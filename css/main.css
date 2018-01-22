@@ -269,7 +269,7 @@ footer {
   padding: 30px 0;
   background: #F5F5F5;
   border-top: 1px #EAEAEA solid;
-  margin-top: 50px;
+  margin-top: 70px;
   font-size: 14px;
   {% if site.footer-col %}
   background: {{ site.footer-col }};
@@ -300,7 +300,7 @@ footer .theme-by {
 
 @media only screen and (min-width: 768px) {
   footer {
-    padding: 50px 0;
+    padding: 30px 0;
   }
   footer .footer-links {
     font-size: 18px;
@@ -694,13 +694,14 @@ td.gutter pre {
   padding: 0;
 }
 td.code pre {
-  border-width: 0 0 0 2px;
+  border-width: 0 0 0 1px;
   border-style: solid;
-  border-color: #444;
+  border-color: #cccccc;
   border-radius: 0;
 }
 td.gutter {
   padding-top: 3px;
+  background: #fff;  
 }
 
 /* --- Social media sharing section --- */
