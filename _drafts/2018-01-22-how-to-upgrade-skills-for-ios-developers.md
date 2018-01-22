@@ -1,3 +1,7 @@
+In this topic we will go through the fundamental areas that every iOS developer must know. Studying them aims two goals: 1) create a solid foundation for a specific knowledge
+
+ improving your problem solving skill that lets you solve tasks of any complexity within a reasonable timeframe.  
+
 # How to upgrade skills for iOS developers
 
 The distinctive feature of software development is rapid obsolence of tools and frameworks. Thus, we must constantly strive to refine and improve our skills to accomodate changes of information field and state of the market.
@@ -41,7 +45,7 @@ You must be fluent in the following topics:
 
 I recommend to study iOS in the following sequence:
 
-1. Read through the [official Apple's book on Swift][swift-docs]. Don't try to remember everything, the main goal of this step is to get the overall understanding of the language. You will refine your practical skills following the next step.
+1. Read through the [official Apple's guide on Swift][swift-docs]. Don't try to remember everything, the main goal of this step is to get the overall understanding of the language. You will refine your practical skills following the next step.
 2. Study [Developing iOS 11 Apps with Swift by Stanford University][standord-course] video course. It's the best practical course on iOS development and it's completely free. Type and run every example and by the end of the course you will confident enough to implement a full-fledge app on your own.
 
 ### Swift or Objective-C?
@@ -61,7 +65,18 @@ Resume is often the first document that acquaints you with. Make every effort to
 1. Use only English language.
 2. Consider using 3rd-party services, such as [JSON Resume](https://jsonresume.org/).
 3. Always keep you resume up to date. Cloud storage or version control system will come in hand.
-4. 
+4. When applying for a job, accompany your CV with a cover letter. It looks professional and gives you an opportunity to stand out from the other candidates.
+5. If you haven't already, sign up on [LinkedIn](linkedin.com). It is extremely efficient at finding jobs and establishing business connections.
+6. And finally make a professional-looking photo of yours for your business profiles.
+
+### Wrapping up
+
+Your main goal as an iOS developer is to build a solid foundation of basic skills which will allow you to solve tasks of any complexity within a reasonable timeframe. This skill is also called a problem solving ability. It is exactly what differs a great software developer from the average one.
+
+Read classic books on software development; start practicing iOS with the [The Swift Programming Language][swift-docs] and continue with [Developing iOS 11 Apps][standord-course] series; build beatiful pet-projects that inspire you. Create first-class resume and keep it up to date.
+
+All of the above activities are aimed specifically to develop this crucial skill. I am sure you are on the right track and you have everything you need to achieve your goals.
+
 
 [swift-docs]: https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html
 [standord-course]: https://itunes.apple.com/us/course/developing-ios-11-apps-with-swift/id1309275316
