@@ -7,7 +7,7 @@ In this article we will go through the fundamental areas that every iOS develope
 1. Build a solid foundation of platform-independent skills that will allow you to easily study iOS as well as enter any other software development area.
 2. Improve problem-solving ability which is often considered to be the most important software developer's skill.
 
-This article mainly targets beginning developers. However, experienced ones might find interesting **Study classic books**, **Portfolio** and **Resume**.
+This article mainly targets beginning developers. However, experienced ones might find interesting [**Study classic books**](#study-classic-books), [**Portfolio**](#portfolio) and [**Resume**](#resume).
 
 ### Why these skills
 
@@ -15,7 +15,7 @@ The distinctive feature of software development is rapid obsolescence of tools a
 
 Mobile development is especially affected with this trend. Thereby, developers must focus on fundamental skills rather than learning individual tools or frameworks.
 
-### Study classic books
+### <a name="study-classic-books"></a>Study classic books
 
 Must-read books:
 * McConnel, S. Code Complete: A Practical Handbook of Software Construction, Second Edition.
@@ -66,11 +66,11 @@ However, do not be under any illusion that you can avoid studying Objective-C. A
 
 Objective-C has been in iOS world for a very long time and all Cocoa frameworks consist of Objective-C classes. From time to time you will have to dive into Objective-C code and this will contribute a lot to your knowledge.
 
-### Portfolio
+### <a name="portfolio"></a>Portfolio
 
 Develop pet-projects. Come up with an idea that inspires you, implement and publish it on [GitHub](https://github.com/). Aside from the invaluable experience, it's a great advantage when finding a job both for beginning and seasoned developers.
 
-### Resume
+### <a name="resume"></a>Resume
 
 Resume is often the first document that acquaints your potential employer with you. Make every effort to compose it with the highest quality possible, because there won't be another chance to a make a first impression.
 
