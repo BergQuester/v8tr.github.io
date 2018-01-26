@@ -23,6 +23,7 @@ description: A blog about Swift development
 
 # List of links in the navigation bar
 navbar-links:
+  Home: "http://www.vadimbulavin.com"
   About Me: "aboutme"
   # Portfolio: "portfolio"
   # Resources:
