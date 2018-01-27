@@ -43,7 +43,7 @@ Subscribing / unsubscribing for `Notifications` often needs to be tied to `ViewC
 
 ### A look on the bright side
 
-Lets discuss advantages of `Notifications` and see what outweights.
+Lets discuss advantages of `Notifications` and see what outweighs.
 
 **Lowers coupling**
 
@@ -55,7 +55,7 @@ Many direct references can be removed from the object graph which reduces overal
 
 ## Verdict: pattern or anti-pattern?
 
-By this time it must be clear that notifications are anti-pattern and should be avoided for the majority of the cases. Lets see what options do we have in regard to notifications usage.
+By this time it must be clear that `Notifications` are anti-pattern and should be avoided for the majority of the cases. Lets see what options do we have in regard to notifications usage.
 
 1. Use alternative communication patterns:
     * Callbacks
@@ -68,7 +68,7 @@ By this time it must be clear that notifications are anti-pattern and should be 
 
 All OOP design principles and patterns target single goal: deal with code complexity. `Notifications` most of the time lend themselves to the opposite. Projects that heavily use `Notification` and `NotificationCenter` API usually end up having spaghetti code that lacks clarity even for original developers.
 
-Follow the suggested rules of thumb if you have to deal with `Notifications`. Consider alternative communication patterns for your application, because for the majority of the cases the best choice is to simply opt out of notifications usage.
+Follow the suggested rules of thumb if you have to deal with `Notifications`. Consider alternative communication patterns for your application, because for the majority of the cases the best choice is to simply opt out of `Notifications` usage.
 
 [adapter-def]: https://en.wikipedia.org/wiki/Adapter_pattern
 [facade-def]: https://en.wikipedia.org/wiki/Facade_pattern
