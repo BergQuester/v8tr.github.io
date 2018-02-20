@@ -6,9 +6,26 @@ Topics
 4. Usage cases
 5. Conclusion
 
-Swift is used to be thought as statically typed language. At the same time, it allows to harness meta data about the type system and other entries that were in the program at runtime. This opens ability for many dynamic features, such as looking at the types and the methods and other objects that we defined in our code and build higher abstractions on top of that. This technique is called Reflection. In this article we will have an in-depth look into Reflection implementation in Swift as well as discuss useful usage scenarios for your production code.å
+Although Swift is a statically typed language, there is a secret double life to Swift’s type system at runtime that paves the way to some dynamism. This allows to look at the types and the methods that we defined in our code and build higher abstractions on top of that. This technique is called Reflection. In this article we will have a look at Reflection and Mirror type as well as discuss several practical usage scenarios.
+
+# Reflection and Mirror
+
+Reflection is [defined][reflection-def] as the ability of a computer program to examine, introspect, and modify its own structure and behavior at runtime.
+
+[Introspection][introspection-def], in turn, is the ability of a program to examine the type or properties of an object at runtime.
+
+Swift's Reflection is limited, providing read-only access to a subset of type metadata. Such metadata is encapsulated in `Mirror` instances.
+
+# Reflection in-depth
+
+1. Mirrored object is boxed into MagicMirror instance. It buffers object using calling it's [witness table][witness-table-def]
+2. Class's 
+
+MagicMirror is a mirror box.
+
+ 
 
 
-Swift is considered to be a statically typed language. However, there is a secret double life to Swift’s type system at runtime that allows to harness meta data about the type system and other entries that were in the program. The technique that uses such metadata to write code about our code is called Reflection. 
-
-# What is Reflection
+[reflection-def]: https://en.wikipedia.org/wiki/Reflection_(computer_programming)
+[introspection-def]: https://en.wikipedia.org/wiki/Type_introspection
+[witness-table-def]: https://github.com/apple/swift/blob/master/docs/SIL.rst#witness-tables
