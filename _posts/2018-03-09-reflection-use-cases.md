@@ -4,7 +4,7 @@ title: Reflection and Mirror in Swift
 permalink: /2018-03-09-reflection-and-mirror-in-swift/
 ---
 
-Although Swift is a statically typed language, there is a secret double life to Swift’s type system at runtime that paves the way to some dynamism. This allows to look at the types and the methods that we defined in our code and build higher abstractions on top of that. This technique is called Reflection. In this article we will have a look at Reflection and `Mirror` type as well as discuss several practical usage cases.
+Although Swift is a statically typed language, there is a secret double life to Swift’s type system at runtime that paves the way to some dynamism. This allows to look at the types and the methods that we defined in our code and build higher abstractions on top of that. This technique is called Reflection. In the article we will have a look at Reflection and `Mirror` type as well as discuss several practical usage cases.
 
 # Reflection and Mirror
 
