@@ -1,11 +1,10 @@
-Topics
+---
+layout: post
+title: Reflection and Mirror in Swift
+permalink: /2018-03-09-reflection-and-mirror-in-swift/
+---
 
-1. Introduction
-2. What is Reflection
-3. Usage cases
-4. Conclusion
-
-Although Swift is a statically typed language, there is a secret double life to Swift’s type system at runtime that paves the way to some dynamism. This allows to look at the types and the methods that we defined in our code and build higher abstractions on top of that. This technique is called Reflection. In this article we will have a look at Reflection and Mirror type as well as discuss several practical usage cases.
+Although Swift is a statically typed language, there is a secret double life to Swift’s type system at runtime that paves the way to some dynamism. This allows to look at the types and the methods that we defined in our code and build higher abstractions on top of that. This technique is called Reflection. In this article we will have a look at Reflection and `Mirror` type as well as discuss several practical usage cases.
 
 # Reflection and Mirror
 
@@ -15,7 +14,7 @@ Reflection is [defined][reflection-def] as the ability of a computer program to 
 
 Swift's Reflection is limited, providing read-only access to a subset of type metadata. Such metadata is encapsulated in `Mirror` instances. Under the hood, there is `Mirror` implementation for each Swift metadata type: `Tuple`, `Struct`, `Enum`, `Class`, `Metatype`, [Opaque][opaque-type-def], all derived from `ReflectionMirrorImpl` abstract class. 
 
-These classes are capable of reading arbitrary fields of corresponding metadata types. Parent-child hierarchies are crawled by means of Objective-C runtime. The latter has **platform limitations**, because requires '[unbridged][toll-free-bridging-def]' interoperation with Objective-C, which is supported only by Apple platforms. This means, the use of `Mirror` on other platforms will crash your app.
+These classes are capable of reading arbitrary fields of corresponding metadata types. Parent-child hierarchies are crawled by means of Objective-C runtime. The latter has **platform limitations**, because requires [unbridged][toll-free-bridging-def] interoperation with Objective-C, which is supported only by Apple platforms. This means, the use of `Mirror` on other platforms will crash your app.
 
 ## JSON parsing
 
@@ -59,7 +58,7 @@ extension JSONSerializable {
 
 {% endhighlight %}
 
-Basically, that's all we need to serialize primitive types and ones composed from them. The following example demonstrates this idea:
+Now adding JSON serialization is as simple as conforming to `JSONSerializable`. Let's see it in action:
 
 {% highlight swift linenos %}
 
@@ -264,7 +263,7 @@ Source code for this example can be found [here][automatic-hashable-equatable-gi
 
 ## Wrapping up
 
-Reflection provides great opportunity to combine it's dynamic features together with Swift static type system. Besides the 3 use cases demonstrated in this article,
+Reflection provides great opportunity to combine it's dynamic features together with Swift static type system. Despite being rather limited, it can bring high value to your production code by reducing boilerplate you write. Besides the above examples of so-called dynamic Reflection, you might want to observe static code generators like [Sourcery][sourcery-repo] and [SwiftGen][swiftgen-repo] which might be another good solution to some of these problems.
 
 
 [reflection-def]: https://en.wikipedia.org/wiki/Reflection_(computer_programming)
@@ -275,3 +274,5 @@ Reflection provides great opportunity to combine it's dynamic features together 
 [dump-docs]: https://developer.apple.com/documentation/swift/1539127-dump
 [json-serialization-gist]: https://gist.github.com/V8tr/3ab9ab1a550415fae5d61aa39d3a2185
 [automatic-hashable-equatable-gist]: https://gist.github.com/V8tr/4507110d40e0b62fb09f1600bd992a96
+[sourcery-repo]: https://github.com/krzysztofzablocki/Sourcery
+[swiftgen-repo]: https://github.com/SwiftGen/SwiftGen
