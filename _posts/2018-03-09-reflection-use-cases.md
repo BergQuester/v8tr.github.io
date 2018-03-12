@@ -106,10 +106,10 @@ Let's filter out all `nil` values by extending our serialization for `Optional` 
 extension Optional: JSONSerializable {
     func toJSON() throws -> Any? {
         if let x = self {
-            if let value = x as? JSONSerializable {
-                return try value.toJSON()
+            guard let value = x as? JSONSerializable else {
+                throw CouldNotSerializeError.noImplementation(source: x, type: String(describing: type(of: x)))
             }
-            throw CouldNotSerializeError.noImplementation(source: x, type: String(describing: type(of: x)))
+            return try value.toJSON()
         }
         return nil
     }
