@@ -1,6 +1,6 @@
 ---
 layout: post
-title: View layout cycle cheat sheet
+title: UIView Auto Layout life cycle
 permalink: /2018-03-14-view-layout-cycle-cheat-sheet/
 ---
 
@@ -16,9 +16,9 @@ Use https://developer.apple.com/library/content/documentation/UserExperience/Con
 
 ####
 
-`UIView` is an essential part of every iOS application’s UI. It’s extremely important to understand which steps it undergoes before being brought to the screen. Lack of this information will sooner or later lead to UI glitches or performance issues in your app. This article consolidates information about the cycle `UIView` passes as a part of it’s presentation process in a brief and easy-to-remember way, so that it can be treated as a cheat sheet on the matter.
+`UIView` is an essential part of every iOS application’s UI and it’s extremely important to understand which steps it undergoes before being brought to the screen. Lack of this information will sooner or later lead to UI glitches or performance issues in your app. This article consolidates information about the steps that every `UIView` with Auto Layout enabled passes as a part of it’s presentation process in a brief and easy-to-remember way, so that it can be treated as a cheatsheet on the matter.
 
-This article assumes that you are familiar with AutoLayout. Otherwise, I suggest reading through [Auto Layout Guide][autolayout-guide] by Apple and then return to this article.
+This article makes an assumption that you are familiar with Auto Layout. Otherwise, I suggest reading through [Auto Layout Guide][autolayout-guide] by Apple and then return to this article.
 
 ### View layout cycle
 
@@ -26,36 +26,38 @@ This article assumes that you are familiar with AutoLayout. Otherwise, I suggest
     <img src="{{ "/img/autolayout_1.png" | absolute_url }}" alt="UIView auto layout life cycle cheat sheet"/>
 </p>
 
-After a `UIView` instance has been initialized, it passes 3 steps: update, layout and rendering. Let’s have a closer look at each of them.
+Every `UIView` instance that uses Auto Layout passes 3 steps after initialization: update, layout and rendering. Let’s have a closer look at each of them.
 
 #### Update step
 
-The constraints of views and view controllers are calculated during this step. Here are the details of the process:
+This step is all about calculating view frame based on it's constrains. The details are next:
 
-- Happens top-down: the system goes from superview to its subviews and calls `updateViewConstraints()` for each.
-- `setNeedsUpdateConstraints()` schedules an update for the future. If there are no pending updates, the whole step is skipped.
-- `updateConstraintsIfNeeded()` performs all pending updates in place. Call together with `setNeedsUpdateConstraints()` to force an immediate update. 
-- View controllers undergo the very same process and have similar family of methods.
-
-The only case when you'll need to override `updateViewConstraints` is to batch constraints update, but it's very unlikely to happen in your project, because for the most of the time there are better ways to improve UI performance. Make sure you read the docs of [updateViewConstraints](https://developer.apple.com/documentation/uikit/uiview/1622512-updateconstraints) before overriding it, as they contain important details.
+- Happens top-down: the system goes from super- to its subviews and calls `updateViewConstraints()` for each.
+- Call `setNeedsUpdateConstraints` to schedules constraints update for the next cycle.
+- Call `updateConstraintsIfNeeded` to perform all pending updates in place. Call together with `setNeedsUpdateConstraints` to force an immediate update. 
+- Override `updateViewConstraints` when you need to boost performance by batching constraints update. However, it is very rarely the case and for the most of the time you will update constraints in place and call a combination of `setNeedsUpdateConstraints()` and `updateConstraintsIfNeeded()` afterwards.
 
 #### Layout step
 
-During this step the frames of each view are updated with the rectangles calculated in previous phase.
+During this step the frames of each view are updated with the rectangles calculated in the previous phase. You will deal with this step most of the time and it's important to have a thorough understanding of the process.
 
-- Happens bottom-up: the system goes from subviews to subviewss calling `layoutSubviews` and `viewWillLayoutSubviews` for view controllers.
-- When overriding,  invalidate the layout of views in your subtree  before you call the superclass’s implementatio
-- Don’t invalidate the layout of any views outside your subtree. This could create a feedback loop.
-- Don’t call setNeedsUpdateConstraints or setNeedsLayout, otherwise deadloop
-- Call superviews method
+- Happens bottom-up: the system goes from super- to subviews calling `layoutSubviews()` for each.
+- Override `layoutSubviews` method when constraints are not enough to express view's layout or you are calculating frames programmatically.
+- Call `setNeedsLayout` to schedule layout for the next cycle.
+- Call `layoutIfNeeded` to force the view to update its layout immediately.
+- When overriding `layoutSubviews`:
+    - Make sure to call `super.layoutSubviews()`;
+    - Don't call `setNeedsLayout` or `setNeedsUpdateConstraints`, otherwise an infinite loop will be created;
+    - Don't modify constraints of views outside your view's hierarchy.
 
-You will deal with this step most of the time, so it's important to understand all deta
-
-Rendering
+#### Rendering
 
 - triggered with setNeedsDisplay or inRect
 - Override drawRect only if need CoreGraphics, Open GL ES or other custom drawing
 - Default implementation does nothing
+
+#### What about UIViewControllers
+
 
 
 ## Wrapping up
