@@ -2,6 +2,7 @@
 layout: post
 title: "Notifications: pattern or anti-pattern?"
 permalink: /2018-01-27-notifications-pattern-or-anti-pattern/
+description: "Let's clear up misconceptions about whether Notifications and NotificationCenter are pattern or anti-pattern."
 ---
 
 Notifications are well-known communication pattern used in one or another way almost in every program. Standard Cocoa frameworks widely utilize notifications to communicate with their clients. Does it necessary mean that its a good technique? Lets clear up the misconceptions and answer the question: are the notifications considered to be a pattern or anti-pattern?

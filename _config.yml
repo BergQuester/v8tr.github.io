@@ -119,7 +119,7 @@ google_analytics: "UA-115440667-1"
 #gtm: ""
 
 # Facebook App ID
-# fb_app_id: ""
+fb_app_id: "200980057336922"
 
 # Excerpt Word Length
 # Truncates the excerpt to the specified number of words on the index page

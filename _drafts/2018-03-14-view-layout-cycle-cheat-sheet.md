@@ -23,7 +23,7 @@ This article assumes that you are familiar with AutoLayout. Otherwise, I suggest
 ### View layout cycle
 
 <p align="center">
-    <img src="{{ "/img/autolayout_1.png" | absolute_url }}" alt="View auto layout passes"/>
+    <img src="{{ "/img/autolayout_1.png" | absolute_url }}" alt="UIView auto layout life cycle cheat sheet"/>
 </p>
 
 After a `UIView` instance has been initialized, it passes 3 steps: update, layout and rendering. Let’s have a closer look at each of them.
