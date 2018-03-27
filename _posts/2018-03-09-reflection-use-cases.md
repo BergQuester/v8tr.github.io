@@ -208,7 +208,7 @@ class AutoEquatableTests: XCTestCase {
 
 {% endhighlight %}
 
-An important note is that `Item` is not `Equatable`, which means only the top level type must conform to `AutoEquatable`.
+An important note is that `Item` is not `AutoEquatable`, which means only the top level type must conform to `AutoEquatable`.
 
 The approach with `AutoHashable` is very similar. Let's briefly see how it works:
 
