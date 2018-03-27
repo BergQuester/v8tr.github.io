@@ -29,7 +29,7 @@ Imagine, you are adding search history feature to an existing search screen. Her
 
 The below diagram shows components structure.
 
-![SearchHistoryMediator UML diagram]({{ "/img/mediator_2.png" | absolute_url }})
+![SearchHistoryMediator UML diagram]({{ "/img/mediator_1.svg" | absolute_url }})
  
 `HistoryRepository` is an example of [Repository design pattern][repository-def]. It abstracts away details of how search history is persisted.
 
