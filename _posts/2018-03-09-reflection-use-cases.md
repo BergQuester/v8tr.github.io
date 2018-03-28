@@ -265,7 +265,6 @@ Source code for this example can be found [here][automatic-hashable-equatable-gi
 
 Reflection provides great opportunity to combine it's dynamic features together with Swift static type system. Despite being rather limited, it can bring high value to your production code by reducing boilerplate you write. Besides the above examples of so-called dynamic Reflection, you might want to observe static code generators like [Sourcery][sourcery-repo] and [SwiftGen][swiftgen-repo] which might be another good solution to some of these problems.
 
-
 [reflection-def]: https://en.wikipedia.org/wiki/Reflection_(computer_programming)
 [introspection-def]: https://en.wikipedia.org/wiki/Type_introspection
 [witness-table-def]: https://github.com/apple/swift/blob/master/docs/SIL.rst#witness-tables
