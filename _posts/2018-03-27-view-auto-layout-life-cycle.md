@@ -20,17 +20,17 @@ Every `UIView` with enabled Auto Layout passes 3 steps after initialization: upd
 
 This step is all about calculating view frame based on its constrains. The system traverses view hierarchy **top-down**, i.e. from *super-* to *subviews*, and calls `updateConstraints()` for each view.
 
-Although this process happens automatically, sometimes you will need to trigger it manually. For example, when some internal state that affects UI changes, and you need to recalculate constaints immediately.
+Although this process happens automatically, sometimes you will need to trigger it manually. For example, when some internal state that affects UI changes, and you need to recalculate constraints immediately.
 
-`setNeedsUpdateConstraints` invalidates the constaints and schedules an update for the next cycle. `updateConstraintsIfNeeded` triggers `updateConstraints` in place if the constains were previously invalidated.
+`setNeedsUpdateConstraints` invalidates the constraints and schedules an update for the next cycle. `updateConstraintsIfNeeded` triggers `updateConstraints` in place if the constrains were previously invalidated.
 
-Apple actually suggests agains overriding `updateConstraints` in [Mysteries of Auto Layout WWDC session](https://developer.apple.com/videos/wwdc/2015/?id=219) unless you discover that changing the constaints in place is too slow. Then you will batch constraints update in `updateConstraints`.
+Apple actually suggests against overriding `updateConstraints` in [Mysteries of Auto Layout WWDC session](https://developer.apple.com/videos/wwdc/2015/?id=219) unless you discover that changing the constraints in place is too slow. Then you will batch constraints update in `updateConstraints`.
 
 ### Layout step
 
 During this step, frames of each view are updated with the rectangles calculated in the *Update* phase. It happens **bottom-up**, i.e. the system traverses views from *sub-* to *superviews* and calls `layoutSubviews` for each.
 
-`layoutSubviews` is the most common method to be overriden from the whole Auto Layout life cycle. You will do this when:
+`layoutSubviews` is the most common method to be overridden from the whole Auto Layout life cycle. You will do this when:
 - Constraints are not enough to express view's layout.
 - Frames are calculated programmatically.
 
