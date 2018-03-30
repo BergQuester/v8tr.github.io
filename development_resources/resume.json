@@ -1,0 +1,562 @@
+{
+  "basics": {
+    "name": "Vadim Bulavin",
+    "label": "Senior iOS Developer",
+    "picture": "",
+    "email": "vadymbulavin@gmail.com",
+    "phone": "+38 (098) 331-1526",
+    "website": "http://www.vadimbulavin.com",
+    "summary": "About 5 years of iOS development experience. Fluent English, deep knowledge of Swift, Objective-C and C/C++. Cryptographic and mathematical background.\n\nDiverse portfolio with over 25 projects from various industry fields: telecom, e-commerce, social networks, dating, 2D games.\n\nExperienced in conducting full development lifecycle, project estimating, direct communication with clients and collaboration in distributed teams, team leading and mentoring. Extensive knowledge of XP, Scrum and Kanban development methodologies.\n\nPassionate about writing well-designed, testable and efficient code. I always apply the latest technologies and best industry standards in each project.",
+    "location": {
+      "city": "Kharkiv",
+      "countryCode": "UA"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "Vadim Bulavin",
+        "url": "https://www.linkedin.com/in/vadim-bulavin"
+      },
+      {
+        "network": "Twitter",
+        "username": "V8tr",
+        "url": "http://twitter.com/V8tr"
+      },
+      {
+        "network": "Stack Overflow",
+        "username": "Vadim Bulavin",
+        "url": "https://stackoverflow.com/users/6870041/vadim-bulavin"
+      },
+      {
+        "network": "Facebook",
+        "username": "Vadim Bulavin",
+        "url": "https://www.facebook.com/vadim.bulavin"
+      }
+    ]
+  },
+  "work": [
+    {
+      "company": "TEAM International",
+      "position": "Senior iOS Developer",
+      "website": "https://www.teaminternational.com/",
+      "startDate": "Nov 2017",
+      "endDate": "Present",
+      "summary": "Develop and maintain self-service app for one of telecom industry leaders. Lead small mobile team.",
+      "highlights": [
+        "Lead small mobile team",
+        "Deliver new feature and maintain existing functionality",
+        "Provide estimations and technical specifications",
+        "Conduct interviews",
+        "Design app architecture",
+        "Setup continuous integration / continuous delivery",
+        "Conduct code reviews",
+        "Conduct demo sessions",
+        "Take part in presales",
+        "Refactor existing code base",
+        "Write unit, integration and end-to-end tests"
+      ]
+    },
+    {
+      "company": "Akvelon",
+      "position": "Senior iOS Developer (Contractor)",
+      "website": "http://akvelon.com/",
+      "startDate": "Jul 2017",
+      "endDate": "Nov 2017",
+      "summary": "Develop social networking app similar to Instagram from scratch.",
+      "highlights": [
+        "Design app architecture",
+        "Conduct code reviews",
+        "Write unit tests"
+      ]
+    },
+    {
+      "company": "Dev-Pro.net",
+      "position": "iOS Developer",
+      "website": "https://www.dev-pro.net/",
+      "startDate": "Mar 2016",
+      "endDate": "Jul 2017",
+      "summary": "Develop multiple apps in telecom field from scratch.",
+      "highlights": [
+        "Design apps' architectures",
+        "Provide estimations and technical specifications",
+        "Setup continuous integration / continuous delivery",
+        "Conduct demo sessions",
+        "Take part in presales",
+        "Write unit and end-to-end tests",
+        "Submit apps to App Store"
+      ]
+    },
+    {
+      "company": "Tundra Mobile",
+      "position": "iOS Developer",
+      "website": "http://tundramobile.com/",
+      "startDate": "Nov 2013",
+      "endDate": "Mar 2016",
+      "summary": "Develop about 15 apps and games of different scale in Objective-C, Swift and C++.",
+      "highlights": [
+        "Design apps' architectures",
+        "Deliver new feature and maintain existing functionality",
+        "Provide estimations and technical specifications",
+        "Conduct demo sessions",
+        "Take part in presales",
+        "Submit apps to App Store",
+        "Occasionally lead small team",
+        "Work in distributed teams"
+      ]
+    },
+    {
+      "company": "Akvelon",
+      "position": "Trainee iOS Developer",
+      "website": "http://akvelon.com/",
+      "startDate": "Jul 2013",
+      "endDate": "Nov 2013",
+      "summary": "Develop road reporting app from scratch.",
+      "highlights": [
+        "Design app architecture",
+        "Develop new features",
+        "Provide estimations"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Kharkiv National University of Radioelectronics",
+      "area": "Computer and Information Systems Security",
+      "studyType": "Bachelor",
+      "startDate": "2010",
+      "endDate": "2014"
+    },
+    {
+      "institution": "Kharkiv National University of Radioelectronics",
+      "area": "Computer and Information Systems Security",
+      "studyType": "Specialist (Master's degree equivalent)",
+      "startDate": "2014",
+      "endDate": "2015"
+    }
+  ],
+  "publications": [
+    {
+      "name": "Советы сеньоров: как прокачать знания junior iOS",
+      "publisher": "DOU",
+      "releaseDate": "2018-01-18",
+      "url": "https://dou.ua/lenta/articles/senior-ios-tips/",
+      "summary": "Tips for iOS development beginners."
+    },
+    {
+      "name": "Notifications: pattern or anti-pattern?",
+      "publisher": "vadimbulavin.com",
+      "releaseDate": "2018-01-27",
+      "url": "https://www.vadimbulavin.com/2018-01-27-notifications-pattern-or-anti-pattern/",
+      "summary": "Lets clear up the misconceptions and answer the question: are the notifications considered to be a pattern or anti-pattern?"
+    },
+    {
+      "name": "Mediator pattern by Search History example",
+      "publisher": "vadimbulavin.com",
+      "releaseDate": "2018-02-09",
+      "url": "https://www.vadimbulavin.com/2018-02-09-mediator-search-history/",
+      "summary": "Case study: how Mediator design pattern can be applied to implement a search history policy in your app."
+    },
+    {
+      "name": "Reflection and Mirror in Swift",
+      "publisher": "vadimbulavin.com",
+      "releaseDate": "2018-03-09",
+      "url": "https://www.vadimbulavin.com/2018-03-09-reflection-and-mirror-in-swift/",
+      "summary": "In the article we will have a look at Reflection and Mirror type as well as discuss several practical usage cases."
+    },
+    {
+      "name": "UIView Auto Layout life cycle",
+      "publisher": "vadimbulavin.com",
+      "releaseDate": "2018-03-09",
+      "url": "https://www.vadimbulavin.com/view-auto-layout-life-cycle/",
+      "summary": "This article consolidates the steps every UIView with Auto Layout enabled undergoes before being presented on a screen."
+    }
+  ],
+  "skills": [
+    {
+      "name": "Primary Skills",
+      "keywords": [
+        "Swift (3+ years)",
+        "Objective-C (5+ years)",
+        "C++ (8 years)",
+        "Kotlin (basic)",
+        "SQL (basic)",
+        "Cryptography",
+        "Game development: SpriteKit, cocos2d-x, cocos2d",
+        "Testing: unit, integration, end-to-end",
+        "Development methodologies: Waterfall, Agile including Scrum, Kanban and XP frameworks",
+        "Continuous Integration and Delivery: Jenkins, Crashlytics, Fastlane, Hockey App",
+        "Architectures: MVC, MVP, MVVM, Clean Architecture (VIPER)",
+        "Team leading, mentoring",
+        "OOD patterns and SOLID principles",
+        "Writing technical specification",
+        "Project estimation",
+        "Git",
+        "Parse, Firebase"
+      ]
+    },
+    {
+      "name": "Tools",
+      "keywords": [
+        "Git",
+        "CocoaPods",
+        "Carthage",
+        "Backend-as-service: Parse, Firebase",
+        "Core Data",
+        "Push and Local Notifications",
+        "Auto Layout",
+        "Multithreading: GCD, Operation Queue",
+        "In-App purchases",
+        "Core Animation",
+        "Networking: SOAP, REST",
+        "Maps: Apple MapKit, Google Maps",
+        "Objective-C Runtime",
+        "Advertising: Chartboost, AppLovin, AdMob, iAds, Heyzap and much more",
+        "Analytics: Mixpanel, Intercom, Flurry, Crashlytics, HockeyApp, Google Analytics and more",
+        "Social Network SDKs: Facebook, Twitter, Instagram, Microsoft Live"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Professional working proficiency"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Reading"
+    },
+    {
+      "name": "Powerlifting"
+    },
+    {
+      "name": "Politology"
+    },
+    {
+      "name": "Philosophy"
+    },
+    {
+      "name": "Sociology"
+    },
+    {
+      "name": "History"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Self-Service App for Telecom Provider (NDA)",
+      "summary": "<confidential> is self-service system for subscribers of <telecom provider> including enterprise and business subscribers. <confidential> allows you to manage costs and subscriptions, pay for your bills, enable services and receive important information about <telecom provider>.",
+      "highlights": [
+        "Lead mobile team.",
+        "Develop new features and maintain existing functionality.",
+        "Write unit, functional and end-to-end tests.",
+        "Perform estimations and planning.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Improve legacy code."
+      ],
+      "startDate": "2016-08-24",
+      "endDate": "2016-08-24"
+    },
+    {
+      "name": "Social Network App (NDA)",
+      "summary": "<confidential> is a full-fledged social network, similar to Instagram, that is distributed as an embeddable Social SDK that simplifies integration with company’s social network.",
+      "highlights": [
+        "Design app architecture.",
+        "Distribute App as a Cocoa Pod framework.",
+        "Write unit and functional tests.",
+        "Develop new features.",
+        "Communicate with RESTful APIs.",
+        "Develop offline mode.",
+        "Integrate Google Plus, Facebook, Twitter and Microsoft Live SDKs."
+      ]
+    },
+    {
+      "name": "Telecom Expenses and Mobile Devices Management App (NDA)",
+      "summary": "Mobile console app for telecom expenses and mobile devices management with real-time data monitoring capabilities.",
+      "highlights": [
+        "Design app architecture.",
+        "Setup CI/CD with multi-tenant distribution and configuration.",
+        "Develop new features.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Submit to App Store.",
+        "Write end-to-end tests."
+      ]
+    },
+    {
+      "name": "Admin Console for Mobile Devices Management",
+      "summary": "<confidential> is a tool for agents of <confidential> allowing to monitor customers' data traffic, manager their devices, build reports with various filters, change permissions etc.",
+      "highlights": [
+        "Design app architecture.",
+        "Setup CI/CD with multi-tenant distribution and configuration.",
+        "Develop new features.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Submit to App Store.",
+        "Write end-to-end tests."
+      ]
+    },
+    {
+      "name": "Picke",
+      "url": "https://itunes.apple.com/app/id994287335",
+      "summary": "In the new generation of online socializing, people are mixing up “hooking up” and “dating”. This is where PICKE soars in, allowing singles to get the important facts first! By having another’s personal characteristics at first sight, you can immediately sort your prospects and PICK those whom meet your criteria. Get even more personal with a match by chatting and exchanging photos. Match with others who share common interests and have mutual friends.",
+      "highlights": [
+        "Develop v1.0.",
+        "Design app architecture",
+        "Develop new features.",
+        "Perform estimations and planning.",
+        "Submit to App Store.",
+        "Develop offline mode.",
+        "Integrate Facebook and Instagram SDKs."
+      ]
+    },
+    {
+      "name": "Presh - Estimate Value for Your Used Goods",
+      "url": "https://presh.io",
+      "summary": "Presh determines the value of your items based on millions of advertisements of leading portals. Submit your item and let Presh evaluate it by photo, name and collecting community estimates.",
+      "highlights": [
+        "Design app architecture.",
+        "Develop new features.",
+        "Setup CI/CD.",
+        "Contribute to UI/UX development.",
+        "Develop offline mode.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Submit to App Store.",
+        "Write end-to-end tests."
+      ]
+    },
+    {
+      "name": "App Analytics SDK",
+      "url": "http://appanalytics.io/",
+      "summary": "App Analytics SDK enables users to analyze consumer behavior through data observations. The SDK provides features to collect heat map analytics, hardware data, in-app purchases, network and battery states and log custom events. The SDK is distributed as Cocoa Pod.",
+      "highlights": [
+        "Design SDK architecture.",
+        "Setup Cocoa Pods distribution.",
+        "Develop new features.",
+        "Write unit and performance tests.",
+        "Develop offline analytics cache.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Contribute to App Analytics platform documentation."
+      ]
+    },
+    {
+      "name": "eZLO - smart house automation system",
+      "url": "https://itunes.apple.com/us/app/ezlo/id1098251731?mt=8 ",
+      "summary": "The eZLO App is the control center of your eZLO Smart Home system. Connect with the eZLO Smart Home hub and obtain full control of dozens of smart home devices. Turn your lights on and off, unlock doors, or control room temperature with a tap of your finger.",
+      "highlights": [
+        "Develop v1.3.",
+        "Develop new features.",
+        "Perform estimations and planning."
+      ]
+    },
+    {
+      "name": "Comet Clash",
+      "url": "https://itunes.apple.com/us/app/id948312788",
+      "summary": "Control the Interstellar Space Station orbiting Earth to destroy approaching Comets in order to save the population of Earth. Each year after the game starts an increasingly larger wave of Comets threatening Earth needs to be destroyed.",
+      "highlights": [
+        "Develop v1.1.",
+        "Cocos2d game development engine, Box2d physics engine.",
+        "Develop new features and fix existing defects.",
+        "Perform estimations and planning.",
+        "Submit to App Store",
+        "Integrate Facebook SDK"
+      ]
+    },
+    {
+      "name": "Mighty Krabz",
+      "url": "https://youtu.be/iInBc7I3I9c",
+      "summary": "Control one from the three fun characters with unique abilities. Collect precious pears on the ocean floor and deliver them to the pirate sheep.",
+      "highlights": [
+        "Lead development team.",
+        "Design architecture.",
+        "Cocos2d-x game development engine, Box2d physics engine.",
+        "Cross platform, available for both iOS and Android.",
+        "Perform estimations and planning.",
+        "Submit to App Store.",
+        "Advanced animations and particle effects."
+      ]
+    },
+    {
+      "name": "Number Puzzles",
+      "url": "https://youtu.be/hgivWX3AWg0",
+      "summary": "A hobbie project of mine. Classical Schulte Table riddle that trains attention. Five game modes: Classic, Time, Shuffle, Inverse, Survival. Flexible settings: board size, colour scheme, mode, difficulty, letters on numbers.",
+      "highlights": [
+        "Do everything: UI/UX, development, App Store SEO, monetization etc."
+      ]
+    },
+    {
+      "name": "Quotes App",
+      "url": "https://goo.gl/GkUA5c",
+      "summary": "A hobbie project of mine. Quote book with hand-picked collection of quotes.",
+      "highlights": [
+        "Do everything: UI/UX, development, App Store SEO, monetization etc."
+      ]
+    },
+    {
+      "name": "Emily's Fun Summer Activities!",
+      "url": "https://play.google.com/store/apps/details?id=uk.co.top10games.kidsreadyforthbeach",
+      "summary": "The game teaches kids to get ready for the beach in a cute and funny way. Choose a twin to help and ensure all their tasks are done before they can get to the next stage.",
+      "highlights": [
+        "Lead development team.",
+        "Design flexible architecture with ability to configure levels and characters using external configuration files.",
+        "Cocos2d-x game development engine.",
+        "Cross platform, available for both iOS and Android.",
+        "Develop new features.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Integrate advertising, in-app purchases, leaderboards, analytics."
+      ]
+    },
+    {
+      "name": "Underwater Quest",
+      "url": "https://youtu.be/4-tPW0E76P8",
+      "summary": "Arcade game where you need to earn as much points as possible, collect coins, avoid enemies and obstacles. Various boosts and power ups will help on your way.",
+      "highlights": [
+        "Cocos2d-x game development engine.",
+        "Design architecture.",
+        "Develop new features.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Integrate advertising, in-app purchases, leaderboards, analytics."
+      ]
+    },
+    {
+      "name": "My Teen Life Campus Gossip Story - Social Episode Dating Game",
+      "url": "https://itunes.apple.com/app/id930395150",
+      "summary": "Each CHAPTER is a new episode in the life of these campus teens. Complete each chapter and stay tuned to the latest sagas and gossip. Simply fill in the missing words from their conversations or thoughts! What do you think they would say or think about!",
+      "highlights": [
+        "Design flexible architecture with ability to configure levels from external configuration files.",
+        "Develop new features.",
+        "Contribute to UI/UX development.",
+        "Submit to App Store.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Integrate advertising, in-app purchases, leaderboards, analytics."
+      ]
+    },
+    {
+      "name": "Jumping Dot",
+      "url": "https://appadvice.com/app/jumping-dot-new-hard-speed/976819833",
+      "summary": "Puzzle game where you need to connect buttons, earn bonuses and buy power ups. The game has multiplayer mode where you can play on real money against other players.",
+      "highlights": [
+        "Do everything: UI/UX, development, App Store SEO, monetization etc.",
+        "SpriteKit",
+        "Leaderboard",
+        "Analytics, adverts, in-app purchases."
+      ]
+    },
+    {
+      "name": "Road reporting app (NDA)",
+      "summary": "Get your California traffic information directly from the source. The <confidential> app displays a map of your location along with real-time traffic information.",
+      "highlights": [
+        "Design app architecture.",
+        "MapKit",
+        "Develop new features.",
+        "Perform estimations and planning."
+      ]
+    },
+    {
+      "name": "Contacts Manager POC",
+      "summary": "Proof-of-concept app that extracts contacts from multiple sources: iOS Address Book, Google Address Book, parses email signatures to get contact information, and stores them uniformly.",
+      "highlights": [
+        "Read email data via POP3 and IMAP protocols.",
+        "Use Google APIs to read contact information.",
+        "RxSwift.",
+        "Core Data.",
+        "VIPER architecture."
+      ]
+    },
+    {
+      "name": "Gym Keeper MVP",
+      "summary": "MVP app that lends itself to creating workout plans, schedule workouts and note your workout sets and reps.",
+      "highlights": [
+        "RxSwift.",
+        "Core Data.",
+        "VIPER architecture."
+      ]
+    },
+    {
+      "name": "My Top Wrestling Power Superstars - Wrestler Legends Builders Game",
+      "url": "https://itunes.apple.com/app/id930395150",
+      "summary": "Dress up wrestlers with different clothes and accessories.",
+      "highlights": [
+        "Develop new features and fix existing defects.",
+        "Submit to App Store.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Integrate advertising, in-app purchases, leaderboards, analytics."
+      ]
+    },
+    {
+      "name": "Dressing up Game",
+      "url": "https://itunes.apple.com/app/id723009214",
+      "summary": "Casual dressing up game for kids.",
+      "highlights": [
+        "Develop new features and maintain existing functionality.",
+        "Submit to App Store.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Integrate advertising, in-app purchases, leaderboards, analytics."
+      ]
+    },
+    {
+      "name": "Story Book Game",
+      "url": "https://itunes.apple.com/us/app/id931483468",
+      "summary": "Complete levels by dress up characters and listening to the stories. Fill in missing words and playback created stories.",
+      "highlights": [
+        "Design flexible architecture with ability to configure levels and characters using external configuration files.",
+        "Text-to-speech.",
+        "Submit to App Store.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning.",
+        "Integrate advertising, in-app purchases, leaderboards, analytics."
+      ]
+    },
+    {
+      "name": "Free Flow",
+      "summary": "Puzzle game where you need to connect lines without intersections. A clone of famous Free Flow game.",
+      "highlights": [
+        "Add multiplayer functionality.",
+        "Submit to App Store."
+      ]
+    },
+    {
+      "name": "Quiz Game",
+      "url": "https://itunes.apple.com/app/id840275056",
+      "summary": "Answer the questions by putting the letters into the correct order. Earn coins and use hints.",
+      "highlights": [
+        "Add multiplayer functionality.",
+        "Submit to App Store."
+      ]
+    },
+    {
+      "name": "Buttons - A dots connecting game",
+      "summary": "Puzzle game where you need to connect buttons, earn bonuses and buy power ups. The game has multiplayer mode where you can play on real money against other players.",
+      "highlights": [
+        "Lead development team.",
+        "Add multiplayer functionality.",
+        "Add cash tournaments using Skillz SDK.",
+        "Add adverts."
+      ]
+    },
+    {
+      "name": "Kong escape",
+      "summary": "Swing over the buildings and get as far as you can. Pick a character from multiple options, earn coins to buy outfits, unlock new characters and locations.",
+      "highlights": [
+        "Cocos2d game development engine, Box2d physics engine.",
+        "Deliver new features and fix existing defects.",
+        "Submit to App Store.",
+        "Conduct demo sessions and regular meetings with product owners.",
+        "Perform estimations and planning."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "name": "Jane Doe",
+      "reference": "Reference..."
+    }
+  ]
+}
