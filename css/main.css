@@ -8,7 +8,9 @@ layout: null
 
 body {
   font-family: 'Open Sans', 'Lora', 'Times New Roman', serif;
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: .01em;
   color: #000000;
   position: relative;
   background: #FFF;
@@ -21,8 +23,9 @@ body {
   {% endif %}
 }
 p {
-  line-height: 1.5;
-  margin: 30px 0;
+  line-height: 1.8em;
+  margin-top: 1.0em;
+  margin-bottom: 1.0em;
 }
 p a {
   /* text-decoration: underline */
@@ -53,10 +56,13 @@ hr.small {
   border-color: inherit;
   border-radius: 3px;
 }
-
+ul li {
+  margin-bottom: 5px;
+}
 .main-content {
   padding-top: 80px;
 }
+
 @media only screen and (min-width: 768px) {
   .main-content {
     padding-top: 130px;
@@ -436,6 +442,10 @@ footer .theme-by {
 }
 /* --- Post and page headers --- */
 
+.blog-post {
+  margin-top: 30px;
+}
+
 .intro-header {
   margin: 80px 0 20px;
   position: relative;
@@ -597,7 +607,7 @@ footer .theme-by {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 1px;
   padding: 10px 5px;
   background: #FFF;
@@ -669,20 +679,23 @@ table tr td :last-child {
 /* --- Code blocks --- */
 
 pre {
-  font-size: 15px;
-  line-height: 1.5em;
+  font-size: 0.9em;
 }
 pre code {
   white-space: pre;
 }
+code {
+  font-family: monospace;
+  font-size: 1em;
+  background: rgba(0,0,0,.05);
+  padding: 3px 4px;
+  color: #000000;
+}
 pre.highlight, .highlight > pre, td.code pre {
-  background: #FAFAFA;
-  /* background-image: linear-gradient(#F9F9F9 50%, #FDFDFD 50%); */
-  /* background-color: #F9F9F9; */
+  background-color: #fff;
   background-repeat: repeat;
   background-size: 3em 3em;
   background-position: 0px 10px;
-  /* border-left: 7px solid #444; */
 }
 code table, code table td, code table th, code table tbody, code table tr,
 td.gutter pre {
@@ -694,6 +707,8 @@ td.gutter pre {
   padding: 0;
 }
 td.code pre {
+  font-family: 'Menlo', 'Open Sans', 'Helvetica Neue';
+  font-size: 0.9em;
   border-width: 0 0 0 1px;
   border-style: solid;
   border-color: #cccccc;
