@@ -11,9 +11,9 @@ Content
 - Core Data Architecture
 - What is persistent container
 - Setting up the stack
-- Fetching Data
-- Saving Data
-- Wrapper around Core Data
+- Save
+- Fetch
+- Delete
 - Conclusion
 
 ### Core Data Architecture
@@ -108,9 +108,12 @@ let item = NSEntityDescription.insertNewObject(forEntityName: "Item", into: pers
 
 {% endhighlight %}
 
+{: .box-note}
+*Here and later we are using `persistentContainer.viewContext` that works on the main queue. Usage of view context for CPU-heavy computations will lead to freezes in your app. Consider using `newBackgroundContext` or `performBackgroundTask(_:)` to perform such tasks in a background.*
+
 ### Save
 
-Since the newly created item does not a name, let's first set this value and then save item to the data base:
+Let's set a name for the newly created item and then save it to the data base:
 
 {% highlight swift linenos %}
 
@@ -118,20 +121,65 @@ item.name = "Some item"
 
 do {
     try persistentContainer.viewContext.save()
-	print("Item named '\(item.name!)' has been successfully saved.")
+    print("Item named '\(item.name!)' has been successfully saved.")
 } catch {
-    assertionFailure(error.localizedDescription)
+    assertionFailure("Failed to save item: \(error)")
 }
 
 {% endhighlight %}
 
 ### Fetch
 
-{: .box-note}
-Make sure not to use view context for CPU-heavy computation, because it will freeze your app. Consider using `newBackgroundContext` or `performBackgroundTask(_:)`.
+When it comes to fetching Core Data entities, the first thing you must do is define search criteria by means of `NSFetchRequest`s.
+
+<!-- Every fetch operation is started with a creat -->
+
+{% highlight swift linenos %}
+let itemsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
+{% endhighlight %}
+
+When executed, the above fetch request will return all managed objects of `Item` type. Core Data does not guarantee any specific order for the fetch results, so you have to do this explicitly. 
+
+Execute fetch request to query recently saved `Item` instance.
+
+{% highlight swift linenos %}
+
+do {
+    let fetchedItems = try persistentContainer.viewContext.fetch(itemsFetch) as! [Item]
+    print("Fetched items: \(fetchedItems)")
+} catch {
+    assertionFailure("Failed to fetch items: \(error)")
+}
+
+{% endhighlight %}
+
+This snippet prints:
+
+```
+Fetched items: [<Item: 0x101a59f40> (entity: Item; id: 0x40000b <x-coredata://C13322AF-CF64-4AC4-8DEB-24B3E250A0B3/Item/p1> ; data: {
+    name = "Some item";
+})]
+```
+
+It is possible to define complex search criteria in fetch requests. 
+
+Construction of complex fetch requests is outside of the current article's scope. For more complex fetch requests I recommend checking [`NSFetchRequest` docs][fetch-request-docs] as well as [Fetching Managed Objects][fetching-managed-objects-article] article by Apple.
+
+#### Delete
+
+By now we have saved and fetched an `Item` instance. Deletion can be done as simple as follows:
+
+{% highlight swift linenos %}
+persistentContainer.viewContext.delete(item)
+{% endhighlight %}
 
 ### Conclusion 
 
 Despite the fact `NSPersistentContainer` takes off a decent part of responsibility for Core Data stack management from developers, it is still extremely important to understand how do the individual components work.
 
+The code snippets from the article can be found is a [sample project][sample-project].
+
 [private-concurrency-type]: https://developer.apple.com/documentation/coredata/nsmanagedobjectcontextconcurrencytype/1506495-privatequeueconcurrencytype
+[fetch-request-docs]: https://developer.apple.com/documentation/coredata/nsfetchrequest
+[fetching-managed-objects-article]: https://developer.apple.com/library/content/documentation/DataManagement/Conceptual/CoreDataSnippets/Articles/fetching.html
+[sample-project]: https://github.com/V8tr/CoreData_in_Swift4_Article
