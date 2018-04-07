@@ -73,9 +73,62 @@ runs passed block on a newly created background context. Yes, you got it right: 
 
 ### Initialize Core Data Stack
 
-Now we will create the Core Data stack and see the components play together.
+At this point we do not have a managed object model, i.e. the data base schema, defined. Let's create a Data Model in Xcode called *"Model"* and add an entity `Item` that has a single attribute `name`.
 
+<p align="center">
+    <img src="{{ "/img/core_data_stack_3.png" | absolute_url }}" alt="Core Data stack Architecture - Model Schema"/>
+</p>
 
+Now we will initialize the Core Data stack and see how the components play together.
+
+{% highlight swift linenos %}
+
+let persistentContainer = NSPersistentContainer(name: "Model")
+
+persistentContainer.loadPersistentStores { storeDescription, error in
+    if let error = error {
+        assertionFailure(error.localizedDescription)
+    }
+    print("Core Data stack has been initialized with description: \(storeDescription)")
+}
+
+{% endhighlight %}
+
+Which prints to console: `Core Data stack has been initialized with description: <NSPersistentStoreDescription: 0x102a69b70> (type: SQLite, url: <...>/CoreData_Article/Model.sqlite)`. At this point Core Data stack is fully initialized and can be used in our app.
+
+### Manipulate Entities
+
+#### Create
+
+A new `Item` instance can be created and inserted into the view context with a single line as follows:
+
+{% highlight swift linenos %}
+
+let item = NSEntityDescription.insertNewObject(forEntityName: "Item", into: persistentContainer.viewContext) as! Item
+
+{% endhighlight %}
+
+### Save
+
+Since the newly created item does not a name, let's first set this value and then save item to the data base:
+
+{% highlight swift linenos %}
+
+item.name = "Some item"
+
+do {
+    try persistentContainer.viewContext.save()
+	print("Item named '\(item.name!)' has been successfully saved.")
+} catch {
+    assertionFailure(error.localizedDescription)
+}
+
+{% endhighlight %}
+
+### Fetch
+
+{: .box-note}
+Make sure not to use view context for CPU-heavy computation, because it will freeze your app. Consider using `newBackgroundContext` or `performBackgroundTask(_:)`.
 
 ### Conclusion 
 
