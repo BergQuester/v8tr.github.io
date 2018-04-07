@@ -73,6 +73,10 @@ runs passed block on a newly created background context. Yes, you got it right: 
 
 ### Initialize Core Data Stack
 
+Now we will create the Core Data stack and see the components play together.
+
+
+
 ### Conclusion 
 
 Despite the fact `NSPersistentContainer` takes off a decent part of responsibility for Core Data stack management from developers, it is still extremely important to understand how do the individual components work.
