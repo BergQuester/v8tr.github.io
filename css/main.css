@@ -709,9 +709,6 @@ td.gutter pre {
   border: none;
   background-color: #fff;
 }
-.highlight > pre {
-  padding: 0;
-}
 td.code pre {
   font-family: 'Menlo', 'Open Sans', 'Helvetica Neue';
   font-size: 0.9em;
