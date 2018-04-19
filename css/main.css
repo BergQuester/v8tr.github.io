@@ -738,8 +738,13 @@ td.gutter {
 }
 
 .box-note {
-  background-color: #eee;
-  border-left-color: #2980b9;
+  background-color: #fff;
+  border: 0px solid #eee;
+  border-left-color: rgba(0,0,0,.84);
+  border-left-width: 3px;
+  border-radius: 0px 0px 0px 0px;
+  padding-left: 20px;
+  margin-left: -23px;
 }
 
 .box-warning {
