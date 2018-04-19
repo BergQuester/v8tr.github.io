@@ -711,6 +711,9 @@ td.gutter pre {
 .highlight > pre {
   padding: 0;
 }
+.highlight > div {
+  padding: 0;
+}
 td.code pre {
   font-family: 'Menlo', 'Open Sans', 'Helvetica Neue';
   font-size: 0.9em;
