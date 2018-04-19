@@ -4,45 +4,47 @@ title: Core Data Stack in Swift 4
 permalink: /core-data-stack-swift-4/
 ---
 
-Content
+Titles:
+* Core Data for Beginners
+* Core Data in Swift 4.1
+* Modern Core Data in Swift 4.1 with NSPersistentContainer
 
-- Introduction
-- What is Core data - see https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/index.html#//apple_ref/doc/uid/TP40001075-CH2-SW1
-- Core Data Architecture
-- What is persistent container
-- Setting up the stack
-- Save
-- Fetch
-- Delete
-- Conclusion
+*Core Data* is Apple's object graph management and persistency framework. When it comes to structured data persistence, *Core Data* is an obvious choice. The goal of this article is to give you an overview of the *Core Data* architecture as well as provide a list of basic operations together with working examples to help you get off to a quick start.
 
 ### Core Data Architecture
 
-Before diving into the examples, we will first take a look at Core Data components to get a better understanding of its architecture. The parts of the Core Data stack are: `NSManagedObject`, `NSManagedObjectModel`, `NSPersistentStoreCoordinator` and `NSManagedObjectContext`.
-
-These pieces attached together are often referred to as a Core Data stack.
+The main building blocks of *Core Data* are: `NSManagedObject`, `NSManagedObjectModel`, `NSPersistentStoreCoordinator` and `NSManagedObjectContext`. When attached together, they are usually referred to as a **Core Data stack**.
 
 <p align="center">
     <img src="{{ "/img/core_data_stack_1.svg" | absolute_url }}" alt="Core Data stack Architecture without NSPersistentContainer"/>
 </p>
 
-`NSManagedObject`'s are the model objects exposed by Core Data. 
+---
 
-`NSManagedObjectModel` is a database schema that describes our application's entities. You can think of it as a description of the data that is going to be accessed by the Core Data stack.
+`NSManagedObject`'s are the model objects exposed by *Core Data*.
 
-`NSPersistentStoreCoordinator` associates persistent storage and Managed Object Model. Mapping of the relational database rows into your application's objects is a nontrivial task and it is often taken for granted when working with Core Data. What is more, `NSPersistentStoreCoordinator` is used by `NSManagedObjectContext` when it comes to saving or fetching objects.
+---
 
-`NSManagedObjectContext` used to save, fetch and create managed objects and thus will be the most used Core Data stack component.
+`NSManagedObjectModel` is a database schema that describes the application's entities. It defines the structure of the *managed objects*.
+
+---
+
+`NSPersistentStoreCoordinator` associates *persistent storage* and *managed object model*. It lends itself to mapping the data from the storage, say SQLite data base rows, into the object model. It is a task of high complexity and is often taken for granted when working with *Core Data*.
+
+What is more, the *persistent coordinator* is used by the *managed object context* when it comes to saving or fetching objects.
+
+---
+
+`NSManagedObjectContext` controls the life cycle of the managed objects and provides operations to create, save and fetch them.
+
+{: .box-note}
+*A well-known [Apple's metaphor][managed-object-context-docs] is to think of the managed object context as a scratch pad used to created, save and fetch managed objects.*
 
 ### Persistent Container
 
-Beginning from iOS 10, the whole stack has been encapsulated into the `NSPersistentContainer` class which drastically simplifies the creation process of the Core Data stack as well as provides many convenience methods when working with its componenets.
+Starting from iOS 10, `NSPersistentContainer` is responsible for creation and management of the *Core Data stack*.
 
-<p align="center">
-    <img src="{{ "/img/core_data_stack_2.svg" | absolute_url }}" alt="Core Data stack Architecture with NSPersistentContainer"/>
-</p>
-
-`NSPersistentContainer` exposes managed object model, the managed object context and the persistent store coordinator as well as provides many convenience methods when working them, especially when it comes to multithreaded applications.
+`NSPersistentContainer` exposes a *managed object model*, a *managed object context* and a *persistent store coordinator* as well as provides many convenience methods when working them, especially when it comes to multithreaded applications.
 
 Let's briefly go through the `NSPersistentContainer`'s interface:
 
@@ -64,25 +66,26 @@ creates a [private][private-concurrency-type] managed object context associated 
 ---
 
 `viewContext`  
-a reference to the managed object context associated with the main queue. It is created automatically during the initialization process. This context is directly connected to `NSPersistentStoreCoordinator`, thus it might freeze your application when performing heavy operations.
+a reference to the managed object context associated with the main queue. It is created automatically during the initialization process. This context is directly connected to a `NSPersistentStoreCoordinator`, thus it might freeze your application when performing heavy operations.
 
 ---
 
 `performBackgroundTask(_:)`  
 runs passed block on a newly created background context. Each time this method is called, a new background `NSManagedObjectContext` will be created.
 
-### Initialize Core Data Stack
+### Setting Up the Stack
 
-Let's begin with creating a Data Model schema in Xcode and add an entity `Item` with a single `name` attribute that will be used throughout this article.
+To be able to use *Core Data*, we first have to create a data model schema that describes the structure of our data.
+
+To create a new *Data Model* file, go to *"File > New"* and choose *"Data Model"* from the *Core Data* section. Then add an entity `Item` with a single `name` attribute as shown below.
 
 <p align="center">
     <img src="{{ "/img/core_data_stack_3.png" | absolute_url }}" alt="Core Data stack Architecture - Model Schema"/>
 </p>
 
-With Data Model created we can initialize the Core Data stack and see how the components play together.
+Having the *data model* created, we can now initialize the *Core Data* stack and see how the components play together.
 
 {% highlight swift linenos %}
-
 let persistentContainer = NSPersistentContainer(name: "Model")
 
 persistentContainer.loadPersistentStores { storeDescription, error in
@@ -91,71 +94,49 @@ persistentContainer.loadPersistentStores { storeDescription, error in
     }
     print("Core Data stack has been initialized with description: \(storeDescription)")
 }
-
 {% endhighlight %}
 
-Which prints to console: `Core Data stack has been initialized with description: <NSPersistentStoreDescription: 0x102a69b70> (type: SQLite, url: <...>/CoreData_Article/Model.sqlite)`. This means the Core Data stack has been fully initialized and can be used in our app. By default the stack uses SQLite persistent store, however it can be instructed to use other types of storage.
+Which prints to console: `Core Data stack has been initialized with description: <NSPersistentStoreDescription: 0x102a69b70> (type: SQLite, url: <...>/CoreData_Article/Model.sqlite)`. This means the *Core Data* stack has been fully initialized and can be used in our app. By default the stack uses an *SQLite* persistent store, however it can be configured to use other types of storage.
 
 {: .box-note}
-*Consider using `InMemory` persistent store for unit tests to ensure that the test data is properly cleaned up.*
+*Tip: consider using `InMemory` persistent store for unit tests to ensure that the test data is properly cleaned up and each test is isolated.*
 
-### Access the Context
+### Accessing the Context
 
-An instantiated container already has a view context ready for use:
+An `NSPersistentStoreCoordinator` already comes with a ready for use view context:
 
 ```swift
 let context = persistentContainer.viewContext
 ```
 
 {: .box-note}
-*Here and later we are using `persistentContainer.viewContext` that works on the main queue. Usage of view context for CPU-heavy computations will lead to freezes in your app. Consider using `newBackgroundContext` or `performBackgroundTask(_:)` to perform such tasks in a background.*
+*Here and next we are using the view context that works on the main queue. Please note that the use of CPU-heavy computations on the main queue will lead to freezes in your app. Consider using `newBackgroundContext` or `performBackgroundTask(_:)` to perform such tasks in the background.*
 
-### Create Entity
+### Creating Entity
 
-Every `ManagedObject` must be associated with a context. Even though there is a way to instantiate a managed object without a context, it is not the intended pattern in the Core Data and I would not recommend to follow it.
-
-A new `Item` instance can be created as follows:
+As discussed at the beginning, all `ManagedObject`s live within a managed object context. Thus, to create a new `Item` instance we have to do this via a context:
 
 ```swift
 let item = NSEntityDescription.insertNewObject(forEntityName: "Item", into: context) as! Item
 ```
 
-### Save
+### Saving Entity
 
 Newly created managed objects have all their properties set to `nil`. Before saving the item to the data base, we will set a name for it:
 
 {% highlight swift linenos %}
-
 item.name = "Some item"
-
-do {
-    try context.save()
-    print("Item named '\(item.name!)' has been successfully saved.")
-} catch {
-    assertionFailure("Failed to save item: \(error)")
-}
-
+try! context.save()
 {% endhighlight %}
 
-### Fetch
+### Fetching Entitites
 
-Core Data provides a way to construct complex search requests by means of `NSFetchRequest`. Let's define a fetch request that returns all saved items:
-
-```swift
-let itemsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
-```
-
-To execute the request it must be passed to a managed context.
+*Core Data* provides a way to construct complex search requests by means of `NSFetchRequest`. Let's define a fetch request that returns all saved items and pass it to the managed object context.
 
 {% highlight swift linenos %}
-
-do {
-    let fetchedItems = try context.fetch(itemsFetch) as! [Item]
-    print("Fetched items: \(fetchedItems)")
-} catch {
-    assertionFailure("Failed to fetch items: \(error)")
-}
-
+let itemsFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
+let fetchedItems = try! context.fetch(itemsFetchRequest) as! [Item]
+print("Fetched items: \(fetchedItems)")
 {% endhighlight %}
 
 This snippet prints:
@@ -166,9 +147,9 @@ Fetched items: [<Item: 0x101a59f40> (entity: Item; id: 0x40000b <x-coredata://C1
 })]
 ```
 
-Core Data does not guarantee any specific order for the fetch results. It is possible to define complex sorting and filtering criterias which is essential when working with Core Data. A more detailed look at this topic is outside of the current article's scope, so I recommend checking [`NSFetchRequest` docs][fetch-request-docs] as well as [Fetching Managed Objects by Apple][fetching-managed-objects-article].
+*Core Data* does not guarantee any specific order for the fetch results. It is possible to define complex sorting and filtering criterias which is essential when working with *Core Data*. A more detailed look at this topic is outside of the current article's scope, so I recommend checking [`NSFetchRequest` docs][fetch-request-docs] as well as [Fetching Managed Objects article by Apple][fetching-managed-objects-article].
 
-### Delete
+### Deleting Entity
 
 By now we have saved and fetched an `Item` instance. Deletion can be done as simple as follows:
 
@@ -176,7 +157,7 @@ By now we have saved and fetched an `Item` instance. Deletion can be done as sim
 context.delete(item)
 ```
 
-### Rollback
+### Rollbacking
 
 You can also reset all changes up to the most recent save using the *rollback* method of the managed object context:
 
@@ -186,12 +167,11 @@ context.rollback()
 
 Now the deleted item is back into the context.
 
-### Undo
+### Undoing
 
-The undo operation comes in hand when you need to cancel edition of managed object field. Let's change the item's name and then undo that change:
+The undo operation comes in hand when you need to cancel edition of the managed object's attribute. Let's change the item's name and then undo that change:
 
 {% highlight swift linenos %}
-
 item.name = "Another name"
 
 print(item.name!)
@@ -200,7 +180,6 @@ context.undoManager = UndoManager()
 context.undo()
 
 print(item.name!)
-
 {% endhighlight %}
 
 Which prints:
@@ -216,11 +195,13 @@ The code snippets from the article can be found in this [sample project][sample-
 
 ### Conclusion
 
-When using the Core Data framework in your app, it is important to understand its architecture and how do the components interact with each other, despite the fact that `NSPersistentContainer` takes a considerable part of responsibility for Core Data stack management off the developers' shoulders.
+We have discussed the components of the *Core Data* framework and how do they play together.
 
-Beginning from iOS 10 there is no need to write custom Core Data stack and it is highly recommended to use `NSPersistentContainer`. We have seen how it can be initialized and used in your app together with the key operations with managed objects, namely: *save, fetch, delete, rollback* and *undo*.
+A Core Data stack can be initialized with the help of `NSPersistentContainer` which takes lots of responsibilities for the stack creation and management off the developers' shoulders.
 
-Even though there are plenty of other complex things Core Data has up on its sleeve, this article can make a nice foundation, so that you can use Core Data in your app right away and gradually move to the more complex stuff.
+We have seen how to setup the *Core Data* stack and perform the basic operations with managed objects, namely: *save, fetch, delete, rollback* and *undo*.
+
+Even though there are plenty of other complex things *Core Data* has up on its sleeve, this article makes a nice foundation to get you off a flying start.
 
 ---
 
@@ -231,4 +212,5 @@ Even though there are plenty of other complex things Core Data has up on its sle
 [private-concurrency-type]: https://developer.apple.com/documentation/coredata/nsmanagedobjectcontextconcurrencytype/1506495-privatequeueconcurrencytype
 [fetch-request-docs]: https://developer.apple.com/documentation/coredata/nsfetchrequest
 [fetching-managed-objects-article]: https://developer.apple.com/library/content/documentation/DataManagement/Conceptual/CoreDataSnippets/Articles/fetching.html
+[managed-object-context-docs]: https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext
 [sample-project]: https://github.com/V8tr/CoreData_in_Swift4_Article
