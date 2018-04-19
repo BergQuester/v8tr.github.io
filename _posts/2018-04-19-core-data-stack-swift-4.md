@@ -3,6 +3,7 @@ layout: post
 title: Core Data Stack in Swift 4
 permalink: /core-data-stack-swift-4/
 share-img: "/img/core_data_in_swift_4_share_img.png"
+
 ---
 
 *Core Data* is Apple's object graph management and persistency framework. When it comes to structured data persistence, *Core Data* is an obvious choice. The goal of this article is to give you an overview of the *Core Data* architecture as well as to provide a list of basic operations together with working examples to help you get off to a quick start.
