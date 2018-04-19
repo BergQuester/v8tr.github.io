@@ -2,21 +2,17 @@
 layout: post
 title: Core Data Stack in Swift 4
 permalink: /core-data-stack-swift-4/
+share-img: "/img/core_data_in_swift_4_share_img.png"
 ---
 
-Titles:
-* Core Data for Beginners
-* Core Data in Swift 4.1
-* Modern Core Data in Swift 4.1 with NSPersistentContainer
-
-*Core Data* is Apple's object graph management and persistency framework. When it comes to structured data persistence, *Core Data* is an obvious choice. The goal of this article is to give you an overview of the *Core Data* architecture as well as provide a list of basic operations together with working examples to help you get off to a quick start.
+*Core Data* is Apple's object graph management and persistency framework. When it comes to structured data persistence, *Core Data* is an obvious choice. The goal of this article is to give you an overview of the *Core Data* architecture as well as to provide a list of basic operations together with working examples to help you get off to a quick start.
 
 ### Core Data Architecture
 
 The main building blocks of *Core Data* are: `NSManagedObject`, `NSManagedObjectModel`, `NSPersistentStoreCoordinator` and `NSManagedObjectContext`. When attached together, they are usually referred to as a **Core Data stack**.
 
 <p align="center">
-    <img src="{{ "/img/core_data_stack_1.svg" | absolute_url }}" alt="Core Data stack Architecture without NSPersistentContainer"/>
+    <img src="/img/core_data_stack_1.svg" alt="Core Data stack Architecture without NSPersistentContainer"/>
 </p>
 
 ---
@@ -35,10 +31,7 @@ What is more, the *persistent coordinator* is used by the *managed object contex
 
 ---
 
-`NSManagedObjectContext` controls the life cycle of the managed objects and provides operations to create, save and fetch them.
-
-{: .box-note}
-*A well-known [Apple's metaphor][managed-object-context-docs] is to think of the managed object context as a scratch pad used to created, save and fetch managed objects.*
+`NSManagedObjectContext` controls the life cycle of the managed objects and provides operations to create, save and fetch them. You can think of the managed object context as a scratch pad with a group of managed objects.
 
 ### Persistent Container
 
@@ -46,7 +39,7 @@ Starting from iOS 10, `NSPersistentContainer` is responsible for creation and ma
 
 `NSPersistentContainer` exposes a *managed object model*, a *managed object context* and a *persistent store coordinator* as well as provides many convenience methods when working them, especially when it comes to multithreaded applications.
 
-Let's briefly go through the `NSPersistentContainer`'s interface:
+Let's briefly go through the `NSPersistentContainer`'s interface.
 
 #### Initialization
 
@@ -129,7 +122,7 @@ item.name = "Some item"
 try! context.save()
 {% endhighlight %}
 
-### Fetching Entitites
+### Fetching Entities
 
 *Core Data* provides a way to construct complex search requests by means of `NSFetchRequest`. Let's define a fetch request that returns all saved items and pass it to the managed object context.
 
@@ -147,7 +140,7 @@ Fetched items: [<Item: 0x101a59f40> (entity: Item; id: 0x40000b <x-coredata://C1
 })]
 ```
 
-*Core Data* does not guarantee any specific order for the fetch results. It is possible to define complex sorting and filtering criterias which is essential when working with *Core Data*. A more detailed look at this topic is outside of the current article's scope, so I recommend checking [`NSFetchRequest` docs][fetch-request-docs] as well as [Fetching Managed Objects article by Apple][fetching-managed-objects-article].
+*Core Data* does not guarantee any specific order for the fetch results. It is possible to define complex sorting and filtering criterion which is essential when working with *Core Data*. A more detailed look at this topic is outside of the current article's scope, so I recommend checking [`NSFetchRequest` docs][fetch-request-docs] as well as [Fetching Managed Objects article by Apple][fetching-managed-objects-article].
 
 ### Deleting Entity
 
@@ -157,9 +150,9 @@ By now we have saved and fetched an `Item` instance. Deletion can be done as sim
 context.delete(item)
 ```
 
-### Rollbacking
+### Rollbacking Deletion
 
-You can also reset all changes up to the most recent save using the *rollback* method of the managed object context:
+All changes in the managed object context, up to the most recent save, can be undone by means of the *rollback* method.
 
 ```swift
 context.rollback()
@@ -167,7 +160,7 @@ context.rollback()
 
 Now the deleted item is back into the context.
 
-### Undoing
+### Undoing Edition
 
 The undo operation comes in hand when you need to cancel edition of the managed object's attribute. Let's change the item's name and then undo that change:
 
@@ -197,11 +190,9 @@ The code snippets from the article can be found in this [sample project][sample-
 
 We have discussed the components of the *Core Data* framework and how do they play together.
 
-A Core Data stack can be initialized with the help of `NSPersistentContainer` which takes lots of responsibilities for the stack creation and management off the developers' shoulders.
+We have initialized the Core Data stack by means of `NSPersistentContainer`, which takes lots of responsibilities for the stack creation and management off the developers' shoulders. We have also performed the basic operations with managed objects, such as *save, fetch, delete, rollback* and *undo*.
 
-We have seen how to setup the *Core Data* stack and perform the basic operations with managed objects, namely: *save, fetch, delete, rollback* and *undo*.
-
-Even though there are plenty of other complex things *Core Data* has up on its sleeve, this article makes a nice foundation to get you off a flying start.
+Even though there are plenty of other complex things *Core Data* has up on its sleeve, this article makes a nice foundation to get you off to a flying start.
 
 ---
 
