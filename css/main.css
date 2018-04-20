@@ -751,7 +751,7 @@ td.gutter {
   border-left-width: 3px;
   border-radius: 0px 0px 0px 0px;
   padding-left: 20px;
-  margin-left: -23px;
+  margin-left: 0px;
 }
 
 .box-warning {
