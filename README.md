@@ -10,7 +10,7 @@ You can reach me on [LinkedIn][my-linkedin-profile], [Facebook][my-facebook-prof
 
 ## License
 
-The `_posts` directory and its contents are **Copyright &copy; 2017-present Vadim Bulavin.**
+The `_posts`, `img` and `development_resources` directories with their contents are **Copyright &copy; 2017-present Vadim Bulavin.**
 
 The rest of the files are licensed under an [MIT License](https://opensource.org/licenses/MIT).
 
