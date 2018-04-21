@@ -64,6 +64,12 @@ var main = {
       fakeMenu.remove();
     }
 
+    // Setup magnific-popup
+    $('.image-link').magnificPopup({
+      type: 'iframe'
+      // other options
+    });
+
     // show the big header image
     main.initImgs();
   },
