@@ -116,7 +116,7 @@ disqus: "v8tr-github-io"
 google_analytics: "UA-115440667-1"
 
 # Google Tag Manager ID
-#gtm: ""
+gtm: "GTM-W67XF7Z"
 
 # Facebook App ID
 fb_app_id: "200980057336922"
