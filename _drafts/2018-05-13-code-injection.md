@@ -20,7 +20,7 @@ override func viewDidLoad() {
 
 {% endhighlight %}
 
-This code repeats dozens of times in different view controllers, increasing overall coupling of your code, making it less reusable, rigid and fragile. Each time you make a change in your view controller code, you have a chance of breaking analytics and logging features in your app.
+This code repeats dozens of times in different view controllers, increasing overall complexity of your code, making it less reusable, rigid and fragile. Each time you make a change in your view controller code, you have a chance of breaking analytics and logging features in your app.
 
 Here is when code injection comes to the rescue.
 
