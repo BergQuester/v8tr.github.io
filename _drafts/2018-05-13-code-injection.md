@@ -7,7 +7,7 @@ share-img: "/img/core_data_in_swift_4_share_img.png"
 
 ### Problem Statement
 
-Analytics and logging are integral part of the vast majority of iOS apps. The common solution to these tasks is to write singletones and call them from the view controllers. Like so:
+Analytics and logging are integral part of the vast majority of iOS apps. The common solution to these tasks is to write singletones and call them from the view controller life cycle method. Like so:
 
 {% highlight swift linenos %}
 
@@ -24,7 +24,7 @@ This code repeats dozens of times in different view controllers, increasing over
 
 Here is when code injection comes to the rescue.
 
-### Theory
+### Theoretical Background
 
 Before heading straight to the code, let's make sure we understand the theoretical background behind it.
 
