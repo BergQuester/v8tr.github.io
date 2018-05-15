@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Code Injection in Swift
+title: Code Injection
 permalink: /code-injection-swift/
 share-img: "/img/code_injection_share.png"
 ---
@@ -34,7 +34,7 @@ By means of *code injection*, the above snippet can be extracted from all view c
 
 The theoretical background behind *code injection* in Swift is not trivial, so let's make sure we understand it before heading straight to the code.
 
-**Code Injection** is a variation of the **method swizzling** technique. It is based on **Objective-C runtime** which a library that provides support for the dynamic properties of the Objective-C language. Even pure Swift app is executed inside the Objective-C runtime, providing not only Swift & Objective-C interoperatiblity, but a number of runtime features that allow us write dynamic code even in such statically typed language as Swift.
+**Code Injection** is a variation of the **method swizzling** technique. It is based on **Objective-C runtime** which is a library that provides support for the dynamic properties of the Objective-C language. Even pure Swift app is executed inside the Objective-C runtime, providing not only Swift & Objective-C interoperatiblity, but a number of runtime features that allow us write dynamic code even in such statically typed language as Swift.
 
 ### Message Dispatch
 
