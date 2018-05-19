@@ -12,13 +12,9 @@ share-img: "/img/core_data_in_swift_4_share_img.png"
 
 The main building blocks of *Core Data* are: `NSManagedObject`, `NSManagedObjectModel`, `NSPersistentStoreCoordinator` and `NSManagedObjectContext`. When connected together, they are usually referred to as a **Core Data stack**.
 
-<!-- <p align="center">
+<p align="center">
     <img src="/img/core_data_stack_1.svg" alt="Core Data stack Architecture without NSPersistentContainer"/>
-</p> -->
-
-<a class="image-popup-vertical-fit" href="/img/core_data_stack_1.svg">
-	<img src="/img/core_data_stack_1.svg" alt="Core Data stack Architecture without NSPersistentContainer">
-</a>
+</p>
 
 ---
 
