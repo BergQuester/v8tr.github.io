@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Delegates Composition and Multicast Delegate
-permalink: /delegates-composition-multicast-delegate/
-share-img: "/img/core_data_in_swift_4_share_img.png"
+title: Multicast Delegate and Delegates Composition
+permalink: /multicast-delegate/
+share-img: "/img/multicast_delegate_share.png"
 ---
 
 Delegate is among the most commonly used patterns in iOS apps. Although one-to-one delegation might be suitable for the majority of cases, sometimes you need to delegate to more than one object and that is where the canonical pattern begins to falter.
