@@ -56,7 +56,7 @@ extension Logger: MyClassDelegate {
 let logger = Logger()
 
 let myClass = MyClass()
-myClass.delegate = delegate
+myClass.delegate = logger
 
 myClass.foo()
 
