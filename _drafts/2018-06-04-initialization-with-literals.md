@@ -162,7 +162,9 @@ print(date) // prints '2000-01-01 00:00:00 +0000'
 
 {% endhighlight %}
 
-### Common Solution
+### ExpressibleByNilLiteral
+
+Apple discourages from conforming to `ExpressibleByNilLiteral`. Presently only the `Optional` type conforms to it.
 
 ### Applying Initialization with Literals
 
