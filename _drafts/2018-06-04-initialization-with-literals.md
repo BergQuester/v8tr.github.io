@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Designing Richer API Utilizing Initialization with Literals
+title: Designing Richer API Using Initialization with Literals
 permalink: /initialization-with-literals/
 share-img: "/img/multicast_delegate_share.png"
 ---
@@ -9,13 +9,23 @@ share-img: "/img/multicast_delegate_share.png"
 
 *“Indeed, the ratio of time spent reading versus writing is well over 10 to 1. We are constantly reading old code as part of the effort to write new code. ...[Therefore,] making it easy to read makes it easier to write.” - Robert C. Martin*
 
-Rephrasing Robert Martin, one should not neglect readability of their code in favor of convenience of writing it. Today we'll see how Initialization with Literals technique can be used to build more expressible and richer APIs.
+Rephrasing Robert Martin, one should not neglect readability of their code in favor of convenience of writing it. In this post we'll see how *Initialization with Literals* can help us building more expressible and richer APIs.
 
 ### Explaining Initialization with Literals
 
-Swift has a family of `ExprissibleByLiteral` protocols that allows structs, classes and enums to be initialized using some literal, ex. array, string, integer etc.
+Swift has a family of `ExprissibleByLiteral` protocols that allow structs, classes and enums to be initialized using a *literal*. 
 
-For instance, the standard library integer and floating-point types conform to `ExpressibleByIntegerLiteral` protocol, thus can be initialized with an integer literal:
+*Literal* is a notation for representing a fixed *value* in source code. Such notations as integers, floating-point numbers, strings, booleans and characters are literals. Literals are not limited to atomic values. The compound objects like array and dictionary fall within the scope of this definition as well.
+
+{% highlight swift linenos %}
+let a = 1
+{% endhighlight %}
+
+Here, *1* is an integer *literal* that is used to initialize a constant *a*. 
+
+*Literals* are the essential blocks of the code and implementing shorthands for them makes your code more clean and direct. 
+
+Examine how conformance to `ExpressibleByIntegerLiteral` protocol of integer and floating-point types from Swift Standard Library allows both of them to be initialized with an integer literal:
 
 {% highlight swift linenos %}
 
@@ -27,36 +37,93 @@ let doubleValue: Double = 1
 
 {% endhighlight %}
 
-The full list of literals with corresponding protocols is next:
+The full list of protocols is next:
 
-- ExpressibleByArrayLiteral
-- ExpressibleByDictionaryLiteral
-- ExpressibleByIntegerLiteral
-- ExpressibleByFloatLiteral
-- ExpressibleByBooleanLiteral
-- ExpressibleByNilLiteral
-- ExpressibleByStringLiteral
-- ExpressibleByExtendedGraphemeClusterLiteral
-- ExpressibleByUnicodeScalarLiteral
+- `ExpressibleByArrayLiteral`
+- `ExpressibleByDictionaryLiteral`
+- `ExpressibleByIntegerLiteral`
+- `ExpressibleByFloatLiteral`
+- `ExpressibleByBooleanLiteral`
+- `ExpressibleByNilLiteral`
+- `ExpressibleByStringLiteral`
+- `ExpressibleByExtendedGraphemeClusterLiteral`
+- `ExpressibleByUnicodeScalarLiteral`
 
-| Protocol | Initializer |
-| -------- | ----------- |
-| `ExpressibleByArrayLiteral | `init(arrayLiteral: Self.ArrayLiteralElement...)` <br><br> *ArrayLiteralElement* - The type of the elements of an array literal |
-| `ExpressibleByDictionaryLiteral` | `init(dictionaryLiteral:(Self.Key, Self.Value)...)` <br><br> *Key,Value* - The key and the value types of a dictionary literal |
-| `ExpressibleByIntegerLiteral` | `init(integerLiteral: Self.IntegerLiteralType)` <br><br> A type that represents an integer literal |
-| `ExpressibleByFloatLiteral` | `init(floatLiteral: Self.FloatLiteralType)` <br><br> A type that represents a floating-point literal. |
-| `ExpressibleByBooleanLiteral` | `init(booleanLiteral: Self.BooleanLiteralType)` <br><br> A type that represents a Boolean literal, such as Bool. |
-| `ExpressibleByNilLiteral` | `init(nilLiteral: ())` <br><br> A type that can be initialized using the nil literal, nil. |
-| `ExpressibleByStringLiteral` | `init(stringLiteral: Self.StringLiteralType)` <br><br> A type that can be initialized with a string literal. |
-| `ExpressibleByExtendedGraphemeClusterLiteral` | `init(extendedGraphemeClusterLiteral: Self.ExtendedGraphemeClusterLiteralType)` <br><br> A type that represents an extended grapheme cluster literal. |
-| `ExpressibleByUnicodeScalarLiteral` | `init(unicodeScalarLiteral: Self.UnicodeScalarLiteralType)` <br><br> A type that represents a Unicode scalar literal. |
+Let's discuss them one by one together with practical examples.
 
+### ExpressibleByStringLiteral
 
-### In-depth explanation per literal
+`ExpressibleByStringLiteral` stands for a type that can be initialized with a string literal. To conform to it you'll need to implement `init(stringLiteral: Self.StringLiteralType)`.
 
-### Integer Literal
+Additionally you should consider implementing `ExpressibleByExtendedGraphemeClusterLiteral` and `ExpressibleByUnicodeScalarLiteral`.
 
-Imagine, your are developing an app in a banking domain, where the notion of finances is the core of your domain model. Defining your model clear and direct is crucial in that case. How would you approach it? Lets start with a simple example:
+The former stands for the type that can be initialized with a string containing a *single* extended grapheme cluster, e.g. "ந". More about the extended grapheme clusters can be found in [Unicode standard][extended-grapheme-cluster]. 
+
+`ExpressibleByUnicodeScalarLiteral` can be initialized with a string containing a *single* [Unicode scalar][unicode-scalar] value. e.g. "♥".
+
+#### ExpressibleByStringLiteral and URL
+
+The code below extends `URL`, so that one can create it from a string. It is especially useful for manually typed `URL`s.
+
+{% highlight swift linenos %}
+
+extension URL: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self = URL(string: value)!
+    }
+}
+
+{% endhighlight %}
+
+Now you can write code like this:
+
+{% highlight swift linenos %}
+
+let url: URL = "https://www.vadimbulavin.com"
+print(url) // prints 'https://www.vadimbulavin.com'
+
+let request = URLRequest(url: "https://www.vadimbulavin.com")
+print(request) // prints 'https://www.vadimbulavin.com'
+
+{% endhighlight %}
+
+#### ExpressibleByStringLiteral and NSRegularExpression
+
+Swift borrows `NSRegularExpression` class from Objective-C. We can write our own thin wrapper over it that adds some syntactic sugar:
+
+{% highlight swift linenos %}
+
+struct RegularExpression {
+	private let regex: NSRegularExpression
+
+	init(regex: NSRegularExpression) {
+		self.regex = regex
+	}
+
+	func matches(in string: String, options: NSRegularExpression.MatchingOptions = []) -> [NSTextCheckingResult] {
+		return regex.matches(in: string, options: options, range: NSMakeRange(0, string.count))
+	}
+}
+
+extension RegularExpression: ExpressibleByStringLiteral {
+	init(stringLiteral value: String) {
+		let regex = try! NSRegularExpression(pattern: value, options: [])
+		self.init(regex: regex)
+	}
+}
+
+let regex: RegularExpression = "abc"
+print(regex.matches(in: "abc")) // prints found match
+
+{% endhighlight %}
+
+### ExpressibleByIntegerLiteral
+
+`ExpressibleByIntegerLiteral` represents a type that can be initialized with an integer literal. It does not have any nuances like string literal does, so jump straight to the examples.
+
+#### ExpressibleByIntegerLiteral and Dollar
+
+Imagine, your are developing an app that operates in a financial domain. Here is how your `Dollar` model might look like.
 
 {% highlight swift linenos %}
 
@@ -64,11 +131,36 @@ struct Dollar {
 	let amount: Int
 }
 
-let tenDollars = Dollar(amount: 10)
+extension Dollar: ExpressibleByIntegerLiteral {
+	init(integerLiteral value: Int) {
+		self = Dollar(amount: value)
+	}
+}
+
+let tenDollars: Dollar = 10
+print(tenDollars) // prints 'Dollar(amount: 10)'
 
 {% endhighlight %}
 
+#### ExpressibleByIntegerLiteral and Date
 
+Convenience initializer for a `Date`. Can be useful for hardcoded dates in Unit tests.
+
+{% highlight swift linenos %}
+
+extension Date: ExpressibleByIntegerLiteral {
+	public init(integerLiteral value: Int) {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "MMddyyyy"
+		formatter.timeZone = TimeZone(secondsFromGMT: 0)
+		self = formatter.date(from: String(value)) ?? Date()
+	}
+}
+
+let date: Date = 01_01_2000
+print(date) // prints '2000-01-01 00:00:00 +0000'
+
+{% endhighlight %}
 
 ### Common Solution
 
@@ -76,10 +168,13 @@ let tenDollars = Dollar(amount: 10)
 
 ### Wrapping Up
 
+Swift literal convertibles can be used to provide convenient shorthand initializers for custom objects.
+
 ---
 
 *I'd love to meet you in Twitter: [here](https://twitter.com/{{ site.author.twitter }}). And don't forget to share this article if you found it useful.*
 
 ---
 
-[code-injection-article]: http://www.vadimbulavin.com/code-injection-swift/
+[extended-grapheme-cluster]: http://unicode.org/reports/tr29/
+[unicode-scalar]: https://unicode.org/glossary/#unicode_scalar_value
