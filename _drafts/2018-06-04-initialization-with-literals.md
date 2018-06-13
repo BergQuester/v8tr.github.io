@@ -53,17 +53,17 @@ Let's discuss them one by one together with practical examples.
 
 ### ExpressibleByStringLiteral
 
-`ExpressibleByStringLiteral` stands for a type that can be initialized with a string literal. The initializer `init(stringLiteral: Self.StringLiteralType)` is the only method that needs to be implemented for this protocol conformace.
+`ExpressibleByStringLiteral` stands for a type that can be initialized with a string literal. The initializer `init(stringLiteral: Self.StringLiteralType)` is the only method that needs to be implemented for this protocol conformance.
 
-Additionally you should consider implementing `ExpressibleByExtendedGraphemeClusterLiteral` and `ExpressibleByUnicodeScalarLiteral`.
-
-The former stands for the type that can be initialized with a string containing a *single* extended grapheme cluster, e.g. "ந". More about the extended grapheme clusters can be found in [Unicode standard][extended-grapheme-cluster]. 
+`ExpressibleByExtendedGraphemeClusterLiteral` stands for the type that can be initialized with a string containing a *single* extended grapheme cluster, e.g. "ந". More about the extended grapheme clusters can be found in [Unicode standard][extended-grapheme-cluster]. 
 
 `ExpressibleByUnicodeScalarLiteral` can be initialized with a string containing a *single* [Unicode scalar][unicode-scalar] value. e.g. "♥".
 
+When conforming to `ExpressibleByStringLiteral`, you should always evaluate whether your type can be initialized from a *Unicode scalar* and a *Grapheme Cluster literal*, and implement them as well.
+
 #### ExpressibleByStringLiteral and URL
 
-The code below extends `URL`, so that one can create it from a string. It is especially useful for manually typed `URL`s.
+When defining manually typed URLs and URL requests, it is handful to initialize them with a strings omitting `URL`'s initializer.
 
 {% highlight swift linenos %}
 
@@ -75,7 +75,7 @@ extension URL: ExpressibleByStringLiteral {
 
 {% endhighlight %}
 
-Now you can write code like this:
+Now both URL and URL request can be initialized with a string:
 
 {% highlight swift linenos %}
 
@@ -119,7 +119,7 @@ print(regex.matches(in: "abc")) // prints that match is found
 
 ### ExpressibleByIntegerLiteral
 
-`ExpressibleByIntegerLiteral` represents a type that can be initialized with an integer *literal*. It does not have any nuances like the string one, so jump straight to the examples.
+`ExpressibleByIntegerLiteral` represents a type that can be initialized with an integer *literal*.
 
 #### ExpressibleByIntegerLiteral and UILayoutPriority
 
@@ -142,7 +142,7 @@ extension NSLayoutConstraint {
 
 {% endhighlight %}
 
-Now the priority can be set with an integer as follows:
+Now you can set custom priorities with an integer:
 
 {% highlight swift linenos %}
 
@@ -213,9 +213,6 @@ extension Sentence: ExpressibleByArrayLiteral {
 	}
 }
 
-let sentence: Sentence = ["A", "B", "C"]
-print(sentence) // prints 'Sentence(words: ["A", "B", "C"])'
-
 {% endhighlight %}
 
 {: .box-note}
@@ -225,22 +222,60 @@ According to the above, the following example does not compile:
 
 {% highlight swift linenos %}
 
+let sentence: Sentence = ["A", "B", "C"]
+print(sentence) // prints 'Sentence(words: ["A", "B", "C"])'
+
 let words = ["A", "B", "C"]
-let sentence: Sentence = words // error: Cannot convert value of type '[String]' to specified type 'Sentence'
+let anotherSentence: Sentence = words // error: Cannot convert value of type '[String]' to specified type 'Sentence'
 
 {% endhighlight %}
 
-### Applying Initialization with Literals
+### ExpressibleByDictionaryLiteral
+
+Similar to its Array counterpart, `ExpressibleByDictionaryLiteral` is primarily used for custom collections and types that are backed by Dictionary. HTTP request headers are among such examples.
+
+{% highlight swift linenos %}
+
+struct HTTPHeaders {
+	private let headers: [String: String]
+}
+
+extension HTTPHeaders: ExpressibleByDictionaryLiteral {
+	init(dictionaryLiteral elements: (String, String)...) {
+		var headers: [String: String] = [:]
+		for pair in elements {
+			headers[pair.0] = pair.1
+		}
+		self = HTTPHeaders(headers: headers)
+	}
+}
+
+{% endhighlight %}
+
+{: .box-note}
+*A dictionary literal should not be confused with an instance of Dictionary. Thus it is not possible to initialize a type that conforms to `ExpressibleByDictionaryLiteral` by assigning a Dictionary instance to it.*
+
+And here is an example that demonstrates the above nuance:
+
+{% highlight swift linenos %}
+
+let headers: HTTPHeaders = ["Content-Type": "application/json"]
+print(headers) // prints 'HTTPHeaders(headers: ["Content-Type": "application/json"])'
+
+let headersDictionary = ["Content-Type": "application/json"] // headersDictionary is an instance of Dictionary, not a Dictionary literal
+let anotherHeaders: HTTPHeaders = headersDictionary // error: Cannot convert value of type '[String : String]' to specified type 'HTTPHeaders'
+
+{% endhighlight %}
 
 ### Wrapping Up
 
-Swift literal convertibles can be used to provide convenient shorthand initializers for custom objects.
+*Literal* is a notation for representing a fixed *value* in source code. Integers, strings, booleans, floating-points, arrays, dictionaries are all literals.
 
----
+An instance of *Array* and an *array literal* are two different notions and they should not be confused. The same is true for *Dictionary*.
 
-*I'd love to meet you in Twitter: [here](https://twitter.com/{{ site.author.twitter }}). And don't forget to share this article if you found it useful.*
+Swift contains a family of `ExpressibleByLiteral` protocols that are used for custom types to be initialized with a matching *literal*.
 
----
+A number of practical examples were examined to demonstrate that *Initialization with Literals* can make your API more clean and direct.
 
 [extended-grapheme-cluster]: http://unicode.org/reports/tr29/
 [unicode-scalar]: https://unicode.org/glossary/#unicode_scalar_value
