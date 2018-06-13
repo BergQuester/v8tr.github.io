@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Multicast Delegate and Delegates Composition
-permalink: /multicast-delegate/
+title: Traffic interception
+permalink: /traffic-interception/
 share-img: "/img/multicast_delegate_share.png"
 ---
 

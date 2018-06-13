@@ -9,11 +9,11 @@ share-img: "/img/multicast_delegate_share.png"
 
 *“Indeed, the ratio of time spent reading versus writing is well over 10 to 1. We are constantly reading old code as part of the effort to write new code. ...[Therefore,] making it easy to read makes it easier to write.” - Robert C. Martin*
 
-Rephrasing Robert Martin, one should not neglect readability of their code in favor of convenience of writing it. In this post we'll see how *Initialization with Literals* can help us building more expressible and richer APIs.
+Rephrasing Robert Martin, one should not neglect readability of their code in favor of speed of writing it. In this post we'll see how *Initialization with Literals* can help us to build more expressible and richer APIs.
 
 ### Explaining Initialization with Literals
 
-Swift has a family of `ExprissibleByLiteral` protocols that allow structs, classes and enums to be initialized using a *literal*. 
+Swift has a family of `ExprissibleByLiteral` protocols that allows structs, classes and enums to be initialized using a *literal*. 
 
 *Literal* is a notation for representing a fixed *value* in source code. Such notations as integers, floating-point numbers, strings, booleans and characters are literals. Literals are not limited to atomic values. The compound objects like array and dictionary fall within the scope of this definition as well.
 
@@ -53,7 +53,7 @@ Let's discuss them one by one together with practical examples.
 
 ### ExpressibleByStringLiteral
 
-`ExpressibleByStringLiteral` stands for a type that can be initialized with a string literal. To conform to it you'll need to implement `init(stringLiteral: Self.StringLiteralType)`.
+`ExpressibleByStringLiteral` stands for a type that can be initialized with a string literal. The initializer `init(stringLiteral: Self.StringLiteralType)` is the only method that needs to be implemented for this protocol conformace.
 
 Additionally you should consider implementing `ExpressibleByExtendedGraphemeClusterLiteral` and `ExpressibleByUnicodeScalarLiteral`.
 
@@ -89,7 +89,7 @@ print(request) // prints 'https://www.vadimbulavin.com'
 
 #### ExpressibleByStringLiteral and NSRegularExpression
 
-Swift borrows `NSRegularExpression` class from Objective-C. We can write our own thin wrapper over it that adds some syntactic sugar:
+Swift borrows `NSRegularExpression` class from Objective-C. We can write our own wrapper over it adding some syntactic sugar:
 
 {% highlight swift linenos %}
 
@@ -113,38 +113,50 @@ extension RegularExpression: ExpressibleByStringLiteral {
 }
 
 let regex: RegularExpression = "abc"
-print(regex.matches(in: "abc")) // prints found match
+print(regex.matches(in: "abc")) // prints that match is found
 
 {% endhighlight %}
 
 ### ExpressibleByIntegerLiteral
 
-`ExpressibleByIntegerLiteral` represents a type that can be initialized with an integer literal. It does not have any nuances like string literal does, so jump straight to the examples.
+`ExpressibleByIntegerLiteral` represents a type that can be initialized with an integer *literal*. It does not have any nuances like the string one, so jump straight to the examples.
 
-#### ExpressibleByIntegerLiteral and Dollar
+#### ExpressibleByIntegerLiteral and UILayoutPriority
 
-Imagine, your are developing an app that operates in a financial domain. Here is how your `Dollar` model might look like.
+The [pre-defined auto layout priorities][uilayoutpriority-docs] are often not enough to express complex constraints. Lets define convenience methods to set custom `UILayoutPriority`.
 
 {% highlight swift linenos %}
 
-struct Dollar {
-	let amount: Int
-}
-
-extension Dollar: ExpressibleByIntegerLiteral {
-	init(integerLiteral value: Int) {
-		self = Dollar(amount: value)
+extension UILayoutPriority: ExpressibleByIntegerLiteral {
+	public init(integerLiteral value: Int) {
+		self.init(rawValue: Float(value))
 	}
 }
 
-let tenDollars: Dollar = 10
-print(tenDollars) // prints 'Dollar(amount: 10)'
+extension NSLayoutConstraint {
+	func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+		self.priority = priority
+		return self
+	}
+}
+
+{% endhighlight %}
+
+Now the priority can be set with an integer as follows:
+
+{% highlight swift linenos %}
+
+let label = UILabel()
+label.setContentHuggingPriority(1, for: .horizontal)
+
+let anotherLabel = UILabel()
+label.leadingAnchor.constraint(equalTo: anotherLabel.leadingAnchor).withPriority(1).isActive = true
 
 {% endhighlight %}
 
 #### ExpressibleByIntegerLiteral and Date
 
-Convenience initializer for a `Date`. Can be useful for hardcoded dates in Unit tests.
+Convenience initializer for a `Date`. Especially useful for hardcoded dates in Unit tests.
 
 {% highlight swift linenos %}
 
@@ -164,7 +176,59 @@ print(date) // prints '2000-01-01 00:00:00 +0000'
 
 ### ExpressibleByNilLiteral
 
-Apple discourages from conforming to `ExpressibleByNilLiteral`. Presently only the `Optional` type conforms to it.
+Apple [discourages][expressiblebynilliteral-docs] from conforming to `ExpressibleByNilLiteral` for custom types. Presently only the `Optional` type conforms to it, which is used to express the **absence** of a value. The following example demonstrates incorrect usage of `ExpressibleByNilLiteral` that confuses the notion of *absence of value* with *zero value*.
+
+{% highlight swift linenos %}
+
+struct MyStruct {
+	let value: Int
+}
+
+extension MyStruct: ExpressibleByNilLiteral {
+	init(nilLiteral: ()) {
+		self = MyStruct(value: 0)
+	}
+}
+
+let myStruct: MyStruct = nil
+print(myStruct) // prints 'MyStruct(value: 0)'
+
+{% endhighlight %}
+
+Always use the `Optional` type to express the notion of value absence.
+
+### ExpressibleByArrayLiteral
+
+Conform to `ExpressibleByArrayLiteral` protocol when implementing custom collections that are backed by an *Array*, ex. *Stack, Graph, Queue, LinkedList* etc. Here is a simple example of a `Sentence` collection that demonstrates the idea.
+
+{% highlight swift linenos %}
+
+struct Sentence {
+	let words: [String]
+}
+
+extension Sentence: ExpressibleByArrayLiteral {
+	init(arrayLiteral elements: String...) {
+		self = Sentence(words: elements)
+	}
+}
+
+let sentence: Sentence = ["A", "B", "C"]
+print(sentence) // prints 'Sentence(words: ["A", "B", "C"])'
+
+{% endhighlight %}
+
+{: .box-note}
+*Array type and the array literal are different things. This means that you can’t initialize a type that conforms to `ExpressibleByArrayLiteral` by assigning an existing array to it.*
+
+According to the above, the following example does not compile:
+
+{% highlight swift linenos %}
+
+let words = ["A", "B", "C"]
+let sentence: Sentence = words // error: Cannot convert value of type '[String]' to specified type 'Sentence'
+
+{% endhighlight %}
 
 ### Applying Initialization with Literals
 
@@ -180,3 +244,5 @@ Swift literal convertibles can be used to provide convenient shorthand initializ
 
 [extended-grapheme-cluster]: http://unicode.org/reports/tr29/
 [unicode-scalar]: https://unicode.org/glossary/#unicode_scalar_value
+[uilayoutpriority-docs]: https://developer.apple.com/documentation/uikit/uilayoutpriority
+[expressiblebynilliteral-docs]: https://developer.apple.com/documentation/swift/expressiblebynilliteral
