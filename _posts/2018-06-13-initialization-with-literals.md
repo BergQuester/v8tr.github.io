@@ -1,19 +1,15 @@
 ---
 layout: post
-title: Designing Richer API Using Initialization with Literals
+title: Using Initialization with Literals to Design Richer API
 permalink: /initialization-with-literals/
-share-img: "/img/multicast_delegate_share.png"
+share-img: "/img/initialization-with-literals-share.png"
 ---
-
-### Introduction
 
 *“Indeed, the ratio of time spent reading versus writing is well over 10 to 1. We are constantly reading old code as part of the effort to write new code. ...[Therefore,] making it easy to read makes it easier to write.” - Robert C. Martin*
 
-Rephrasing Robert Martin, one should not neglect readability of their code in favor of speed of writing it. In this post we'll see how *Initialization with Literals* can help us to build more expressible and richer APIs.
+Rephrasing Robert Martin, one should not neglect readability of their code in favor of speed of writing it. In this post we'll see how *Initialization with Literals* can help us to build more expressive and richer APIs.
 
 ### Explaining Initialization with Literals
-
-Swift has a family of `ExprissibleByLiteral` protocols that allows structs, classes and enums to be initialized using a *literal*. 
 
 *Literal* is a notation for representing a fixed *value* in source code. Such notations as integers, floating-point numbers, strings, booleans and characters are literals. Literals are not limited to atomic values. The compound objects like array and dictionary fall within the scope of this definition as well.
 
@@ -24,6 +20,8 @@ let a = 1
 Here, *1* is an integer *literal* that is used to initialize a constant *a*. 
 
 *Literals* are the essential blocks of the code and implementing shorthands for them makes your code more clean and direct. 
+
+Swift has a family of `ExprissibleByLiteral` protocols that allows structs, classes and enums to be initialized using a *literal*. 
 
 Examine how conformance to `ExpressibleByIntegerLiteral` protocol of integer and floating-point types from Swift Standard Library allows both of them to be initialized with an integer literal:
 
@@ -94,22 +92,22 @@ Swift borrows `NSRegularExpression` class from Objective-C. We can write our own
 {% highlight swift linenos %}
 
 struct RegularExpression {
-	private let regex: NSRegularExpression
+    private let regex: NSRegularExpression
 
-	init(regex: NSRegularExpression) {
-		self.regex = regex
-	}
+    init(regex: NSRegularExpression) {
+        self.regex = regex
+    }
 
-	func matches(in string: String, options: NSRegularExpression.MatchingOptions = []) -> [NSTextCheckingResult] {
-		return regex.matches(in: string, options: options, range: NSMakeRange(0, string.count))
-	}
+    func matches(in string: String, options: NSRegularExpression.MatchingOptions = []) -> [NSTextCheckingResult] {
+        return regex.matches(in: string, options: options, range: NSMakeRange(0, string.count))
+    }
 }
 
 extension RegularExpression: ExpressibleByStringLiteral {
-	init(stringLiteral value: String) {
-		let regex = try! NSRegularExpression(pattern: value, options: [])
-		self.init(regex: regex)
-	}
+    init(stringLiteral value: String) {
+        let regex = try! NSRegularExpression(pattern: value, options: [])
+        self.init(regex: regex)
+    }
 }
 
 let regex: RegularExpression = "abc"
@@ -128,16 +126,16 @@ The [pre-defined auto layout priorities][uilayoutpriority-docs] are often not en
 {% highlight swift linenos %}
 
 extension UILayoutPriority: ExpressibleByIntegerLiteral {
-	public init(integerLiteral value: Int) {
-		self.init(rawValue: Float(value))
-	}
+    public init(integerLiteral value: Int) {
+        self.init(rawValue: Float(value))
+    }
 }
 
 extension NSLayoutConstraint {
-	func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
-		self.priority = priority
-		return self
-	}
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
+    }
 }
 
 {% endhighlight %}
@@ -161,12 +159,12 @@ Convenience initializer for a `Date`. Especially useful for hardcoded dates in U
 {% highlight swift linenos %}
 
 extension Date: ExpressibleByIntegerLiteral {
-	public init(integerLiteral value: Int) {
-		let formatter = DateFormatter()
-		formatter.dateFormat = "MMddyyyy"
-		formatter.timeZone = TimeZone(secondsFromGMT: 0)
-		self = formatter.date(from: String(value)) ?? Date()
-	}
+    public init(integerLiteral value: Int) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMddyyyy"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        self = formatter.date(from: String(value)) ?? Date()
+    }
 }
 
 let date: Date = 01_01_2000
@@ -181,13 +179,13 @@ Apple [discourages][expressiblebynilliteral-docs] from conforming to `Expressibl
 {% highlight swift linenos %}
 
 struct MyStruct {
-	let value: Int
+    let value: Int
 }
 
 extension MyStruct: ExpressibleByNilLiteral {
-	init(nilLiteral: ()) {
-		self = MyStruct(value: 0)
-	}
+    init(nilLiteral: ()) {
+        self = MyStruct(value: 0)
+    }
 }
 
 let myStruct: MyStruct = nil
@@ -199,24 +197,24 @@ Always use the `Optional` type to express the notion of value absence.
 
 ### ExpressibleByArrayLiteral
 
-Conform to `ExpressibleByArrayLiteral` protocol when implementing custom collections that are backed by an *Array*, ex. *Stack, Graph, Queue, LinkedList* etc. Here is a simple example of a `Sentence` collection that demonstrates the idea.
+Conform to `ExpressibleByArrayLiteral` protocol when implementing custom collections that are backed by an *Array*, ex. *Stack, Graph, Queue, LinkedList* etc. Here is a simple example of a `Sentence` struct that demonstrates the idea.
 
 {% highlight swift linenos %}
 
 struct Sentence {
-	let words: [String]
+    let words: [String]
 }
 
 extension Sentence: ExpressibleByArrayLiteral {
-	init(arrayLiteral elements: String...) {
-		self = Sentence(words: elements)
-	}
+    init(arrayLiteral elements: String...) {
+        self = Sentence(words: elements)
+    }
 }
 
 {% endhighlight %}
 
 {: .box-note}
-*Array type and the array literal are different things. This means that you can’t initialize a type that conforms to `ExpressibleByArrayLiteral` by assigning an existing array to it.*
+*An array type and an array literal are different things. This means that you can’t initialize a type that conforms to `ExpressibleByArrayLiteral` by assigning an existing array to it.*
 
 According to the above, the following example does not compile:
 
@@ -232,22 +230,22 @@ let anotherSentence: Sentence = words // error: Cannot convert value of type '[S
 
 ### ExpressibleByDictionaryLiteral
 
-Similar to its Array counterpart, `ExpressibleByDictionaryLiteral` is primarily used for custom collections and types that are backed by Dictionary. HTTP request headers are among such examples.
+Similar to its Array counterpart, `ExpressibleByDictionaryLiteral` is primarily used for custom collections and types that are backed by a dictionary. HTTP request headers are among such examples.
 
 {% highlight swift linenos %}
 
 struct HTTPHeaders {
-	private let headers: [String: String]
+    private let headers: [String: String]
 }
 
 extension HTTPHeaders: ExpressibleByDictionaryLiteral {
-	init(dictionaryLiteral elements: (String, String)...) {
-		var headers: [String: String] = [:]
-		for pair in elements {
-			headers[pair.0] = pair.1
-		}
-		self = HTTPHeaders(headers: headers)
-	}
+    init(dictionaryLiteral elements: (String, String)...) {
+        var headers: [String: String] = [:]
+        for pair in elements {
+            headers[pair.0] = pair.1
+        }
+        self = HTTPHeaders(headers: headers)
+    }
 }
 
 {% endhighlight %}
@@ -271,7 +269,7 @@ let anotherHeaders: HTTPHeaders = headersDictionary // error: Cannot convert val
 
 *Literal* is a notation for representing a fixed *value* in source code. Integers, strings, booleans, floating-points, arrays, dictionaries are all literals.
 
-An instance of *Array* and an *array literal* are two different notions and they should not be confused. The same is true for *Dictionary*.
+An instance of *Array* and an *array literal* are two different things and they should not be confused. The same is true for *Dictionary*.
 
 Swift contains a family of `ExpressibleByLiteral` protocols that are used for custom types to be initialized with a matching *literal*.
 
