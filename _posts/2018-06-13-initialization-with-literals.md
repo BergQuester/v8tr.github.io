@@ -275,6 +275,12 @@ Swift contains a family of `ExpressibleByLiteral` protocols that are used for cu
 
 A number of practical examples were examined to demonstrate that *Initialization with Literals* can make your API more clean and direct.
 
+---
+
+*I'd love to meet you in Twitter: [here](https://twitter.com/{{ site.author.twitter }}). Don't forget to share this article if you found it useful.*
+
+---
+
 [extended-grapheme-cluster]: http://unicode.org/reports/tr29/
 [unicode-scalar]: https://unicode.org/glossary/#unicode_scalar_value
 [uilayoutpriority-docs]: https://developer.apple.com/documentation/uikit/uilayoutpriority
