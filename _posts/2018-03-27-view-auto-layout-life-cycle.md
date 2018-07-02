@@ -1,6 +1,7 @@
 ---
 layout: post
 title: UIView Auto Layout life cycle
+share-img: "/img/auto-layout-life-cycle-share.png"
 permalink: /view-auto-layout-life-cycle/
 ---
 
