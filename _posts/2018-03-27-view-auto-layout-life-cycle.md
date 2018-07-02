@@ -1,8 +1,8 @@
 ---
 layout: post
 title: UIView Auto Layout life cycle
-share-img: "/img/auto-layout-life-cycle-share.png"
 permalink: /view-auto-layout-life-cycle/
+share-img: "/img/auto-layout-life-cycle-share.png"
 ---
 
 Auto Layout is among the most important topics when it comes to iOS development in general. It is extremely important to understand Auto Layout life cycle to save time and avoid naive mistakes. Lack of this information will sooner or later lead to UI glitches and performance issues in your app. This article consolidates information about the steps that every `UIView` with Auto Layout enabled undergoes before being presented on a screen.
