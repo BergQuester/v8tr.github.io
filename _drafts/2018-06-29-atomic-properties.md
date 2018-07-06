@@ -35,11 +35,11 @@ On a software level, a common tool to enforce *atomicity* is *lock*.
 
 When dealing with iOS apps, we are always sandboxed to their *processes*. A process creates and manages *threads*, which are the main building blocks in multitasking iOS applications.
 
-**Lock** is an abstract concept for threads synchronization. The main idea is to protect access to a given region of code at a time. There are multiple types of locks:
+**Lock** is an abstract concept for threads synchronization. The main idea is to protect access to a given region of code at a time. Different kinds of locks exist:
 1. **Semaphore** - allows up to *N* threads to access a given region of code at a time.
 2. **Mutex** - ensures that only one thread is active in a given region of code at a time. You can think of it as a *semaphore* with a *maximum count of 1*.
 3. **Spinlock** - causes a thread trying to acquire a lock to wait in a loop while checking if the lock is available. It is efficient if waiting is rare, but wasteful if waiting is common.
-4. **Read-write lock** - provides concurrent access for *read-only* operations, but exclusive access for *write* operations. Efficient when reading is common, but writing is rare.
+4. **Read-write lock** - provides concurrent access for *read-only* operations, but exclusive access for *write* operations. Efficient when reading is common and writing is rare.
 5. **Recursive lock** - a *mutex* that can be acquired by the same thread many times.
 
 ### Overview of Apple Locking APIs
@@ -52,21 +52,26 @@ A lower-level C `pthread_mutex_t` is also available in Swift. It can be configur
 
 #### Spin Lock
 
-Since iOS 10 `OSSpinLock` has been deprecated and now there is no exact match to spin lock concept in Apple's frameworks. The recommendation is to use `os_unfair_lock` for this purpose. This function doesn't spin on contention, but instead waits in the kernel to be awoken by an unlock. Thus, it has lower CPU impact than the spin lock does, but makes starvation of waiters a possibility.
+Since iOS 10 `OSSpinLock` has been deprecated and now there is no exact match to the spin lock concept in Swift. The closest replacement is `os_unfair_lock` which doesn't spin on contention, but instead waits in the kernel to be awoken by an unlock. Thus, it has lower CPU impact than the spin lock does, but makes starvation of waiters a possibility.
 
 #### Read-write lock
 
-`pthread_rwlock_t` is a low-level C read-write lock.
+`pthread_rwlock_t` is a read-write lock that can be used in Swift.
 
 ### Semaphore
 
-`DispatchSemaphore` provides an implementation of a semaphore. It makes little sense to use semaphore for designing atomic properties in Swift, so it is listed here for completeness reasons.
+`DispatchSemaphore` provides an implementation of a semaphore. It makes little sense to use semaphore for designing atomic properties in Swift, so it is listed here for the sake of completeness.
 
 ### Implementing Atomic Property using Locks
 
-After we have learned about concurrent programming and locks, we can implement our own atomic operation by means of Apple's locking APIs.
+After learning about concurrent programming and locks, let's implement our own atomic properties by means of Apple's locking APIs.
 
 <script src="https://gist.github.com/V8tr/57c7c6a79b51185005862a40d246117d.js"></script>
+
+The main bullet points from the above code are:
+1. Instead of using different locking APIs directly, we wrap them into classes conforming to the `Lock` interface: `SpinLock`, `Mutex` and `ReadWriteLock`.
+2. `AtomicProperty` is a simple class that has atomic property `foo` backed by `underlyingFoo` under the hood.
+3. By means of lock / unlock dance we create a critical section that accesses `underlyingFoo`.
 
 ### Implementing Atomic Property using queues
 
