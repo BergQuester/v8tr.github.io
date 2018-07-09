@@ -2,12 +2,12 @@
 layout: post
 title: Atomic Properties in Swift
 permalink: /atomic-properties/
-share-img: "/img/initialization-with-literals-share.png"
+share-img: "/img/atomic-properties-share.png"
 ---
 
 Swift has no language features for defining atomic properties. However, the lack of @synchronized or atomic modifier that we used to in Objective-C is compensated with the diversity of locking APIs available in Apple's frameworks. In this article let's take a look at different ways of designing atomic properties in Swift.
 
-Before going straight to the code, make sure we understand the core concepts related to *concurrent programming* and *atomicity*.
+First off, make sure we understand the core concepts related to *concurrent programming* and *atomicity*.
 
 ### Concurrency and Multitasking
 
@@ -21,11 +21,13 @@ In common sense, **synchronization** means making two things happen at the same 
 
 In programming, **synchronization** has broader definition: it refers to relationships among events — any number of events, and any kind of relationship (before, during, after).
 
-As programmers, we are often concerned with *synchronization constraints*, which are requirements pertaining to the order of events. Constraint example: *Events A and B must not happen at the same time*.
+As programmers, we are often concerned with *synchronization constraints*, which are requirements pertaining to the order of events. 
+
+Example of a constraint: *Events A and B must not happen at the same time*.
 
 ### What is Atomicity
 
-An operation is **atomic** if it appears to the rest of the system to occur at a single instant without being interrupted. In other words, it will either complete or return to its original state.
+An operation is **atomic** if it appears to the rest of the system to occur at a single instant without being interrupted. An *atomic* operation can either complete or return to its original state.
 
 *Atomicity* is a safety measure which enforces that operations do not complete in an unpredictable way when accessed by multiple threads or processes simultaneously.
 
@@ -48,19 +50,19 @@ When dealing with iOS apps, we are always sandboxed to their *processes*. A proc
 
 `NSLock` and its companion `NSRecursiveLock` are Objective-C lock classes. They correspond to *Mutex* and *Recursive Lock* and don't have their Swift counterparts. 
 
-A lower-level C `pthread_mutex_t` is also available in Swift. It can be configures both as a mutex and a recursive lock.
+A lower-level C `pthread_mutex_t` is also available in Swift. It can be configured both as a mutex and a recursive lock.
 
 #### Spin Lock
 
-Since iOS 10 `OSSpinLock` has been deprecated and now there is no exact match to the spin lock concept in Swift. The closest replacement is `os_unfair_lock` which doesn't spin on contention, but instead waits in the kernel to be awoken by an unlock. Thus, it has lower CPU impact than the spin lock does, but makes starvation of waiters a possibility.
+`OSSpinLock` has been deprecated in iOS 10 and now there is no exact match to a spin lock in Swift. The closest replacement is `os_unfair_lock` which doesn't spin on contention, but instead waits in the kernel to be awoken by an unlock. Thus, it has lower CPU impact than the spin lock does, but makes [starvation of waiters](https://en.wikipedia.org/wiki/Dining_philosophers_problem) a possibility.
 
 #### Read-write lock
 
-`pthread_rwlock_t` is a read-write lock that can be used in Swift.
+`pthread_rwlock_t` is a lower-level read-write lock that can be used in Swift.
 
 ### Semaphore
 
-`DispatchSemaphore` provides an implementation of a semaphore. It makes little sense to use semaphore for designing atomic properties in Swift, so it is listed here for the sake of completeness.
+`DispatchSemaphore` provides an implementation of a semaphore. It is listed here for the sake of completeness, as it makes little sense to use semaphore for designing atomic properties.
 
 ### Implementing Atomic Property using Locks
 
@@ -73,6 +75,9 @@ The main bullet points from the above code are:
 2. `AtomicProperty` is a simple class that has atomic property `foo` backed by `underlyingFoo` under the hood.
 3. By means of lock / unlock dance we create a critical section that accesses `underlyingFoo`.
 
+{: .box-note}
+*Despite POSIX phread locks are value types, you should not copy them both explicitly with the assignment operator or implicitly by capturing them in a closure or embedding in another value type. In POSIX, the behavior of the copy is undefined. That's why locks are wrapped into Class, not Struct.*
+
 ### Implementing Atomic Property using queues
 
 Besides locks, Swift has `DispatchQueue` and `OperationQueue` that also can be used to design an atomic property.
@@ -83,4 +88,8 @@ Both queues are used to manage the execution of work items and they can configur
 
 ### Wrapping Up
 
+Atomic operations appear to be instant from the perspective of all other threads in the app.
 
+Despite Swift lacks default language traits for creating atomic property, it can be easily achieved with a number of available locking APIs. `NSLock`, dispatch and operation queues and multiple POSIX types are the most notable ones.
+
+When dealing with POSIX locks, a rule of thumb is not to copy them and wrap in Swift APIs hiding implementation details.
