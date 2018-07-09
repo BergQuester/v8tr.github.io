@@ -5,7 +5,7 @@ permalink: /atomic-properties/
 share-img: "/img/atomic-properties-share.png"
 ---
 
-Swift has no language features for defining atomic properties. However, the lack of @synchronized or atomic modifier that we used to in Objective-C is compensated with the diversity of locking APIs available in Apple's frameworks. In this article let's take a look at different ways of designing atomic properties in Swift.
+Although Swift has no language features for defining atomic properties, their lack is compensated with the diversity of locking APIs available in Apple's frameworks. In this article let's take a look at different ways of designing atomic properties in Swift.
 
 First off, make sure we understand the core concepts related to *concurrent programming* and *atomicity*.
 
@@ -52,9 +52,9 @@ When dealing with iOS apps, we are always sandboxed to their *processes*. A proc
 
 A lower-level C `pthread_mutex_t` is also available in Swift. It can be configured both as a mutex and a recursive lock.
 
-#### Spin Lock
+#### Spinlock
 
-`OSSpinLock` has been deprecated in iOS 10 and now there is no exact match to a spin lock in Swift. The closest replacement is `os_unfair_lock` which doesn't spin on contention, but instead waits in the kernel to be awoken by an unlock. Thus, it has lower CPU impact than the spin lock does, but makes [starvation of waiters](https://en.wikipedia.org/wiki/Dining_philosophers_problem) a possibility.
+`OSSpinLock` has been deprecated in iOS 10 and now there is no exact match to a spinlock in Swift. The closest replacement is `os_unfair_lock` which doesn't spin on contention, but instead waits in the kernel to be awoken by an unlock. Thus, it has lower CPU impact than the spinlock does, but makes [starvation of waiters](https://en.wikipedia.org/wiki/Dining_philosophers_problem) a possibility.
 
 #### Read-write lock
 
@@ -76,7 +76,7 @@ The main bullet points from the above code are:
 3. By means of lock / unlock dance we create a critical section that accesses `underlyingFoo`.
 
 {: .box-note}
-*Despite POSIX phread locks are value types, you should not copy them both explicitly with the assignment operator or implicitly by capturing them in a closure or embedding in another value type. In POSIX, the behavior of the copy is undefined. That's why locks are wrapped into Class, not Struct.*
+*Despite POSIX pthread locks are value types, you should not copy them both explicitly with the assignment operator or implicitly by capturing them in a closure or embedding in another value type. In POSIX, the behavior of the copy is undefined. That's why locks are wrapped into Class, not Struct.*
 
 ### Implementing Atomic Property using queues
 
