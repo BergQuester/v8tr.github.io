@@ -38,11 +38,11 @@ On a software level, a common tool to enforce *atomicity* is *lock*.
 When dealing with iOS apps, we are always sandboxed to their *processes*. A process creates and manages *threads*, which are the main building blocks in multitasking iOS applications.
 
 **Lock** is an abstract concept for threads synchronization. The main idea is to protect access to a given region of code at a time. Different kinds of locks exist:
-1. **Semaphore** — allows up to *N* threads to access a given region of code at a time.
-2. **Mutex** — ensures that only one thread is active in a given region of code at a time. You can think of it as a *semaphore* with a *maximum count of 1*.
-3. **Spinlock** — causes a thread trying to acquire a lock to wait in a loop while checking if the lock is available. It is efficient if waiting is rare, but wasteful if waiting is common.
-4. **Read-write lock** — provides concurrent access for *read-only* operations, but exclusive access for *write* operations. Efficient when reading is common and writing is rare.
-5. **Recursive lock** — a *mutex* that can be acquired by the same thread many times.
+1. **Semaphore** - allows up to *N* threads to access a given region of code at a time.
+2. **Mutex** - ensures that only one thread is active in a given region of code at a time. You can think of it as a *semaphore* with a *maximum count of 1*.
+3. **Spinlock** - causes a thread trying to acquire a lock to wait in a loop while checking if the lock is available. It is efficient if waiting is rare, but wasteful if waiting is common.
+4. **Read-write lock** - provides concurrent access for *read-only* operations, but exclusive access for *write* operations. Efficient when reading is common and writing is rare.
+5. **Recursive lock** - a *mutex* that can be acquired by the same thread many times.
 
 ### Overview of Apple Locking APIs
 
