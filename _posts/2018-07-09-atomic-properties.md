@@ -96,3 +96,9 @@ Atomic operations appear to be instant from the perspective of all other threads
 Despite Swift lacks default language traits for creating atomic property, it can be easily achieved with a number of available locking APIs. `NSLock`, dispatch and operation queues and multiple POSIX types are the most notable ones.
 
 When dealing with POSIX locks, a rule of thumb is not to copy them and wrap in Swift APIs hiding implementation details.
+
+---
+
+*I'd love to meet you in Twitter: [@V8tr](https://twitter.com/{{ site.author.twitter }}). And don't forget to share this article if you find it useful.*
+
+---
