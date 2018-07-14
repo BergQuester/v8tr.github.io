@@ -70,10 +70,13 @@ After learning about concurrent programming and locks, let's implement our own a
 
 <script src="https://gist.github.com/V8tr/57c7c6a79b51185005862a40d246117d.js"></script>
 
+<script src="https://gist.github.com/V8tr/5d079c49693d62b75e0885d686806f6e.js"></script>
+
 The main bullet points from the above code are:
-1. Instead of using different locking APIs directly, we wrap them into classes conforming to the `Lock` interface: `SpinLock`, `Mutex` and `ReadWriteLock`.
+1. Instead of using different locking APIs directly, we wrap them into classes conforming to the `Lock` interface: `SpinLock` and `Mutex`.
 2. `AtomicProperty` is a simple class that has atomic property `foo` backed by `underlyingFoo` under the hood.
 3. By means of lock / unlock dance we create a critical section that accesses `underlyingFoo`.
+4. We create separate wrapper for read-write lock, as it needs different locking APIs to be used for setter and getter.
 
 {: .box-note}
 *Despite POSIX pthread locks are value types, you should not copy them both explicitly with the assignment operator or implicitly by capturing them in a closure or embedding in another value type. In POSIX, the behavior of the copy is undefined. That's why locks are wrapped into Class, not Struct.*
