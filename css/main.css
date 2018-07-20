@@ -648,7 +648,6 @@ footer .theme-by {
 }
 
 /* --- Tables --- */
-
 table {
   padding: 0;
 }
@@ -682,7 +681,9 @@ table tr th :last-child,
 table tr td :last-child {
   margin-bottom: 0;
 }
-
+.width-full {
+  width: 100%;
+}
 /* --- Code blocks --- */
 
 pre {

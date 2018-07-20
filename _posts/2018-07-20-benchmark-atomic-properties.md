@@ -1,12 +1,9 @@
 ---
 layout: post
-title: Benchmarking Atomic Properties in Swift
+title: Benchmarking Swift Atomic Properties
 permalink: /benchmark-atomic-properties/
-share-img: "/img/atomic-properties-share.png"
+share-img: "/img/benchmarking-atomic-properties.png"
 ---
-
-- Intro
-- Conclusion
 
 When designing atomic property in Swift, you might wonder which API to pick among the diversity of available choices. In this article we will benchmark performance of most notable Apple locking APIs and suggest best options based on their characteristics.
 
@@ -16,7 +13,7 @@ We've already covered major locking APIs as well as concurrent programming conce
 
 ### Sampling Data
 
-First off, let's describe the data and the way it has been collected.
+First off, let's describe sampling data and the way it has been collected.
 
 | API under test | Name on chart |
 |----------|-------------|
@@ -26,19 +23,13 @@ First off, let's describe the data and the way it has been collected.
 | `os_unfair_lock_s`| Spinlock |
 | `DispatchQueue` | Dispatch Queue |
 | `OperationQueue`| Operation Queue |
-
-- `NSLock`
-- `pthread_mutex_t` - named *Mutex* on charts
-- `pthread_rwlock_t` - named *Read-write* lock on charts
-- `os_unfair_lock_s` - named *Spinlock* on charts
-- `DispatchQueue`
-- `OperationQueue`
+{: .width-full .text-align-center}
 
 #### Source code
 
-Small utility app was created for this article: [https://github.com/V8tr/AtomicBenchmark](https://github.com/V8tr/AtomicBenchmark). It benchmarks atomic properties created with the above APIs and exports it to a CSV file.
+Here is the app created for this article: [https://github.com/V8tr/AtomicBenchmark](https://github.com/V8tr/AtomicBenchmark). It benchmarks atomic properties that use the above APIs and exports statistics to a CSV file.
 
-We use power-of-two data points. Each data sample is calculated 100 times and then an average value is taken to compensate possible deviations.
+To compensate possible deviations each data sample is calculated 100 times and an average value is taken.
 
 ### Benchmarking Getters
 
@@ -142,7 +133,19 @@ Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 
 `DispatchQueue` and `OperationQueue` have considerable variance of setter vs. getter performance, locks are approximately equal.
 
-### What to pick?
+### Summing up
+
+I believe that `DispatchQueue` is your best choice for an atomic property.
+
+Under 10_000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
+
+Besides the example in test project, where we use serial `DispatchQueue` with synchronous setter and getter, it can be configured in several ways that might be faster in some cases: 
+- Serial queue with async setter and sync getter;
+- Concurrent queue with a barrier in the setter;
+
+If for some reason the block-based locking nature of `DispatchQueue` is not what you need, I'd suggest to go with `NSLock`. It's a bit more heavyweight than the rest of the locks, but this can be neglected.
+
+Pthread locks are usually a bad choice due to considerably complex configuration and some usage nuances, highlighted in [Atomic Properties in Swift]({{ "/atomic-properties/" | absolute_url }}).
 
 ---
 
