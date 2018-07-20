@@ -25,7 +25,7 @@ First off, let's describe sampling data and the way it has been collected.
 | `OperationQueue`| Operation Queue |
 {: .width-full .text-align-center}
 
-#### Source code
+### Source code
 
 Here is the app created for this article: [https://github.com/V8tr/AtomicBenchmark](https://github.com/V8tr/AtomicBenchmark). It benchmarks atomic properties that use the above APIs and exports statistics to a CSV file.
 
