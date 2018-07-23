@@ -147,10 +147,6 @@ Based on the benchmark results, `DispatchQueue` must be your best choice for cre
 
 Under 10000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
 
-Besides the example in test project, where we use serial `DispatchQueue` with synchronous setter and getter, it can be configured in several ways that might be faster in some cases: 
-- Serial queue with async setter and sync getter;
-- Concurrent queue with a barrier in the setter;
-
 If for some reason the block-based locking nature of `DispatchQueue` is not what you need, I'd suggest to go with `NSLock`. It's a bit more heavyweight than the rest of the locks, but this can be neglected.
 
 Pthread locks are usually a bad choice due to considerably complex configuration and some usage nuances, as highlighted in [Atomic Properties in Swift]({{ "/atomic-properties/" | absolute_url }}).
