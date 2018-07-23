@@ -1,11 +1,11 @@
 ---
 layout: post
-title: Benchmarking Swift Atomic Properties
-permalink: /benchmark-atomic-properties/
+title: Benchmarking Swift Locking APIs
+permalink: /benchmarking-locking-apis/
 share-img: "/img/benchmarking-atomic-properties.png"
 ---
 
-When designing atomic property in Swift, you might wonder which API to pick among the diversity of available choices. In this article we will benchmark performance of most notable Apple locking APIs and suggest best options based on their characteristics.
+When designing concurrent code in Swift, you might wonder which API to pick among the diversity of available choices. In this article we will benchmark performance of most notable Apple locking APIs and suggest best options based on their characteristics.
 
 ### Locking APIs and Atomicity
 
@@ -25,6 +25,8 @@ First off, let's describe sampling data and the way it has been collected.
 | `OperationQueue`| Operation Queue |
 {: .width-full .text-align-center}
 
+To benchmark each API we have implemented a class with a critical section in its setter and getter.
+
 ### Source code
 
 Main benchmark function:
@@ -40,24 +42,24 @@ Whole app source code can be found here: [https://github.com/V8tr/AtomicBenchmar
 ### Benchmarking Getters
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-2.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-2.png" alt="Benchmarking Atomic Properties in Swift - 2"/>
+    <a href="{{ "img/benchmarking-locking-apis-2.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-2.png" alt="Benchmarking Swift Locking APIs - 2"/>
     </a>
 </p>
 
 Locks have roughly equal performance, with `NSLock` being a bit slower than the others.
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-3.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-3.png" alt="Benchmarking Atomic Properties in Swift - 3"/>
+    <a href="{{ "img/benchmarking-locking-apis-3.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-3.png" alt="Benchmarking Swift Locking APIs - 3"/>
     </a>
 </p>
 
 `OperationQueue` is way slower than `DispatchQueue`.
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-1.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-1.png" alt="Benchmarking Atomic Properties in Swift - 1"/>
+    <a href="{{ "img/benchmarking-locking-apis-1.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-1.png" alt="Benchmarking Swift Locking APIs - 1"/>
     </a>
 </p>
 
@@ -66,24 +68,24 @@ Locks have roughly equal performance, with `NSLock` being a bit slower than the 
 ### Benchmarking Setters
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-5.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-5.png" alt="Benchmarking Atomic Properties in Swift - 5"/>
+    <a href="{{ "img/benchmarking-locking-apis-5.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-5.png" alt="Benchmarking Swift Locking APIs - 5"/>
     </a>
 </p>
 
 Same as with getters, all locks have roughly equal performance and `NSLock` is a bit slower than the rest. Variance of statistic is higher, comparing to the same calculations for getters.
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-6.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-6.png" alt="Benchmarking Atomic Properties in Swift - 6"/>
+    <a href="{{ "img/benchmarking-locking-apis-6.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-6.png" alt="Benchmarking Swift Locking APIs - 6"/>
     </a>
 </p>
 
 Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-4.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-4.png" alt="Benchmarking Atomic Properties in Swift - 4"/>
+    <a href="{{ "img/benchmarking-locking-apis-4.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-4.png" alt="Benchmarking Swift Locking APIs - 4"/>
     </a>
 </p>
 
@@ -92,48 +94,48 @@ Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 ### Comparing Setters vs. Getters
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-7.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-7.png" alt="Benchmarking Atomic Properties in Swift - 7"/>
+    <a href="{{ "img/benchmarking-locking-apis-7.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-7.png" alt="Benchmarking Swift Locking APIs - 7"/>
     </a>
 </p>
 
 ---
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-8.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-8.png" alt="Benchmarking Atomic Properties in Swift - 8"/>
+    <a href="{{ "img/benchmarking-locking-apis-8.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-8.png" alt="Benchmarking Swift Locking APIs - 8"/>
     </a>
 </p>
 
 ---
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-9.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-9.png" alt="Benchmarking Atomic Properties in Swift - 9"/>
+    <a href="{{ "img/benchmarking-locking-apis-9.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-9.png" alt="Benchmarking Swift Locking APIs - 9"/>
     </a>
 </p>
 
 ---
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-10-cut.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-10.png" alt="Benchmarking Atomic Properties in Swift - 10"/>
+    <a href="{{ "img/benchmarking-locking-apis-10-cut.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-10.png" alt="Benchmarking Swift Locking APIs - 10"/>
     </a>
 </p>
 
 ---
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-11.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-11.png" alt="Benchmarking Atomic Properties in Swift - 11"/>
+    <a href="{{ "img/benchmarking-locking-apis-11.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-11.png" alt="Benchmarking Swift Locking APIs - 11"/>
     </a>
 </p>
 
 ---
 
 <p align="center">
-    <a href="{{ "img/benchmark-atomic-prop-12.png" | absolute_url }}">
-        <img src="/img/benchmark-atomic-prop-12.png" alt="Benchmarking Atomic Properties in Swift - 12"/>
+    <a href="{{ "img/benchmarking-locking-apis-12.png" | absolute_url }}">
+        <img src="/img/benchmarking-locking-apis-12.png" alt="Benchmarking Swift Locking APIs - 12"/>
     </a>
 </p>
 
@@ -141,7 +143,7 @@ Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 
 ### Summary
 
-Based on the benchmark results, `DispatchQueue` must be your best choice for an atomic property.
+Based on the benchmark results, `DispatchQueue` must be your best choice for creating a critical section in your code.
 
 Under 10000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
 
