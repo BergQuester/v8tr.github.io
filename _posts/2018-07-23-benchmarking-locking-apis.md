@@ -2,7 +2,7 @@
 layout: post
 title: Benchmarking Swift Locking APIs
 permalink: /benchmarking-locking-apis/
-share-img: "/img/benchmarking-atomic-properties.png"
+share-img: "/img/benchmarking-locking-apis-share.png"
 ---
 
 When designing concurrent code in Swift, you might wonder which API to pick among the diversity of available choices. In this article we will benchmark performance of most notable Apple locking APIs and suggest best options based on their characteristics.
