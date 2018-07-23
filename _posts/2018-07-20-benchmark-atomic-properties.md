@@ -151,7 +151,7 @@ Besides the example in test project, where we use serial `DispatchQueue` with sy
 
 If for some reason the block-based locking nature of `DispatchQueue` is not what you need, I'd suggest to go with `NSLock`. It's a bit more heavyweight than the rest of the locks, but this can be neglected.
 
-Pthread locks are usually a bad choice due to considerably complex configuration and some usage nuances, highlighted in [Atomic Properties in Swift]({{ "/atomic-properties/" | absolute_url }}).
+Pthread locks are usually a bad choice due to considerably complex configuration and some usage nuances, as highlighted in [Atomic Properties in Swift]({{ "/atomic-properties/" | absolute_url }}).
 
 ---
 
