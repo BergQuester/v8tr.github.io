@@ -133,11 +133,11 @@ Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 
 `DispatchQueue` and `OperationQueue` have considerable variance of setter vs. getter performance, locks are approximately equal.
 
-### Summing up
+### Summary
 
-I believe that `DispatchQueue` is your best choice for an atomic property.
+`DispatchQueue` is your best choice for an atomic property.
 
-Under 10_000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
+Under 10000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
 
 Besides the example in test project, where we use serial `DispatchQueue` with synchronous setter and getter, it can be configured in several ways that might be faster in some cases: 
 - Serial queue with async setter and sync getter;
