@@ -27,9 +27,15 @@ First off, let's describe sampling data and the way it has been collected.
 
 ### Source code
 
-Here is the app created for this article: [https://github.com/V8tr/AtomicBenchmark](https://github.com/V8tr/AtomicBenchmark). It benchmarks atomic properties that use the above APIs and exports statistics to a CSV file.
+Main benchmark function:
 
-To compensate possible deviations each data sample is calculated 100 times and an average value is taken.
+<script src="https://gist.github.com/V8tr/e030176b09db21cf9578ebbec8e1f0e6.js"></script>
+
+To compensate deviations of individual benchmark iterations, each data sample is calculated 100 times and an average value is taken.
+
+<script src="https://gist.github.com/V8tr/530c8c79053f90d17cf5214e16b17413.js"></script>
+
+Whole app source code can be found here: [https://github.com/V8tr/AtomicBenchmark](https://github.com/V8tr/AtomicBenchmark). It implements an abstraction over the above two methods, runs test samples and exports statistics to a CSV file.
 
 ### Benchmarking Getters
 
@@ -135,7 +141,7 @@ Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 
 ### Summary
 
-`DispatchQueue` is your best choice for an atomic property.
+`DispatchQueue` must be your best choice for an atomic property.
 
 Under 10000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
 
