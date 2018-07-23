@@ -141,7 +141,7 @@ Comparing to getters, `OperationQueue` falls behind `DispatchQueue` even more.
 
 ### Summary
 
-`DispatchQueue` must be your best choice for an atomic property.
+Based on the benchmark results, `DispatchQueue` must be your best choice for an atomic property.
 
 Under 10000 calculations it performs almost identical to locks, while providing higher-level and thus less error-prone API.
 
