@@ -97,6 +97,8 @@ Despite Swift lacks default language traits for creating atomic property, it can
 
 When dealing with POSIX locks, a rule of thumb is not to copy them and wrap in Swift APIs hiding implementation details.
 
+If you are interested in performance characteristics of discussed locking APIs, I recommend checking [Benchmarking Swift Locking APIs]({{ "/benchmarking-locking-apis/" | absolute_url }}).
+
 ---
 
 *I'd love to meet you in Twitter: [@V8tr](https://twitter.com/{{ site.author.twitter }}). And don't forget to share this article if you find it useful.*
