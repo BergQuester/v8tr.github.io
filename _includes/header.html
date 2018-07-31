@@ -36,7 +36,10 @@
 		  {% endif %}
 		  
 		  {% if include.type == "post" %}
-		  <span class="post-meta">Posted on {{ page.date | date: "%B %-d, %Y" }}</span>
+		  <span class="post-meta">
+        Posted on {{ page.date | date: "%B %-d, %Y" }} 
+        <a href="https://twitter.com/{{ site.author.twitter }}" target="_blank">@{{ site.author.twitter }}</a>
+      </span>
 		  {% endif %}
         </div>
       </div>
@@ -61,7 +64,10 @@
 		  {% endif %}
 		  
 		  {% if include.type == "post" %}
-		  <span class="post-meta">Posted on {{ page.date | date: "%B %-d, %Y" }}</span>
+      <span class="post-meta">
+          Posted on {{ page.date | date: "%B %-d, %Y" }} by
+          <a href="https://twitter.com/{{ site.author.twitter }}" target="_blank">@{{ site.author.twitter }}</a>
+        </span>
 		  {% endif %}
         </div>
       </div>
