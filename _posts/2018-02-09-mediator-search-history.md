@@ -1,7 +1,8 @@
 ---
 layout: post
-title: Mediator pattern by Search History example
-permalink: /2018-02-09-mediator-search-history/
+title: "Mediator Pattern Case Study"
+permalink: /mediator-pattern-case-study/
+share-img: "/img/mediator_share.png"
 ---
 
 Programmers encounter same problems over and over again. The common solution to such problems, that is generic and reusable enough to be used millions of times, is called a design pattern. Lets have a closer look at a mediator pattern that is often unfairly left unnoticed.
@@ -29,7 +30,11 @@ Imagine, you are adding search history feature to an existing search screen. Her
 
 The below diagram shows components structure.
 
-![SearchHistoryMediator UML diagram]({{ "/img/mediator_1.svg" | absolute_url }})
+<p align="center">
+    <a href="{{ "img/mediator_1.svg" | absolute_url }}">
+        <img src="/img/mediator_1.svg" alt="SearchHistoryMediator UML diagram"/>
+    </a>
+</p>
  
 `HistoryRepository` is an example of [Repository design pattern][repository-def]. It abstracts away details of how search history is persisted.
 
@@ -134,7 +139,7 @@ In the above example, the Mediator handles `UISearchBar` events and sets `Histor
 
 Consider using Mediator every time: 
 1. Interaction between a set of objects is well defined and complex.
-1. A common point of control over a set of objects is required.
+2. A common point of control over a set of objects is required.
 
 Although Mediator is a well-known pattern, it's not as widely used as it could. As long as you clearly understand Mediator usage, it will become a significant tool in your toolset.
 
