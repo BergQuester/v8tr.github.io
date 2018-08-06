@@ -5,7 +5,7 @@ permalink: /refactoring-massive-app-delegate/
 share-img: "/img/massive_app_delegate_share.png"
 ---
 
-App delegate connects your app and the system and is usually considered to be the core of every iOS project. The common tendency is that it keeps growing as the development goes, gradually sprouting with new features and responsibilities, being called here and there and eventually turning into spaghetti code.
+App delegate connects your app and the system and is considered to be the core of every iOS project. The common tendency is that it keeps growing as the development goes, gradually sprouting with new features and responsibilities, being called here and there and eventually turning into spaghetti code.
 
 The cost of breaking anything inside the app delegate is extremely high due to the influence it has over your app. Undoubtedly, keeping this class clean and concise is crucial for the healthy iOS project.
 
