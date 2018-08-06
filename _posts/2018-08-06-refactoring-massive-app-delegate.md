@@ -9,7 +9,7 @@ App delegate connects your app and the system and is usually considered to be th
 
 The cost of breaking anything inside the app delegate is extremely high due to the influence it has over your app. Undoubtedly, keeping this class clean and concise is crucial for the healthy iOS project.
 
-It this article let's have a look at different methods of how app delegates can be made thin, expandable and testable.
+In this article let's have a look at different methods of how app delegates can be made concise, reusable and testable.
 
 ### Problem Statement
 
