@@ -7,19 +7,18 @@ share-img: "/img/massive_app_delegate_share.png"
 
 Xcode is the core tool for Apple development. Although it is well-integrated with the most development workflows, from time to time you might feel like missing some basic features. In this article you will learn how to create Xcode Source Editor Extension that adds some extra functionality to Xcode.
 
-As you are reading this article, you must be already familiar with Xcode IDE and even using it on daily basis. You must be generally happy with Xcode (except for the times it crashes), .....
-
 ### Explaining Xcode Source Editor Extensions
 
-Extensions to the source editor in Xcode are capable of manipulating the contents of the selected file as well as the selected text within the editor. 
+You create extensions to the source editor by means of [XcodeKit](https://developer.apple.com/documentation/xcodekit) framework. Extensions are limited with selected source file and capable of manipulating its content and select / deselect text within that file.
 
-You create extensions with [XcodeKit](https://developer.apple.com/documentation/xcodekit). It lends itself to adding extra functionality and specialized behavior to the source editor. Most notable classes from `XcodeKit` are:
+Most notable classes from `XcodeKit` are:
 
 - `XCSourceEditorExtension` - the protocol that every Xcode Source Editor Extension must implement. You can think of it as `AppDelegate` from your iOS and MacOSX apps.
 - `XCSourceEditorCommand` - the protocol that stands for the source editor command handler. You can think of it as a sink where one or more command invoications are handled. You must implement at least one of these in your extension.
 - `XCSourceEditorCommandInvocation` - an instance of the command sent to your extension. It contains a buffer and an identifier. As already noted, multiple invocations can be handled by a single `XCSourceEditorCommand`.
+- `XCSourceTextBuffer` - a buffer used to manipulate the text contents and selections in a source editor.
 
-The created commands will be accessible from Xcode Editor dropdown menu. By the end of this article, your command will look something like this:
+Extension's commands are accessible from Xcode Editor dropdown menu. By the end of this article, your command will look something like this:
 
 <p align="center">
     <a href="{{ "img/xcode-extension-tutorial-editor-menu.png" | absolute_url }}">
@@ -27,9 +26,9 @@ The created commands will be accessible from Xcode Editor dropdown menu. By the 
     </a>
 </p>
 
-### Settings up Xcode Project
+### Creating Xcode Project
 
-The extensions cannot exist on their own and must be wired to a macOS application. 
+The extensions cannot exist on their own and must be wired up to a macOS application. 
 
 First off, we create a macOS project in Xcode named *LinesSorter*.
 
@@ -39,7 +38,7 @@ First off, we create a macOS project in Xcode named *LinesSorter*.
     </a>
 </p>
 
-Now add *Xcode Source Editor Extension Target* to your newly created project. Let's call it *SourceEditorExtension*. Tap *Activate* when it prompts you "Activate “SourceEditorExtension” scheme".
+Now add *Xcode Source Editor Extension Target* to your newly created project. Let's call it *SourceEditorExtension*. Tap *Activate* when it prompts you *Activate "SourceEditorExtension" scheme*.
 
 <p align="center">
     <a href="{{ "img/xcode-extension-tutorial-create-extension-target.png" | absolute_url }}">
@@ -57,9 +56,7 @@ At this point the targets must look like this:
 
 ### Configuring Source Editor Command
 
-All Xcode Source Editor Extension targets contain an extra entry in their *Info.plist* files named *NSExtension*. 
-
-Lets find it in your your extension target's *Info.plist*. Unfold it to inspect all properties. The ones of particular interest are:
+All editor extension targets contain an extra entry in their *Info.plist* files named *NSExtension*. Lets unfold it and inspect inner properties. 
 
 <p align="center">
     <a href="{{ "img/xcode-extension-tutorial-command-identifier.png" | absolute_url }}">
@@ -67,11 +64,13 @@ Lets find it in your your extension target's *Info.plist*. Unfold it to inspect 
     </a>
 </p>
 
-- `XCSourceEditorCommandClassName` - name of your command class. You must implementing an instance of `XCSourceEditorCommand` with the exact same class name. Xcode has already created one for you inside the *SourceEditorExtension* target.
-- `XCSourceEditorCommandIdentifier` - a command invocation identifier. Make sure you set it to something unique within your extension. 
-- `XCSourceEditorCommandName` - name of the command as it will be displayed in the second level of Xcode Editor menu. Let's change it into *Sort Selected Lines*.
+The ones of particular interest are:
 
-*Bundle display name* stands for your extension name in Editor menu. Let's change it into "Lines Sorter". There is no need to make any other edits as long as we have only one command.
+- `XCSourceEditorCommandClassName` - a name of the command class. Xcode has already created one for you. 
+- `XCSourceEditorCommandIdentifier` - a command invocation identifier. Make sure to set it to something unique within your extension. 
+- `XCSourceEditorCommandName` - a command name as it will be displayed in the second level of Xcode Editor menu. Let's change it into *Sort Selected Lines*.
+
+*Bundle display name* stands for your extension name in Editor menu. Let's change it into *'Lines Sorter'*. There is no need to make any other edits as long as we have only one command.
 
 Here is how extension name and command names are displayed in Editor menu:
 
@@ -83,33 +82,33 @@ Here is how extension name and command names are displayed in Editor menu:
 
 ### Implementing the Sorting Command
 
-As you might have already guessed, our extension will sort selected lines of code. Sounds like an easy task? I bet it is. 
+As you might have already guessed, our extension will sort selected lines of code. Sounds like an easy task? It sure is after you learned how *XcodeKit* works and did lots of preparation work.
 
 {: .box-note}
-*I got so much carried away by writing this article that I ended up with [LinesSorter](https://github.com/V8tr/LinesSorter-Xcode-Extension) project and open sourced it recently. Make sure to check it out after reading this article.*
+*I got so much carried away by writing this article that I ended up with [LinesSorter](https://github.com/V8tr/LinesSorter-Xcode-Extension) extension and open sourced it recently. Make sure to check it out after reading this article.*
 
-We already know that as soon as the command is activated from Xcode Editor menu, an invocation instance is sent to a handler class which is in our case `SourceEditorCommand`.
+We already know that as soon as the command is activated from Xcode Editor menu, an invocation instance is sent to a the command class.
 
-Open *SourceEditorCommand.swift* and paste the method there:
+Open `SourceEditorCommand.swift` and paste the method there:
 
 {% highlight swift linenos %}
 
 func sort(_ inputLines: NSMutableArray, in range: CountableClosedRange<Int>, by comparator: (String, String) -> Bool) {
-	guard range.upperBound < inputLines.count, range.lowerBound >= 0 else {
-		return
-	}
+    guard range.upperBound < inputLines.count, range.lowerBound >= 0 else {
+        return
+    }
 
-	let lines = inputLines.compactMap { $0 as? String }
-	let sorted = Array(lines[range]).sorted(by: comparator)
+    let lines = inputLines.compactMap { $0 as? String }
+    let sorted = Array(lines[range]).sorted(by: comparator)
 
-	for lineIndex in range {
-		inputLines[lineIndex] = sorted[lineIndex - range.lowerBound]
-	}
+    for lineIndex in range {
+        inputLines[lineIndex] = sorted[lineIndex - range.lowerBound]
+    }
 }
 
 {% endhighlight %}
 
-Now we can sort selected lines by mutating `invocation.buffer.selections` that contants `NSMutableArray` of selected strings. All changes to the buffer will be reflected in Xcode source editor.
+Now we can sort selected lines by mutating `invocation.buffer.selections` which is an `NSMutableArray` of strings. All changes to the buffer will be reflected in Xcode source editor.
 
 {% highlight swift linenos %}
 
@@ -134,9 +133,9 @@ func perform(with invocation: XCSourceEditorCommandInvocation, completionHandler
 
 Few things going on here:
 1. Do some sanity checks that at least two lines of code are selected within the editor.
-2. Call `sort` method to perform the actual sorting, passing "<" operator as a comparator that will sort lines alphabetically.
+2. Call `sort` method to perform the actual sorting by mutating the input `NSMutableArray` in place. We pass `<` operator to sort alphabetically.
 
-In vast majority of cases we want to sort lines of code ignoring leading whitespaces, because they might have different indentation levels. Let's define a custom comparator that takes care of it.
+Lines of codes tend to have different indentation levels that affects their sorting. We usually don't want to take indentation into account as we sort. Let's define a custom comparator that takes care of it.
 
 {% highlight swift linenos %}
 
@@ -181,9 +180,13 @@ Like any other editor command, you can assign a keys combination to yours. Go to
 
 ### Summary
 
-As you are reading this article, you must be already familiar with Xcode IDE and even using it on daily basis. 
+In this article we learned how you can push Xcode IDE to the next limits by writing your own extension.
 
-In this article you have learned how you can push IDE to the limits by writing your own extension to the Xcode source editor.
+Source editor extensions are quite limited in their functionality and are capable of editing and selecting lines of code within a single file.
+
+Creating Xcode Source Editor Extension might seem daunting at first glance. After learning `XcodeKit`, the process of setting up an Xcode project and testing the extension it does not appear as such.
+
+Check out [LinesSorter](https://github.com/V8tr/LinesSorter-Xcode-Extension) that is an extended version of the project we created during this article. It also shows how to setup Unit tests and Continuous Integration for Xcode Source Editor Extension project.
 
 ---
 
