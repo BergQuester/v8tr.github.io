@@ -2,7 +2,7 @@
 layout: post
 title: "Xcode Source Editor Extension Tutorial: Getting Started"
 permalink: /xcode-source-editor-extension-tutorial/
-share-img: "/img/xcode-source-editor-extension-tutorial-share.png"
+share-img: "/img/xcode-source-code-editor-extension-tutorial-share.png"
 ---
 
 Xcode is the core tool for Apple development. Although it is well-integrated with the most development workflows, from time to time you might feel like missing some basic features. In this article you will learn how to create Xcode Source Editor Extension that adds some extra functionality to Xcode.
