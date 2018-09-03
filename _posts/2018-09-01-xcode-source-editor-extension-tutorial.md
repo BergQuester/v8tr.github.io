@@ -1,28 +1,28 @@
 ---
 layout: post
-title: "Xcode Extension Tutorial: Getting Started"
-permalink: /xcode-extension-tutorial/
-share-img: "/img/massive_app_delegate_share.png"
+title: "Xcode Source Editor Extension Tutorial: Getting Started"
+permalink: /xcode-source-editor-extension-tutorial/
+share-img: "/img/xcode-source-editor-extension-tutorial-share.png"
 ---
 
 Xcode is the core tool for Apple development. Although it is well-integrated with the most development workflows, from time to time you might feel like missing some basic features. In this article you will learn how to create Xcode Source Editor Extension that adds some extra functionality to Xcode.
 
 ### Explaining Xcode Source Editor Extensions
 
-You create extensions to the source editor by means of [XcodeKit](https://developer.apple.com/documentation/xcodekit) framework. Extensions are limited with selected source file and capable of manipulating its content and select / deselect text within that file.
+You create extensions to the source editor by means of [XcodeKit](https://developer.apple.com/documentation/xcodekit) framework. Extensions have quite limited functionality. They can read and modify the contents of current source file, selected and deselect text within that file.
 
 Most notable classes from `XcodeKit` are:
 
 - `XCSourceEditorExtension` - the protocol that every Xcode Source Editor Extension must implement. You can think of it as `AppDelegate` from your iOS and MacOSX apps.
-- `XCSourceEditorCommand` - the protocol that stands for the source editor command handler. You can think of it as a sink where one or more command invoications are handled. You must implement at least one of these in your extension.
+- `XCSourceEditorCommand` - the protocol that stands for the source editor command handler. You can think of it as a sink where one or more command invocations are handled. You must implement at least one of these in your extension.
 - `XCSourceEditorCommandInvocation` - an instance of the command sent to your extension. It contains a buffer and an identifier. As already noted, multiple invocations can be handled by a single `XCSourceEditorCommand`.
 - `XCSourceTextBuffer` - a buffer used to manipulate the text contents and selections in a source editor.
 
 Extension's commands are accessible from Xcode Editor dropdown menu. By the end of this article, your command will look something like this:
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-editor-menu.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-editor-menu.png" width="400" alt="Xcode Extension Tutorial: Getting Started - Locating Command in Xcode Editor Menu"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-editor-menu.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-editor-menu.png" width="400" alt="Xcode Extension Tutorial: Getting Started - Locating Command in Xcode Editor Menu"/>
     </a>
 </p>
 
@@ -33,24 +33,24 @@ The extensions cannot exist on their own and must be wired up to a macOS applica
 First off, we create a macOS project in Xcode named *LinesSorter*.
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-create-project.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-create-project.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Creating New MacOS Project in Xcode"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-create-project.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-create-project.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Creating New MacOS Project in Xcode"/>
     </a>
 </p>
 
 Now add *Xcode Source Editor Extension Target* to your newly created project. Let's call it *SourceEditorExtension*. Tap *Activate* when it prompts you *Activate "SourceEditorExtension" scheme*.
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-create-extension-target.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-create-extension-target.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Creating Xcode Source Editor Extension"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-create-extension-target.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-create-extension-target.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Creating Xcode Source Editor Extension"/>
     </a>
 </p>
 
 At this point the targets must look like this:
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-targets-list.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-targets-list.png" width="400" alt="Xcode Extension Tutorial: Getting Started - Targets List"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-targets-list.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-targets-list.png" width="400" alt="Xcode Extension Tutorial: Getting Started - Targets List"/>
     </a>
 </p>
 
@@ -59,8 +59,8 @@ At this point the targets must look like this:
 All editor extension targets contain an extra entry in their *Info.plist* files named *NSExtension*. Lets unfold it and inspect inner properties. 
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-command-identifier.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-command-identifier.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Editing Info.plist"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-command-identifier.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-command-identifier.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Editing Info.plist"/>
     </a>
 </p>
 
@@ -75,8 +75,8 @@ The ones of particular interest are:
 Here is how extension name and command names are displayed in Editor menu:
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-editor-menu-explained.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-editor-menu-explained.png" width="480" alt="Xcode Extension Tutorial: Getting Started - Editor Menu Explained"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-editor-menu-explained.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-editor-menu-explained.png" width="480" alt="Xcode Extension Tutorial: Getting Started - Editor Menu Explained"/>
     </a>
 </p>
 
@@ -85,7 +85,7 @@ Here is how extension name and command names are displayed in Editor menu:
 As you might have already guessed, our extension will sort selected lines of code. Sounds like an easy task? It sure is after you learned how *XcodeKit* works and did lots of preparation work.
 
 {: .box-note}
-*I got so much carried away by writing this article that I ended up with [LinesSorter](https://github.com/V8tr/LinesSorter-Xcode-Extension) extension and open sourced it recently. Make sure to check it out after reading this article.*
+*I got so much carried away by writing this article that I ended up with [LinesSorter][lines-sorter-repo] extension and open sourced it recently. Make sure to check it out after reading this article.*
 
 We already know that as soon as the command is activated from Xcode Editor menu, an invocation instance is sent to a the command class.
 
@@ -154,12 +154,12 @@ sort(invocation.buffer.lines, in: firstSelection.start.line...lastSelection.end.
 ### Testing the Command
 
 Finally let's see our work in action. Testing Xcode Source Editor Extensions is different from what you have used to when developing macOS and iOS apps.
-1. First of all, both the app target and the source editor extension must be signed with your developer certificate. I will not dive too deply into details, but Apple got you covered with [this tutorial](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7).
+1. First of all, both the app target and the source editor extension must be signed with your developer certificate. I will not dive too deeply into details, but Apple got you covered with [this tutorial](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7).
 2. Run *SourceEditorExtension* target and select Xcode app from the list. Source editor extensions launch in a separate instance of Xcode that can be distinguished by a the darker top bar.
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-run-extension.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-run-extension.png" width="400" alt="Xcode Extension Tutorial: Getting Started - Run Extension"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-run-extension.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-run-extension.png" width="400" alt="Xcode Extension Tutorial: Getting Started - Run Extension"/>
     </a>
 </p>
 
@@ -173,8 +173,8 @@ Voila, your lines must be ordered alphabetically now.
 Like any other editor command, you can assign a keys combination to yours. Go to *Xcode* > *Preferences* > *Key Bindings* > search for *"Lines Sorter"*.
 
 <p align="center">
-    <a href="{{ "img/xcode-extension-tutorial-key-binding.png" | absolute_url }}">
-        <img src="/img/xcode-extension-tutorial-key-binding.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Key Binding"/>
+    <a href="{{ "img/xcode-source-editor-extension-tutorial-key-binding.png" | absolute_url }}">
+        <img src="/img/xcode-source-editor-extension-tutorial-key-binding.png" width="680" alt="Xcode Extension Tutorial: Getting Started - Key Binding"/>
     </a>
 </p>
 
@@ -186,10 +186,12 @@ Source editor extensions are quite limited in their functionality and are capabl
 
 Creating Xcode Source Editor Extension might seem daunting at first glance. After learning `XcodeKit`, the process of setting up an Xcode project and testing the extension it does not appear as such.
 
-Check out [LinesSorter](https://github.com/V8tr/LinesSorter-Xcode-Extension) that is an extended version of the project we created during this article. It also shows how to setup Unit tests and Continuous Integration for Xcode Source Editor Extension project.
+Check out [LinesSorter][lines-sorter-repo] that is an extended version of the project we created during this article. It also shows how to setup Unit tests and Continuous Integration for Xcode Source Editor Extension project.
 
 ---
 
 *I'd love to meet you in Twitter: [@V8tr](https://twitter.com/{{ site.author.twitter }}). And don't forget to share this article if you find it useful.*
 
 ---
+
+[lines-sorter-repo]: https://github.com/V8tr/LinesSorter-Xcode-Extension
