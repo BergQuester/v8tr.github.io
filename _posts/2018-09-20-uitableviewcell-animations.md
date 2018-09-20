@@ -310,9 +310,11 @@ Pull requests and issues are warmly welcome.
 
 Animations play important role in every iOS app's user experience.
 
-Table views are among most widely used components in iOS, thus developing a good-looking cells animation might be beneficial to your project's user experience. 
+Table views are among most widely used components in iOS, thus developing a good-looking cells animation might be beneficial to your project's user experience.
 
-The recipes from this article make a nice foundation to get you off to a flying start and begin bringing value to your app right now.
+The reusable solution we designed to be able to easily plug-in and tweak animations can be adapted and used in your current app.
+
+The animation recipes we implemented make a nice foundation to get you off to a flying start using table view cell display animations.
 
 ---
 
