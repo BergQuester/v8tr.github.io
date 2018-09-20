@@ -5,7 +5,7 @@ permalink: /tableviewcell-display-animation/
 share-img: "/img/tableviewcell-display-animation/share.png"
 ---
 
-In this article you will learn how you can bring more value to your app by adding custom display animations for table view cells.
+In this article you will learn how to boost user experience of your app by adding custom display animations for table view cells.
 
 ### Problem Statement
 
