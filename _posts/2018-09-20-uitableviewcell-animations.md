@@ -62,7 +62,7 @@ UIView.animate(
 
 {% endhighlight %}
 
-Now run the project and see the animation in action.
+Now run the project to see the animation in action.
 
 <p align="center">
     <a href="{{ "/img/tableviewcell-display-animation/simple-animation.gif" | absolute_url }}">
@@ -76,7 +76,7 @@ When implementing animations, it is often difficult to judge how good it is just
 
 As a good developer, you want to follow best practices to produce a reusable solution that allows to easily plug in and tweak animations. This section lends itself to developing such foundation.
 
-The first thing we do is defining `Animation` type that is essentially a closure that accepts several parameters:
+The first thing we do is define `Animation` type that is essentially a closure that accepts several parameters:
 
 {% highlight swift linenos %}
 
@@ -146,9 +146,19 @@ override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewC
 
 {% endhighlight %}
 
-Run the project to verify that everything is working as expected.
+The only thing left is adding the refresh feature.
 
-Great job at refactoring old non-reusable animation code and replacing it with the new fancy one. Now you are ready for more cool stuff.
+{% highlight swift linenos %}
+
+@IBAction func onRefresh(_ sender: UIBarButtonItem) {
+    tableView.reloadData()
+}
+
+{% endhighlight %}
+
+Run the project to verify that everything works as expected.
+
+Great job at refactoring the old non-reusable animation code and replacing it with the new fancy one. Now you are ready for more cool stuff.
 
 ### Bounce Animation
 
@@ -228,7 +238,17 @@ static func makeMoveUpWithFade(rowHeight: CGFloat, duration: TimeInterval, delay
 
 {% endhighlight %}
 
-Put the new animation code in table view controller like we did before and run the app. Here is how the animation is supposed to look:
+Put the new animation code in table view controller like we did before.
+
+{% highlight swift linenos %}
+
+let animation = AnimationFactory.makeMoveUpWithFade(rowHeight: cell.frame.height, duration: 0.5, delayFactor: 0.05)
+let animator = Animator(animation: animation)
+animator.animate(cell: cell, at: indexPath, in: tableView)
+
+{% endhighlight %}
+
+When you run the app, the animation must look like this:
 
 <p align="center">
     <a href="{{ "/img/tableviewcell-display-animation/move-and-fade-animation.gif" | absolute_url }}">
@@ -246,7 +266,7 @@ Now add next animation code to our factory.
 
 {% highlight swift linenos %}
 
-static func makeSlideIn(rowHeight: CGFloat, duration: TimeInterval, delayFactor: Double) -> Animation {
+static func makeSlideIn(duration: TimeInterval, delayFactor: Double) -> Animation {
     return { cell, indexPath, tableView in
         cell.transform = CGAffineTransform(translationX: tableView.bounds.width, y: 0)
 
@@ -262,7 +282,17 @@ static func makeSlideIn(rowHeight: CGFloat, duration: TimeInterval, delayFactor:
 
 {% endhighlight %}
 
-Next, update table view code to use slide in animation. It produces visual effect like this:
+Next, update table view controller code to use slide in animation. 
+
+{% highlight swift linenos %}
+
+let animation = AnimationFactory.makeSlideIn(duration: 0.5, delayFactor: 0.05)
+let animator = Animator(animation: animation)
+animator.animate(cell: cell, at: indexPath, in: tableView)
+
+{% endhighlight %}
+
+It produces visual effect like this:
 
 <p align="center">
     <a href="{{ "/img/tableviewcell-display-animation/slide-in-animation.gif" | absolute_url }}">
