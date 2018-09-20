@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Animating Table View Cell Display: Practical Recipes"
+title: "Animating Table View Cells Display"
 permalink: /tableviewcell-display-animation/
 share-img: "/img/tableviewcell-display-animation/share.png"
 ---
