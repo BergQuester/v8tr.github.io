@@ -9,7 +9,7 @@ Xcode is the core tool for Apple development. Although it is well-integrated wit
 
 ### Explaining Xcode Source Editor Extensions
 
-You create extensions to the source editor by means of [XcodeKit](https://developer.apple.com/documentation/xcodekit) framework. Extensions have quite limited functionality. They can read and modify the contents of current source file, selected and deselect text within that file.
+You create extensions to the source editor by means of [XcodeKit](https://developer.apple.com/documentation/xcodekit) framework. Extensions have quite limited functionality. They can read and modify the contents of current source file, select and deselect text within that file.
 
 Most notable classes from `XcodeKit` are:
 
