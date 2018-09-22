@@ -70,7 +70,7 @@ The ones of particular interest are:
 - `XCSourceEditorCommandIdentifier` - a command invocation identifier. Make sure you set it to something unique within your extension. 
 - `XCSourceEditorCommandName` - a command name as it will be displayed in the second level of Xcode Editor menu. Let's change it into *Sort Selected Lines*.
 
-*Bundle display name* stands for your extension name in Editor menu. Let's change it into *'Lines Sorter'*. There is no need to make any other edits as long as we have only one command.
+*Bundle display name* stands for your extension name in Editor menu. Let's change it into *Lines Sorter*. There is no need to make any other edits as long as we have only one command.
 
 Here is how extension name and command names are displayed in Editor menu:
 
