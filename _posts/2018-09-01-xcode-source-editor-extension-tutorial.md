@@ -82,7 +82,7 @@ Here is how extension name and command names are displayed in Editor menu:
 
 ### Implementing the Sorting Command
 
-As you might have already guessed, our extension will sort selected lines of code. Sounds like an easy task? It sure is after you learned how *XcodeKit* works and did lots of preparation work.
+As you might have already guessed, our extension will sort selected lines of code. Sounds like an easy task? It sure is after you learning the basics of *XcodeKit* and the structure of source editor extension target.
 
 {: .box-note}
 *I got so much carried away by writing this article that I ended up with [LinesSorter][lines-sorter-repo] extension and open sourced it recently. Make sure to check it out after reading this article.*
@@ -155,7 +155,7 @@ sort(invocation.buffer.lines, in: firstSelection.start.line...lastSelection.end.
 
 Finally let's see our work in action. Testing Xcode Source Editor Extensions is different from what you have used to when developing macOS and iOS apps.
 1. First of all, both the app target and the source editor extension must be signed with your developer certificate. I will not dive too deeply into details, but Apple got you covered with [this tutorial](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7).
-2. Run *SourceEditorExtension* target and select Xcode app from the list. Source editor extensions launch in a separate instance of Xcode that can be distinguished by a the darker top bar.
+2. Run *SourceEditorExtension* target and select Xcode app from the list. Source editor extension will be launched in a separate instance of Xcode that can be distinguished by a darker top bar.
 
 <p align="center">
     <a href="{{ "img/xcode-source-editor-extension-tutorial-run-extension.png" | absolute_url }}">
