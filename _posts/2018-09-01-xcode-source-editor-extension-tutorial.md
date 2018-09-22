@@ -13,7 +13,7 @@ You create extensions to the source editor by means of [XcodeKit](https://develo
 
 Most notable classes from `XcodeKit` are:
 
-- `XCSourceEditorExtension` - the protocol that every Xcode Source Editor Extension must implement. You can think of it as `AppDelegate` from your iOS and macOS apps.
+- `XCSourceEditorExtension` - the protocol that every Xcode Source Editor Extension must implement. You can think of it as an `AppDelegate` from your iOS and macOS apps.
 - `XCSourceEditorCommand` - the protocol that stands for the source editor command handler. You can think of it as a sink where one or more command invocations are handled. You must implement at least one of these in your extension.
 - `XCSourceEditorCommandInvocation` - an instance of the command sent to your extension. It contains a buffer and an identifier. As already noted, multiple invocations can be handled by a single `XCSourceEditorCommand`.
 - `XCSourceTextBuffer` - a buffer used to manipulate the text contents and selections in a source editor.
