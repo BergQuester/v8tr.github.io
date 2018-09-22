@@ -66,8 +66,8 @@ All editor extension targets contain an extra entry in their *Info.plist* files 
 
 The ones of particular interest are:
 
-- `XCSourceEditorCommandClassName` - a name of the command class. Xcode has already created one for you. 
-- `XCSourceEditorCommandIdentifier` - a command invocation identifier. Make sure to set it to something unique within your extension. 
+- `XCSourceEditorCommandClassName` - a name of the command class. Xcode has already created a command class with exact same name once you created the source editor target.
+- `XCSourceEditorCommandIdentifier` - a command invocation identifier. Make sure you set it to something unique within your extension. 
 - `XCSourceEditorCommandName` - a command name as it will be displayed in the second level of Xcode Editor menu. Let's change it into *Sort Selected Lines*.
 
 *Bundle display name* stands for your extension name in Editor menu. Let's change it into *'Lines Sorter'*. There is no need to make any other edits as long as we have only one command.
