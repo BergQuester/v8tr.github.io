@@ -28,7 +28,7 @@ Extension's commands are accessible from Xcode Editor dropdown menu. By the end 
 
 ### Creating Xcode Project
 
-The extensions cannot exist on their own and must be wired up to a macOS application. 
+Xcode editor extensions cannot exist on their own and must be wired up to a macOS application. 
 
 First off, we create a macOS project in Xcode named *LinesSorter*.
 
