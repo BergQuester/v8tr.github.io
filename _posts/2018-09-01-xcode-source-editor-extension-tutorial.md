@@ -186,7 +186,7 @@ Source editor extensions are quite limited in their functionality and are capabl
 
 Creating Xcode Source Editor Extension might seem daunting at first glance. After learning `XcodeKit`, the process of setting up an Xcode project and testing the extension it does not appear as such.
 
-Check out [LinesSorter][lines-sorter-repo] that is an extended version of the project we created during this article. It also shows how to setup Unit tests and Continuous Integration for Xcode Source Editor Extension project.
+Check out [LinesSorter][lines-sorter-repo] that is an extended version of the project we created during this tutorial. It also shows how to setup Unit tests and Continuous Integration for Xcode Source Editor Extension project.
 
 ---
 
