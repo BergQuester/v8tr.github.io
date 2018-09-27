@@ -89,15 +89,13 @@ Now let's write some code.
 
 ### Implementing a Mixin
 
-### Implementing Stateless Mixin
-
 #### Flasher
 
 #### LoadingAnimatable
 
-### Implementing Statefull Mixin
+### The Diamond Problem
 
-### Diamond Problem
+### Advanced Mixins - Stateful
 
 ### Wrapping Up
 
