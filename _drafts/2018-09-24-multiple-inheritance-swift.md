@@ -5,7 +5,7 @@ permalink: /multiple-inheritance-swift/
 share-img: "/img/multiple-inheritance-swift-share.png"
 ---
 
-Although Swift does not support multiple inheritance, it offers rich API that allows to come up with a close solution. Let's take an in-depth look at multiple inheritance as an object-oriented concept and what options do we have with regards to multiple inheritance implementation in Swift.
+Although Swift does not support multiple inheritance, it offers rich API that provides possibility to simulate it. Let's take an in-depth look at multiple inheritance as an object-oriented concept and what options do we have with regards to multiple inheritance implementation in Swift.
 
 ### Programming Language is Just a Tool
 
