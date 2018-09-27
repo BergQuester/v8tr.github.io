@@ -5,7 +5,7 @@ permalink: /multiple-inheritance-swift/
 share-img: "/img/multiple-inheritance-swift-share.png"
 ---
 
-Although Swift does not support multiple inheritance, it offers rich API that gives possibility to simulate it. Let's take an in-depth look at multiple inheritance as an object-oriented concept and its implementation in Swift.
+Although Swift does not support multiple inheritance, it offers rich API that gives possibility to simulate it. Let's take an in-depth look at multiple inheritance and its implementation in Swift.
 
 <!-- ### Programming Language is Just a Tool -->
 
@@ -25,21 +25,20 @@ When put this way, it becomes obvious that the second way of thinking is much mo
 
 ### What is Multiple Inheritance
 
-*Multiple inheritance* is an object-oriented concept in which a class can inherit behavior and attributes from more than one parent class. It is a way of sharing code between multiple classes.
+*Multiple inheritance* is an object-oriented concept in which a class can inherit behavior and attributes from more than one parent class. 
 
-*Multiple inheritance* is a standard feature of some programming languages, like C++. In Swift it is supported partially. 
+Together with single inheritance and composition, *multiple inheritance* offers another way of sharing code between classes and can bring a lot of value when used correctly. 
 
-In Swift a class can conform to multiple protocols, but inherit from just one class. Value types, such as struct and enum, can conform to multiple protocols only.
+Through the rest of the article we'll elaborate on its proper use cases as well as provide the Swift implementation.
 
-<p align="center">
-<i>Swift support multiple inheritance of interfaces but single inheritance of implementations.</i>
-</p>
+### Multiple Inheritance in Swift
 
-Let's explore what options do we have in relation to *multiple inheritance* in Swift.
+Although *multiple inheritance* is a standard feature of some programming languages, like C++, it is not the case for Swift. In Swift a class can conform to multiple protocols, but inherit from just one class. Value types, such as struct and enum, can conform to multiple protocols only.
 
-### Implementing Multiple Inheritance in Swift
+{: .box-note}
+*Swift supports only multiple inheritance of protocols.*
 
-Protocols with default implementation become the main tool that provides the opportunity to simulate multiple inheritance. Here is how it looks like:
+Protocols with default implementations give us just enough flexibility to approach multiple inheritance very closely. Here is how it looks:
 
 {% highlight swift linenos %}
 
@@ -68,11 +67,9 @@ myStruct.print() // Prints "Hello"
 
 {% endhighlight %}
 
-You must already understand the pattern: we are going to incorporate independent pieces of functionality into protocols with default implementations. 
+However, conforming to a bunch of protocols with default implementation is not enough to call it multiple inheritance. More importantly, our protocols must satisfy the notion of *mixin*.
 
-There is a term for this approach named *mixin*. 
-
-### Mixins
+### What is a Mixin
 
 A *mixin* is a class that contains methods for use by other classes without having to be the parent class of those other classes.
 
@@ -80,11 +77,11 @@ The idea behind *mixins* is simple: we would like to specify an extension withou
 
 *Mixins* are generally not intended to be instantiated and used on their own. They provide the behavior that is supposed to be added to other types.
 
-Here are the key points to understand about mixins:
+Here are the key points to understand about *mixins*. A *mixin*:
 - Can contain both behavior and state.
-- Not supposed to be initialized.
-- Specialized and narrow in its functionality.
-- Not intended to be specialized any further by other *mixins*.
+- Is not supposed to be initialized.
+- Is specialized and narrow in its functionality.
+- Is not intended to be subclassed by other *mixins*.
 
 With the help of *mixins* we can approach multiple inheritance implementation in Swift very closely.
 
