@@ -5,92 +5,94 @@ permalink: /multiple-inheritance-swift/
 share-img: "/img/multiple-inheritance-swift-share.png"
 ---
 
-Although Swift language does not completely support multiple inheritance, it offers rich API that allows to come up with a very close design. Let's take a look at what multiple inheritance exactly is and how it can be implemented by means of Swift language features.
-
-### Programming language is only a tool
-
-As a software engineer, you solve new and new tasks each day. When you encounter a task, do you first think of concrete language APIs or rather an overall design and then .
-
----
-
-As a software engineer, when you encounter certain programming problems, your design 
-
-As a software engineer, you must approach any problem not from the level of particular programming language syntax, but from the solution that certain problem best fits best.
-
-Any programming language must be only a tool 
-
----
-
-There is a number of programming languages out there. Programming languages come and go. The foundational principles that form the basis of software engineering don't.
-
-As a software engineer, when encounter new task, you should not think from the perspective of current programming language. You use the abstractions 
-
-When designing software 
-
-When designing software, you should not approach the solution from the programming language level. You should come up with most suitable solution and 
-
-When working on software engineering problems, the solution you come up with must be
-
----
+Although Swift does not support multiple inheritance, it offers rich API that allows to come up with a close solution. Let's take an in-depth look at multiple inheritance as an object-oriented concept and what options do we have with regards to multiple inheritance implementation in Swift.
 
 ### Programming Language is Just a Tool
 
-Have you ever thought what is the starter point of your software design decisions? The answer on this question reveals the two basic ways of thinking that usually drive software design.
+<!-- Have you ever thought what is the starter point of your software design decisions? The answer on this question reveals the two basic ways of thinking that usually drive software design. -->
 
-Thinking from programming language perspective: you assess each software task based on the toolset the programming language offers you. For example, one might think: "I know that Swift has generics language feature, then I'll keep using them as much as I could as a solution to all emerging tasks".
+Speaking of programming as a way of thinking, have you even thought what drives your software design decisions? The answer on this question reveals the two basic approaches that are naturally the starter points of all programming decisions.
 
-Thinking from the solution perspective: based on the knowledge of object-oriented programming concepts and good practices you come up with a software design that is not necessary supported by your current programming language out of the box. If needed you come up with a workaround or simulate the required features. For example, Swift does not support atomic properties by default, but still offers rich locking API which you can utilize to implement such. In [Atomic Properties in Swift](http://www.vadimbulavin.com/atomic-properties/) I discuss this particular case in more details.
+**Thinking from programming language perspective** - each problem is assessed based on the toolkit the programming language offers. The example of this way of thinking: "I am good at Swift generics, I'll keep using them as a solution to all emerging tasks". 
 
-As a professional software developer you must stick to the second way of thinking. The programming language must be just a tool.
+It is thinking like a hammer: everything becomes a nail to be hammered in, irrespective of how inappropriate it is.
 
-*Multiple inheritance* lends itself to the second way of thinking. So what is it exactly?
+**Thinking from the problems and their solutions perspective** - following this way of thinking, you translate the solution into the program. All programming languages have their pros and cons, thus such solution might not be perfect. Following this way of thinking, programming language becomes just a tool.
+
+For example, Swift does not support atomic properties by default, but still offers rich locking API which you can utilize to implement such. In [Atomic Properties in Swift](http://www.vadimbulavin.com/atomic-properties/) I discuss this particular case in more details.
+
+When put this way, it becomes obvious that the second way of thinking is much more productive, while the first should be omitted.
+
+**Thinking from the problems and their solutions perspective** requires knowledge of basic programming idioms. *Multiple inheritance*, which is the subject of present article, is among such idioms.
 
 ### Multiple Inheritance in Swift
 
 *Multiple inheritance* is an object-oriented concept in which a class can inherit behavior and attributes from more than one parent class. It is a way of sharing code between multiple classes.
 
-*Multiple inheritance* is a standard feature of some programming languages, like C++. Swift supports multiple inheritance of interfaces and single inheritance of implementations.
+*Multiple inheritance* is a standard feature of some programming languages, like C++.
 
-In Swift a class can inherit from multiple protocols but just one class. Value types, such as struct and enum, can inherit only from multiple protocols.
+ With regard to Swift, a class can conform to multiple protocols, but inherit from just one class. Value types, such as struct and enum, can conform to multiple protocols only.
 
 <p align="center">
 <i>Swift support multiple inheritance of interfaces but single inheritance of implementations.</i>
 </p>
 
-### What is Mixin
-
-### Multiple Inheritance as Composition of Mixins
+Let's explore what options do we have in relation to *multiple inheritance* in Swift.
 
 ### Implementing Multiple Inheritance in Swift
 
-Here is where the boundary between the inheritance and compositions begins to eradicate. Mixins are the basis for a compositional inheritance
-mechanism.
+Protocols with default implementation become the main tool that provides the opportunity to simulate multiple inheritance. Here is how it looks like:
 
-The core language mechanism to allow us implement multiple inheritance is protocol extensions. By using such 
+{% highlight swift linenos %}
 
-### Mixin
+protocol HelloPrinter {
+    func sayHello()
+}
 
-A *mixin* is a class that contains methods for use by other classes without having to be the parent class of other classes.
+extension HelloPrinter {
+    func sayHello() {
+        print("Hello")
+    }
+}
 
+{% endhighlight %}
 
+Now when you create a new type conforming to that protocol, it gets the implementation of `sayHello` for free:
 
-The idea is simple: we would like to specify an extension without pre-determining what exactly it can extend.
+{% highlight swift linenos %}
 
-A mixin is an abstract subclass that may be used to specialize the behavior of a variety of parent classes. It often does this by defining new methods that perform some actions and
-then call the corresponding parent methods.
+struct MyStruct: HelloPrinter {
 
-In other words, a *mixin* provides methods with a certain behavior that is *not intended* to be used on its own, but rather to be added to other classes.
+}
 
-Thus, the main purpose of *mixin* is to dynamically add a set of methods into an object. 
+let myStruct = MyStruct()
+myStruct.print() // Prints "Hello"
 
-The definition of *mixin* can be reduced to next key points that:
-- contains methods
-- contains state
-- not supposed to be initialized
-- narrow in functionality
-- not intended to be extended
+{% endhighlight %}
 
-Sounds like we can simulate multiple inheritance pretty close by means of *mixins*.
+You must already understand the pattern: we are going to incorporate independent pieces of functionality into protocols with default implementations. 
+
+There is a term for this approach named *mixin*. 
+
+### Mixins
+
+A *mixin* is a class that contains methods for use by other classes without having to be the parent class of those other classes.
+
+The idea behind *mixins* is simple: we would like to specify an extension without pre-determining what exactly it can extend. This is equivalent to specifying a subclass while leaving its superclass as a parameter to be determined later.
+
+*Mixins* are generally not intended to be instantiated and used on their own. They provide the behavior that is supposed to be added to other types.
+
+Here are the key points to understand about mixins:
+- Can contain both behavior and state.
+- Not supposed to be initialized.
+- Specialized and narrow in its functionality.
+- Not intended to be specialized any further by other *mixins*.
+
+With the help of *mixins* we can approach multiple inheritance implementation in Swift very closely.
+
+Now let's write some code.
+
+### Implementing a Mixin
 
 ### Implementing Stateless Mixin
 
@@ -104,7 +106,8 @@ Sounds like we can simulate multiple inheritance pretty close by means of *mixin
 
 ### Wrapping Up
 
-### Implementing a Mixin
+Here is where the boundary between the inheritance and compositions begins to eradicate. Mixins are the basis for a compositional inheritance.
+
 
 ---
 
