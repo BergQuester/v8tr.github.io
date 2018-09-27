@@ -5,13 +5,11 @@ permalink: /multiple-inheritance-swift/
 share-img: "/img/multiple-inheritance-swift-share.png"
 ---
 
-Although Swift does not support multiple inheritance, it offers rich API that provides possibility to simulate it. Let's take an in-depth look at multiple inheritance as an object-oriented concept and what options do we have with regards to multiple inheritance implementation in Swift.
+Although Swift does not support multiple inheritance, it offers rich API that gives possibility to simulate it. Let's take an in-depth look at multiple inheritance as an object-oriented concept and its implementation in Swift.
 
-### Programming Language is Just a Tool
+<!-- ### Programming Language is Just a Tool -->
 
-<!-- Have you ever thought what is the starter point of your software design decisions? The answer on this question reveals the two basic ways of thinking that usually drive software design. -->
-
-Speaking of programming as a way of thinking, have you even thought what drives your software design decisions? The answer on this question reveals the two basic approaches that are naturally the starter points of all programming decisions.
+<!-- Speaking of programming as a way of thinking, have you even thought what drives your software design decisions? The answer on this question reveals the two basic approaches that are naturally the starter points of all programming decisions.
 
 **Thinking from programming language perspective** - each problem is assessed based on the toolkit the programming language offers. The example of this way of thinking: "I am good at Swift generics, I'll keep using them as a solution to all emerging tasks". 
 
@@ -23,15 +21,15 @@ For example, Swift does not support atomic properties by default, but still offe
 
 When put this way, it becomes obvious that the second way of thinking is much more productive, while the first should be omitted.
 
-**Thinking from the problems and their solutions perspective** requires knowledge of basic programming idioms. *Multiple inheritance*, which is the subject of present article, is among such idioms.
+**Thinking from the problems and their solutions perspective** requires knowledge of basic programming idioms. *Multiple inheritance*, which is the subject of present article, is among such idioms. -->
 
-### Multiple Inheritance in Swift
+### What is Multiple Inheritance
 
 *Multiple inheritance* is an object-oriented concept in which a class can inherit behavior and attributes from more than one parent class. It is a way of sharing code between multiple classes.
 
-*Multiple inheritance* is a standard feature of some programming languages, like C++.
+*Multiple inheritance* is a standard feature of some programming languages, like C++. In Swift it is supported partially. 
 
- With regard to Swift, a class can conform to multiple protocols, but inherit from just one class. Value types, such as struct and enum, can conform to multiple protocols only.
+In Swift a class can conform to multiple protocols, but inherit from just one class. Value types, such as struct and enum, can conform to multiple protocols only.
 
 <p align="center">
 <i>Swift support multiple inheritance of interfaces but single inheritance of implementations.</i>
