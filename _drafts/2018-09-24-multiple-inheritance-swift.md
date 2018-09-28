@@ -27,7 +27,7 @@ When put this way, it becomes obvious that the second way of thinking is much mo
 
 *Multiple inheritance* is an object-oriented concept in which a class can inherit behavior and attributes from more than one parent class. 
 
-Together with single inheritance and composition, *multiple inheritance* offers another way of sharing code between classes and can bring a lot of value when used correctly. 
+Along with single inheritance and composition, *multiple inheritance* offers another way of sharing code between classes that can be very beneficial if used correctly. 
 
 Through the rest of the article we'll elaborate on its proper use cases as well as provide the Swift implementation.
 
@@ -38,7 +38,7 @@ Although *multiple inheritance* is a standard feature of some programming langua
 {: .box-note}
 *Swift supports only multiple inheritance of protocols.*
 
-Protocols with default implementations give us just enough flexibility to approach multiple inheritance very closely. Here is how it looks:
+*Protocols with default implementations* give us just enough flexibility to approach multiple inheritance very closely. Here is how it looks:
 
 {% highlight swift linenos %}
 
@@ -75,7 +75,7 @@ A *mixin* is a class that contains methods for use by other classes without havi
 
 The idea behind *mixins* is simple: we would like to specify an extension without pre-determining what exactly it can extend. This is equivalent to specifying a subclass while leaving its superclass as a parameter to be determined later.
 
-*Mixins* are generally not intended to be instantiated and used on their own. They provide the behavior that is supposed to be added to other types.
+*Mixins* are generally not intended to be instantiated and used on their own. They provide standalone behavior that is supposed to be added to other types.
 
 Here are the key points to understand about *mixins*. A *mixin*:
 - Can contain both behavior and state.
@@ -85,13 +85,90 @@ Here are the key points to understand about *mixins*. A *mixin*:
 
 With the help of *mixins* we can approach multiple inheritance implementation in Swift very closely.
 
-Now let's write some code.
+### Implementing a Mixin in Swift
 
-### Implementing a Mixin
+Animating and applying visual decorations to `UIView` are among the frequent tasks that iOS developers encounter. To demonstrate the practical use of multiple inheritance, we define several mixins and make *UIView* inherit from them without actually creating any subclasses.
 
-#### Flasher
+{% highlight swift linenos %}
 
-#### LoadingAnimatable
+// MARK: - Blinkable
+
+protocol Blinkable {
+    func blink()
+}
+
+extension Blinkable where Self: UIView {
+    func blink() {
+        alpha = 1
+
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.25,
+            options: [.repeat, .autoreverse],
+            animations: {
+                self.alpha = 0
+        })
+    }
+}
+
+// MARK: - Scalable
+
+protocol Scalable {
+    func scale()
+}
+
+extension Scalable where Self: UIView {
+    func scale() {
+        transform = .identity
+
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.25,
+            options: [.repeat, .autoreverse],
+            animations: {
+                self.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        })
+    }
+}
+
+// MARK: - CornersRoundable
+
+protocol CornersRoundable {
+    func roundCorners()
+}
+
+extension CornersRoundable where Self: UIView {
+    func roundCorners() {
+        layer.cornerRadius = bounds.width * 0.1
+        layer.masksToBounds = true
+    }
+}
+
+{% endhighlight %}
+
+Next we make *UIView* conform to all these protocols.
+
+```swift
+extension UIView: Scalable, Blinkable, CornersRoundable {}
+```
+
+Each view and it's subclass are getting methods from mixins for free.
+
+{% highlight swift linenos %}
+
+aView.blink()
+aView.scale()
+aView.roundCorners()
+
+{% endhighlight %}
+
+And the visuals look like this:
+
+<p align="center">
+    <a href="{{ "/img/multiple-inheritance-mixin-demo.gif" | absolute_url }}">
+        <img src="/img/multiple-inheritance-mixin-demo.gif" alt="Multiple Inheritance in Swift - Mixin Demo"/>
+    </a>
+</p>
 
 ### The Diamond Problem
 
