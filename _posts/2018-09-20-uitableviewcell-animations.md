@@ -323,4 +323,4 @@ The proposed animation recipes we make a nice foundation to get you off to a fly
 ---
 
 [starter-repo]: https://github.com/V8tr/UITableViewCellAnimation-Article-Starter
-[final-repo]: https://github.com/V8tr/UITableViewCellAnimation-Article-Starter
+[final-repo]: https://github.com/V8tr/UITableViewCellAnimation-Article-Final
