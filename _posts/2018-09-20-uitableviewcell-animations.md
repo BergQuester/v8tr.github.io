@@ -314,7 +314,7 @@ Table views are among most widely used components in iOS, thus developing a good
 
 The reusable solution we designed to be able to easily plug in and tweak animations can be adapted and used in your current app.
 
-The proposed animation recipes we make a nice foundation to get you off to a flying start using table view cell display animations.
+The proposed animation recipes form a nice foundation to get you off to a flying start using table view cell display animations.
 
 ---
 

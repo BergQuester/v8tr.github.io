@@ -29,11 +29,11 @@ When put this way, it becomes obvious that the second way of thinking is much mo
 
 Along with single inheritance and composition, *multiple inheritance* offers another way of sharing code between classes that can be very beneficial if used correctly. 
 
-Through the rest of the article we'll elaborate on its proper use cases as well as provide the Swift implementation.
+Through the rest of the article we'll elaborate on its proper usage as well as provide its Swift implementation.
 
 ### Multiple Inheritance in Swift
 
-Although *multiple inheritance* is a standard feature of some programming languages, like C++, it is not the case for Swift. In Swift a class can conform to multiple protocols, but inherit from just one class. Value types, such as struct and enum, can conform to multiple protocols only.
+Although *multiple inheritance* is a standard feature of some programming languages, like C++, it is not the case for Swift. In Swift a class can conform to multiple protocols, but inherit from only one class. Value types, such as struct and enum, can conform to multiple protocols only.
 
 {: .box-note}
 *Swift supports only multiple inheritance of protocols.*
@@ -58,16 +58,14 @@ Now when you create a new type conforming to that protocol, it gets the implemen
 
 {% highlight swift linenos %}
 
-struct MyStruct: HelloPrinter {
-
-}
+struct MyStruct: HelloPrinter {}
 
 let myStruct = MyStruct()
 myStruct.print() // Prints "Hello"
 
 {% endhighlight %}
 
-However, conforming to a bunch of protocols with default implementation is not enough to call it multiple inheritance. More importantly, our protocols must satisfy the notion of *mixin*.
+However, conforming to a bunch of protocols with default implementations is not enough to call it multiple inheritance. More importantly, our protocols must satisfy the notion of *mixin*.
 
 ### What is a Mixin
 
@@ -80,14 +78,14 @@ The idea behind *mixins* is simple: we would like to specify an extension withou
 Here are the key points to understand about *mixins*. A *mixin*:
 - Can contain both behavior and state.
 - Is not supposed to be initialized.
-- Is specialized and narrow in its functionality.
+- Is highly specialized and narrow in its functionality.
 - Is not intended to be subclassed by other *mixins*.
 
 With the help of *mixins* we can approach multiple inheritance implementation in Swift very closely.
 
 ### Implementing a Mixin in Swift
 
-Animating and applying visual decorations to `UIView` are among the frequent tasks that iOS developers encounter. To demonstrate the practical use of multiple inheritance, we define several mixins and make *UIView* inherit from them without actually creating any subclasses.
+Animating and applying visual decorations to `UIView` are among the frequent tasks that iOS developers encounter. To demonstrate the practical use of multiple inheritance, we define several *mixins* and make `UIView` inherit from them, without introducing any subclasses or helpers.
 
 {% highlight swift linenos %}
 
