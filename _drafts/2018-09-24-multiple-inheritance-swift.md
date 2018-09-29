@@ -7,6 +7,16 @@ share-img: "/img/multiple-inheritance-swift-share.png"
 
 Although Swift does not support multiple inheritance, it offers rich API that gives possibility to simulate it. Let's take an in-depth look at multiple inheritance and its implementation in Swift.
 
+### Introduction
+
+There are two major ways of structuring data in programming languages. The first one can be said to derive from standard branches of mathematics. Data is organized as [cartesian products](https://en.wikipedia.org/wiki/Cartesian_product) and languages supporting this kind of organization are known as functional.
+
+The second approach can be considered to derive from biology and taxonomy. Data is organized in a hierarchy of classes and subclasses, where lower levels inherit all the attributes higher up in the hierarchy. This approach is called *object-oriented programming*.
+
+Inheritance can be single and multiple. While the former is supported in Swift by default, we can approach the latter very closely by applying certain programming techniques.
+
+Let's see what options do we have with regards to multiple inheritance implementation in Swift and which restrictions does it impose.
+
 <!-- ### Programming Language is Just a Tool -->
 
 <!-- Speaking of programming as a way of thinking, have you even thought what drives your software design decisions? The answer on this question reveals the two basic approaches that are naturally the starter points of all programming decisions.
@@ -23,7 +33,7 @@ When put this way, it becomes obvious that the second way of thinking is much mo
 
 **Thinking from the problems and their solutions perspective** requires knowledge of basic programming idioms. *Multiple inheritance*, which is the subject of present article, is among such idioms. -->
 
-### What is Multiple Inheritance
+### Understanding Multiple Inheritance
 
 *Multiple inheritance* is an object-oriented concept in which a class can inherit behavior and attributes from more than one parent class. 
 
@@ -65,9 +75,9 @@ myStruct.print() // Prints "Hello"
 
 {% endhighlight %}
 
-However, conforming to a bunch of protocols with default implementations is not enough to call it multiple inheritance. More importantly, our protocols must satisfy the notion of *mixin*.
+However, conforming to more than one protocol with default implementation is not enough to call it multiple inheritance. More importantly, the protocols must satisfy the notion of *mixin*.
 
-### What is a Mixin
+### Understanding Mixins
 
 A *mixin* is a class that contains methods for use by other classes without having to be the parent class of those other classes.
 
@@ -177,6 +187,16 @@ The Diamond Problem is best described with next diagram.
         <img src="/img/diamond-problem.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
     </a>
 </p>
+
+We can see that `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform on `Root` protocol. As a result, `MyClass` conforms to `Root` twice. As long as `ChildA` and `ChildB` do not have default implementation for `method()`, the code compiles fine:
+
+{% highlight swift linenos %}
+
+{% endhighlight %}
+
+The diamond problem arises when a class or a value type conforms to a protocol along multiple paths in the inheritance graph.
+
+Problem: requires global knowledge of the inheritance graph. Otherwise, a change in a remote ancestor 
 
 ### Advanced Mixins - Stateful
 
