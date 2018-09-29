@@ -144,7 +144,7 @@ extension CornersRoundable where Self: UIView {
 
 {% endhighlight %}
 
-Next we make *UIView* conform to all these protocols.
+Next we make `UIView` conform to all these protocols.
 
 ```swift
 extension UIView: Scalable, Blinkable, CornersRoundable {}
@@ -164,11 +164,19 @@ And the visuals look like this:
 
 <p align="center">
     <a href="{{ "/img/multiple-inheritance-mixin-demo.gif" | absolute_url }}">
-        <img src="/img/multiple-inheritance-mixin-demo.gif" alt="Multiple Inheritance in Swift - Mixin Demo"/>
+        <img src="/img/multiple-inheritance-mixin-demo.gif" alt="Multiple Inheritance and Mixins in Swift - Mixin Demo"/>
     </a>
 </p>
 
 ### The Diamond Problem
+
+The Diamond Problem is best described with next diagram.
+
+<p align="center">
+    <a href="{{ "/img/diamond-problem.svg" | absolute_url }}">
+        <img src="/img/diamond-problem.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
+    </a>
+</p>
 
 ### Advanced Mixins - Stateful
 
