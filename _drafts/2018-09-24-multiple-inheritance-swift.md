@@ -183,20 +183,79 @@ And the visuals look like this:
 The Diamond Problem is best described with next diagram.
 
 <p align="center">
-    <a href="{{ "/img/diamond-problem.svg" | absolute_url }}">
-        <img src="/img/diamond-problem.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
+    <a href="{{ "/img/diamond-problem-with-extensions.svg" | absolute_url }}">
+        <img src="/img/diamond-problem-with-extensions.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
     </a>
 </p>
 
-We can see that `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform on `Root` protocol. As a result, `MyClass` conforms to `Root` twice. As long as `ChildA` and `ChildB` do not have default implementation for `method()`, the code compiles fine:
+We can see that `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform on `Root` protocol. `method()` is defined only in `Root`, but is extended in each from 3 protocols. As a result, compiler cannot define which default implementation of `method()` is inherited by `MyClass`.
+
+Here is the code that demonstrates the problem:
 
 {% highlight swift linenos %}
 
+protocol Root {
+    func method()
+}
+
+extension Root {
+    func method() {
+        print("Method from Root")
+    }
+}
+
+protocol ChildA: Root {}
+
+extension ChildA {
+    func method() {
+        print("Method from ChildA")
+    }
+}
+
+protocol ChildB: Root {}
+
+extension ChildB {
+    func method() {
+        print("Method from ChildB")
+    }
+}
+
+class MyClass: ChildA, ChildB {} // Error: Type 'MyClass' does not conform to protocol 'Root'
+
 {% endhighlight %}
 
+The above situation can be referred to as a *Classic Diamond Problem*. The next truncated case is also true for Swift:
+
+{% highlight swift linenos %}
+
+protocol ProtocolA {
+    func method()
+}
+
+extension ProtocolA {
+    func method() {
+        print("Method from ProtocolA")
+    }
+}
+
+protocol ProtocolB {
+    func method()
+}
+
+extension ProtocolB {
+    func method() {
+        print("Method from ProtocolB")
+    }
+}
+
+class MyClass: ProtocolA, ProtocolB {} // Error: Type 'MyClass' does not conform to protocol 'ProtocolA'
+
+{% endhighlight %}
+
+{: .box-note}
 The diamond problem arises when a class or a value type conforms to a protocol along multiple paths in the inheritance graph.
 
-Problem: requires global knowledge of the inheritance graph. Otherwise, a change in a remote ancestor 
+Problem: requires global knowledge of the inheritance graph. Otherwise, a change in a remote ancestor.
 
 ### Advanced Mixins - Stateful
 
