@@ -188,7 +188,7 @@ The Diamond Problem is best described with next diagram.
     </a>
 </p>
 
-We can see that `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform on `Root` protocol. `method()` is defined only in `Root`, but is extended in each from 3 protocols. As a result, compiler cannot define which default implementation of `method()` is inherited by `MyClass`.
+We can see that `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform to `Root` protocol. `method()` is defined only in `Root`, but is extended in each from 3 protocols. As a result, compiler cannot define which default implementation of `method()` is inherited by `MyClass`.
 
 Here is the code that demonstrates the problem:
 
@@ -224,7 +224,15 @@ class MyClass: ChildA, ChildB {} // Error: Type 'MyClass' does not conform to pr
 
 {% endhighlight %}
 
-The above situation can be referred to as a *Classic Diamond Problem*. The next truncated case is also true for Swift:
+The above situation can be referred to as a *Classic Diamond Problem*. The next truncated case is also valid for Swift:
+
+<p align="center">
+    <a href="{{ "/img/diamond-problem-truncated.svg" | absolute_url }}">
+        <img src="/img/diamond-problem-truncated.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
+    </a>
+</p>
+
+And here is the code that demonstrates the issue:
 
 {% highlight swift linenos %}
 
