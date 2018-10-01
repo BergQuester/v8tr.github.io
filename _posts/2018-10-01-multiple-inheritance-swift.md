@@ -2,7 +2,7 @@
 layout: post
 title: "Multiple Inheritance in Swift"
 permalink: /multiple-inheritance-swift/
-share-img: "/img/multiple-inheritance-swift-share.svg"
+share-img: "/img/multiple-inheritance-swift-share.png"
 ---
 
 Although Swift does not support multiple inheritance, it offers rich API that gives possibility to simulate it. Let's take an in-depth look at multiple inheritance and its implementation in Swift.
