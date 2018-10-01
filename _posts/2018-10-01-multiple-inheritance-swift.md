@@ -2,7 +2,7 @@
 layout: post
 title: "Multiple Inheritance in Swift"
 permalink: /multiple-inheritance-swift/
-share-img: "/img/multiple-inheritance-swift-share.png"
+share-img: "/img/multiple-inheritance-swift-share.svg"
 ---
 
 Although Swift does not support multiple inheritance, it offers rich API that gives possibility to simulate it. Let's take an in-depth look at multiple inheritance and its implementation in Swift.
@@ -173,8 +173,8 @@ aView.roundCorners()
 And the visuals look like this:
 
 <p align="center">
-    <a href="{{ "/img/multiple-inheritance-mixin-demo.gif" | absolute_url }}">
-        <img src="/img/multiple-inheritance-mixin-demo.gif" alt="Multiple Inheritance and Mixins in Swift - Mixin Demo"/>
+    <a href="{{ "/img/multiple-inheritance-mixin-demo-small.gif" | absolute_url }}">
+        <img src="/img/multiple-inheritance-mixin-demo-small.gif" width="300" alt="Multiple Inheritance and Mixins in Swift - Mixin Demo"/>
     </a>
 </p>
 
@@ -224,7 +224,7 @@ class MyClass: ChildA, ChildB {} // Error: Type 'MyClass' does not conform to pr
 
 {% endhighlight %}
 
-The above situation can be referred to as a *Classic Diamond Problem*. The next truncated case is also valid for Swift:
+The above situation can be referred to as a *Classic Diamond Problem*. The next shortened case is also valid for Swift:
 
 <p align="center">
     <a href="{{ "/img/diamond-problem-truncated.svg" | absolute_url }}">
@@ -260,17 +260,28 @@ class MyClass: ProtocolA, ProtocolB {} // Error: Type 'MyClass' does not conform
 
 {% endhighlight %}
 
+In this variation of the diamond problem both `ProtocolA` and `ProtocolB` have default implementations of `method()` which results in name collision. The compiler cannot decide on which default implementation of `method()` `MyClass` should inherit and the code fails with a Swift compiler error.
+
 {: .box-note}
 The diamond problem arises when a class or a value type conforms to a protocol along multiple paths in the inheritance graph.
 
-Problem: requires global knowledge of the inheritance graph. Otherwise, a change in a remote ancestor.
+### Solution to Diamond Problem
 
-### Advanced Mixins - Stateful
+The answer might disappoint you: there is no silver bullet for the diamond problem in Swift. Two possible solutions exist, each not without its flaws.
+1. Re-implement the conflicting methods in derived class. Might be achieved by means of composition and delegation. Problems: introduces extra indirections, increases code complexity.
+2. Change conflicting methods in one of the remote ancestors. Problems: requires global knowledge of the inheritance graph. You might not have the ownership over the adverse code, thus unable to change it.
+
+Before applying each solution, I suggest to asses the benefits you gain from multiple inheritance against the overhead introduced by these recipes.
 
 ### Wrapping Up
 
-Here is where the boundary between the inheritance and compositions begins to eradicate. Mixins are the basis for a compositional inheritance.
+Multiple inheritance is the fundamental concept of the object-oriented programming and when applied right, it can be very beneficial to your code.
 
+Swift does not have default language mechanisms for implementing multiple inheritance. However, by applying protocols with default implementations that comply to the notion of mixin, multiple inheritance in Swift can be approached very closely.
+
+Mixins eradicate the boundary between the inheritance and composition. This kind of software design can be called *compositional inheritance* due of the lack of the proper term.
+
+When implementing multiple inheritance, you must be aware of the Diamond Problem and its variations. The solutions to that problem are non-optimal and might lead outweigh the potential benefits.
 
 ---
 
