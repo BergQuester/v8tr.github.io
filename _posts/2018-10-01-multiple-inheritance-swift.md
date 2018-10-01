@@ -188,7 +188,7 @@ The Diamond Problem is best described with next diagram.
     </a>
 </p>
 
-We can see that `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform to `Root` protocol. `method()` is defined only in `Root`, but is extended in each from 3 protocols. As a result, compiler cannot define which default implementation of `method()` is inherited by `MyClass`.
+On the diagram `MyClass` conforms to `ChildA` and `ChildB` protocols, which in their turn both conform to `Root`. `method()` is defined only in `Root`, but is extended in each from 3 protocols. As a result, compiler cannot define which default implementation of `method()` is inherited by `MyClass`.
 
 Here is the code that demonstrates the problem:
 
