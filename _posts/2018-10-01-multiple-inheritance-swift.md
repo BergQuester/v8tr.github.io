@@ -279,9 +279,9 @@ Multiple inheritance is the fundamental concept of the object-oriented programmi
 
 Swift does not have default language mechanisms for implementing multiple inheritance. However, by applying protocols with default implementations that comply to the notion of mixin, multiple inheritance in Swift can be approached very closely.
 
-Mixins eradicate the boundary between the inheritance and composition. This kind of software design can be called *compositional inheritance* due of the lack of the proper term.
+Mixins eradicate the boundary between the inheritance and composition. This kind of software design can be called *compositional inheritance*.
 
-When implementing multiple inheritance, you must be aware of the Diamond Problem and its variations. The solutions to that problem are non-optimal and might lead outweigh the potential benefits.
+When implementing multiple inheritance, you must be aware of the Diamond Problem and its variations. The solutions to that problem are non-optimal and might outweigh the potential benefits.
 
 ---
 
