@@ -95,7 +95,7 @@ With the help of *mixins* we can approach multiple inheritance implementation in
 
 ### Implementing a Mixin in Swift
 
-Animating and applying visual decorations to `UIView` are among the frequent tasks that iOS developers encounter. To demonstrate the practical use of multiple inheritance, we define several *mixins* and make `UIView` inherit from them, without introducing any subclasses or helpers.
+Animating and applying visual decorations to `UIView` are among the frequent tasks that iOS developers encounter. To demonstrate the practical use of multiple inheritance, we define several *mixins* and make `UIView` inherit from them.
 
 {% highlight swift linenos %}
 
