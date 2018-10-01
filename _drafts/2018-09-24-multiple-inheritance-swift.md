@@ -183,8 +183,8 @@ And the visuals look like this:
 The Diamond Problem is best described with next diagram.
 
 <p align="center">
-    <a href="{{ "/img/diamond-problem-with-extensions.svg" | absolute_url }}">
-        <img src="/img/diamond-problem-with-extensions.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
+    <a href="{{ "/img/diamond-problem.svg" | absolute_url }}">
+        <img src="/img/diamond-problem.svg" alt="Multiple Inheritance and Mixins in Swift - The Diamond Problem"/>
     </a>
 </p>
 
