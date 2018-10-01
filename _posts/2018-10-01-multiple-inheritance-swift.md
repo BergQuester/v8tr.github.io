@@ -224,7 +224,7 @@ class MyClass: ChildA, ChildB {} // Error: Type 'MyClass' does not conform to pr
 
 {% endhighlight %}
 
-The above situation can be referred to as a *Classic Diamond Problem*. The next shortened case is also valid for Swift:
+The above situation can be referred to as a *Diamond Problem*. The next shortened case is also valid for Swift:
 
 <p align="center">
     <a href="{{ "/img/diamond-problem-truncated.svg" | absolute_url }}">
