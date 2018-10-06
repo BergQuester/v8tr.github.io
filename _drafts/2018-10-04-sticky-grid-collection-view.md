@@ -13,11 +13,15 @@ Collection view is arguably the most flexible control in iOS and macOS developme
 
 `UICollectionViewLayout` defines positioning of cells and supplementary elements inside collection view bounds. Collection view always consults with its layout before presenting elements on the screen, that gives you just enough opportunities to come up with literally any kind of placement. By default, collection view uses `UICollectionViewFlowLayout` that organizes items into a grid. 
 
-Throughout this tutorial we will build a reusable solution on top of `UICollectionViewFlowLayout` that has sticky rows and columns and supports both horizontal and vertical scrolling.
+Throughout this tutorial we will build a reusable solution on top of `UICollectionViewFlowLayout`. It will have the following features:
+- Position cells into a grid.
+- Configurable number of sticky rows and columns.
+- Easy to plug in from storyboard, xib or programmatically.
+- Support vertical and horizontal scrolling.
 
 ### Getting Started
 
-Let's begin with [downloading the starter project][starter-repo] for this article. It will save you some time on writing boilerplate code and make sure we are on the same page before beginning this tutorial. When you run it, you will see a simple collection with 100x100 cells, each showing its index path.
+Let's begin with [downloading the starter project][starter-repo] for this article. It will save you some time on writing boilerplate code and also make sure we are on the same page before beginning this tutorial. When you run it, you see a grid of 100 cells, each showing its index path.
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/starter.png" | absolute_url }}">
@@ -25,7 +29,10 @@ Let's begin with [downloading the starter project][starter-repo] for this articl
     </a>
 </p>
 
+The only view controller that will be used in the article is configured in `Main.storyboard` and 
 
+
+Along the way, we will need 
 
 ---
 
