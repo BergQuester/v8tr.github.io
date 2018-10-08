@@ -2,6 +2,7 @@
 layout: post
 title: How to upgrade your iOS development skills
 permalink: /2018-01-22-how-to-upgrade-your-ios-development-skills/
+share-img: "/img/how-to-upgrade-your-ios-development-skills-share.png"
 ---
 
 In this article we will go through the fundamental areas that every iOS developer must know. Studying them will help you:
