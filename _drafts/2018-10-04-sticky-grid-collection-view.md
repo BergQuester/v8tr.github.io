@@ -9,7 +9,34 @@ In this article you will learn how to implement collection view grid with sticky
 
 ### Introduction
 
-Collection view is arguably the most flexible control in iOS and macOS development. One way of customizing it is by means of a number of `delegate` and `dataSource` methods. However your options are not limited with it. To make one step further you can provide your own collection view layout.
+Collection view lends itself to managing ordered data items and displaying them using configurable layouts. It is arguably the most flexible control in iOS: tables, grids, pages, you name it - literally any control can be implemented using collection views. Such a high level of customization is achieved primarily by decoupling presentation, positioning and event-handling responsibilities.
+
+- `UICollectionViewDataSource` is responsible for providing the data and views to be rendered by the collection view.
+- `UICollectionViewDelegate` allows to control selection events.
+- `UICollectionViewLayout` determines positioning of cells and supplementary elements.
+
+Our next step is to decide on which of the above should be extended to reach our goal. To design a grid with arbitrary number of sticky rows and columns that can be scrolled both vertically and horizontally, we definitely need to focus on presentation which is the responsibility of `UICollectionViewLayout`. Let's have a closer look at it.
+
+### Understanding UICollectionViewLayout
+
+Before diving into code, we must clearly understand how the collection view layout works and which customization options does it offer.
+
+`UICollectionViewLayout` is an abstract class responsible for items and supplementary views placement inside the collection view bounds. Collection view consults with its layout before presenting elements on the screen, that allows to come up with literally any kind of placement. By default, collection view uses `UICollectionViewFlowLayout` that organizes items into a grid. 
+
+Since the flow layout already organizes elements in a grid, we want to subclass it and provide our own placement of sticky rows and columns and let the layout do the rest.
+
+/////////
+
+An object that manages an ordered collection of data items and presents them using customizable layouts.
+
+
+Collection view is arguably the most flexible control in iOS and macOS development. You can implement literally anything by means of collection views. Decoupling presentation and positioning is what makes collection views so customizable.
+
+UICollectionViewDelegate and 
+
+Standard ways of customization include `delegate` and `dataSource` methods and tweak
+
+One way of customizing it is by means of a number of `delegate` and `dataSource` methods. However your options are not limited with it. To make one step further you can provide your own collection view layout.
 
 `UICollectionViewLayout` defines positioning of cells and supplementary elements inside collection view bounds. Collection view always consults with its layout before presenting elements on the screen, that gives you just enough opportunities to come up with literally any kind of placement. By default, collection view uses `UICollectionViewFlowLayout` that organizes items into a grid. 
 
