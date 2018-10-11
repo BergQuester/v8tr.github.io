@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Sticky Grid Collection View: Tutorial"
+title: "Sticky Grid Collection View: Implementing From Scratch"
 permalink: /sticky-grid-collection-view/
 share-img: "/img/sticky-grid-collection-view-share.png"
 ---
 
-In this article you will learn how to implement collection view that has grid layout, supports both vertical and horizontal scrolling and has sticky rows and columns using Swift.
+In this article you will learn how to implement collection that has sticky rows and columns, and supports both vertical and horizontal scrolling using Swift.
 
 ### Introduction
 
-Collection view lends itself to managing ordered data items and displaying them using configurable layouts. It is arguably the most flexible control in iOS: tables, grids, pages, you name it — literally any user interface control can be implemented using collection views. 
+Collection view lends itself to managing ordered data items and displaying them using configurable layouts. It is arguably the most flexible control in iOS: tables grids, pages, you name it — literally any user interface control can be implemented using collection views. 
 
 Such a high level of customization is achieved primarily by decoupling presentation, positioning and event-handling responsibilities. Here are the key actors along with their roles:
 
@@ -27,21 +27,14 @@ Before diving into code, we must clearly understand how the collection view layo
 
 By default, collection view comes with `UICollectionViewFlowLayout` that organizes items into a grid. The flow layout uses `UICollectionViewDelegateFlowLayout` protocol to coordinate the size of elements and spacing between them. Our implementation will rely on the methods from this protocol to be as much extensible as possible.
 
-<!-- An object that manages an ordered collection of data items and presents them using customizable layouts.
-
-One way of customizing it is by means of a number of `delegate` and `dataSource` methods. However your options are not limited with it. To make one step further you can provide your own collection view layout.
-
-`UICollectionViewLayout` defines positioning of cells and supplementary elements inside collection view bounds. Collection view always consults with its layout before presenting elements on the screen, that gives you just enough opportunities to come up with literally any kind of placement. By default, collection view uses `UICollectionViewFlowLayout` that organizes items into a grid. -->
-
 ### Getting Started
 
 Throughout the tutorial we will build a reusable solution on top of `UICollectionViewFlowLayout` that does next things:
 - Supports vertical and horizontal scrolling simultaneously.
 - Positions cells into a grid.
 - Has configurable number of sticky rows and columns.
-- Is easy to use via storyboards, xibs or programmatically.
 
-After we specified our goals, we are ready to get started. Each subsequent section will fulfil one goal from the list and move us one step closer to the final solution.
+After we specified our goals, we are ready to get started. Each subsequent section fulfills one goal from the list and moves us one step closer to the final solution.
 
 Let's begin with [downloading the starter project][starter-repo]. It will save you some time on writing boilerplate code and also make sure we are on the same page. When you run it, you see a simple collection view with 10000 cells - 100 sections, 100 items per section - each showing its index path.
 
@@ -52,13 +45,11 @@ Let's begin with [downloading the starter project][starter-repo]. It will save y
 </p>
 
 Here are some important highlights to pinpoint in starter project:
-- `ViewController` — the only view controller we will be dealing with in this tutorial. It is configured in `Main.storyboard` with a collection view and layout added as outlets.
+- `ViewController` — is configured in `Main.storyboard` and already wired up with the collection view and its layout.
 - `StickyGridCollectionViewLayout` — an empty subclass of the flow layout.
 - `CollectionViewCell` — a simple collection view cell subclass with a title label.
 
-Another thing to notice is that the collection view is already using our custom layout that is set in interface builder. This is also reflected in view controller's `gridLayout` property of type `StickyGridCollectionViewLayout`.
-
-Here is how it looks in interface builder:
+Here is how `StickyGridCollectionViewLayout` is set in interface builder:
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/starter-storyboard-grid-layout.png" | absolute_url }}">
@@ -70,7 +61,7 @@ Here is how it looks in interface builder:
 
 By default, flow layout supports either horizontal or vertical scrolling. In our case 3 cells fit the screen horizontally which results in a grid with 3333 rows and 3 columns. 
 
-Imagine that we want to have a square grid of `100 x 100` items. Considering that the size of each item is 100px, that would be `10000 x 10000 px`. Let's reflect this in our `StickyGridCollectionViewLayout` and override the property `collectionViewContentSize: CGSize`:
+Imagine that we want to have a square grid of `100 x 100` items. Considering that the size of each item is `100 px`, that would be `10000 x 10000 px`. Let's reflect this in our `StickyGridCollectionViewLayout` and override the property `collectionViewContentSize`:
 
 {% highlight swift linenos %}
 
@@ -80,7 +71,7 @@ override var collectionViewContentSize: CGSize {
 
 {% endhighlight %}
 
-Now run the project and play with the scroll. It results in next behavior:
+Now run the project and play with the scroll. The result is next:
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/horizontal-and-vertical-scrolling.gif" | absolute_url }}">
@@ -92,7 +83,9 @@ Collection view is smart about scrolling and adapts automatically to its content
 
 ### Positioning Cells into Grid
 
-The next step is to properly position cells within collection view content size. For this purpose we need to override `layoutAttributesForElements(in:)` that returns an array of `UICollectionViewLayoutAttributes` which is the layout attributes for all of the cells and views in the specified rectangle.
+The next step is to properly position cells within the collection view bounds. 
+
+Before rendering its cells, the collection view calls `layoutAttributesForElements(in:)` that returns an array of cells attributes. Instead of drawing all cells at once, the collection view passes visible rectangle to that method and expects it to return attributes only for the visible cells which has a positive impact on performance.
 
 {% highlight swift linenos %}
 
@@ -112,13 +105,15 @@ override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewL
 
 {% endhighlight %}
 
-The method iterates through the `allAttributes` property and checks which attributes fall within the specified rectangle. This calculation will be repeated each time the collection view bounds are changed and has huge influence over the performance. Instead of repeating calculations again and again, we do it once and then cache into `allAttributes`. It is a two-dimensional array that contains attributes for the whole grid. You can access an arbitrary cell like this:
+The `allAttributes` property is a two-dimensional array that contains attributes for the whole grid. For instance, to access individual cell attributes you would write:
 
 ```swift
 let cellAttributes = allAttributes[row][column]
 ```
 
-The right place to setup attributes is `prepare()` which is called each time the collection view layout is invalidated.
+In `layoutAttributesForElements(in:)` we iterate through the `allAttributes` array and pick attributes that fall within the specified rectangle. This method is called very often and has huge influence over the performance.
+
+As an optimization measure, we pre-calculate the attributes and save them to `allAttributes`. The right place to setup attributes is `prepare()` which is called each time the collection view layout is invalidated.
 
 {% highlight swift linenos %}
 
@@ -164,7 +159,7 @@ For now let's ignore compiler's warnings to understand how the method works.
 
 1. Remove all previously calculated attributes as they might be no longer relevant and initialize offset variables.
 2. Iterate over all rows within a grid. When working with a grid, it is easier to think about cells in terms of rows in columns rather than items and sections. For this purpose we will implement `rowsCount` and `columnsCount(in:)` later.
-3. Make preparations for the new row. Each row must begin with *0* position, thus we need to reset `xOffset`. Attributes of each row are stored in `rowAttrs` array.
+3. Make preparations before we calculate attributes the new row. Each row must begin with *0* position, thus we need to reset `xOffset`. Attributes of each row are stored in `rowAttrs` array.
 4. Iterate over all columns within a row.
 5. Calculate a frame of a cell. We are accumulating `xOffset` and `yOffset` to position the cell correctly within the grid. The size is received from the new method `size(forRow:,column:)` that will be implemented later.
 6. Lastly, we append row attributes to `allAttributes` that contains attributes for the whole grid.
@@ -197,9 +192,9 @@ private func size(forRow row: Int, column: Int) -> CGSize {
 
 Methods `rowsCount` and `columnsCount(in:)` make the conversion from sections and items into rows and columns. We can safely force unwrap `collectionView` here, because the collection view always has a layout object set. The opposite is also true because we are not going to use the layout without the collection view.
 
-The method `size(forRow:,column:)` does not calculate the size, but asks flow layout delegate to provide one. It is mandatory for `UICollectionViewDelegateFlowLayout` to implement this method and we enforce it with an assertion.
+The method `size(forRow:,column:)` asks a flow layout delegate to provide the size for an item along with some safety checks. By doing this we enforce all `UICollectionViewDelegateFlowLayout` to implement this method.
 
-The only thing that is left is small utility method that converts row and column back to `IndexPath`:
+The only thing that is left is small utility method that converts row and column into `IndexPath`:
 
 {% highlight swift linenos %}
 
@@ -219,7 +214,7 @@ Now you can run the app to see the result:
     </a>
 </p>
 
-Let's move on to adding sticky rows and columns to our collection view layout.
+Another goal fulfilled! Let's move on to adding sticky rows and columns to our collection view layout.
 
 ### Adding Sticky Rows and Columns to Collection View
 
@@ -241,9 +236,19 @@ var stickyColumnsCount = 0 {
 
 {% endhighlight %}
 
-You must have noticed that each time the number of sticky rows or columns is changed, we invalidate the layout to trigger `preload()` and recalculate all the attributed.
+Every time the number of sticky rows or columns changes we explicitly invalidate the layout that triggers `preload()` to recalculate the attributes.
 
-Next we want to adjust sticky items positions each time the collection view is scrolled. To do so we need to do two things: invalidate the layout for bounds changes and recalculate sticky cells placement.
+To ensure that the sticky items are positioned correctly, their placement must be adjusted every time the collection view bounds change, for example when scrolling occurs. The collection view must be told explicitly that the layout want its attributes to be re-calculated when the bounds change. For this purpose we introduce the new method below.
+
+{% highlight swift linenos %}
+
+override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    return true
+}
+
+{% endhighlight %}
+
+The method `updateStickyItemsPositions()` does the actual placement of sticky rows and columns.
 
 {% highlight swift linenos %}
 
@@ -253,28 +258,14 @@ override func prepare() {
     updateStickyItemsPositions()
 }
 
-// 2
-override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-    return true
-}
-
-{% endhighlight %}
-
-1. Here we add the new method that updates sticky items positions. We'll implement it later.
-2. Returning `true` in `shouldInvalidateLayout(forBoundsChange:)` would trigger `preload()` method whenever the collection view is scrolled.
-
-The method `updateStickyItemsPositions()` does the actual placement of sticky rows and columns.
-
-{% highlight swift linenos %}
-
 private func updateStickyItemsPositions() {
-    // 1
+    // 2
     for row in 0..<rowsCount {
         for col in 0..<columnsCount(in: row) {
-            // 2
+            // 3
             let attributes = allAttributes[row][col]
 
-            // 3
+            // 4
             if row < stickyRowsCount {
                 var frame = attributes.frame
                 frame.origin.y += collectionView!.contentOffset.y
@@ -287,7 +278,7 @@ private func updateStickyItemsPositions() {
                 attributes.frame = frame
             }
 
-            // 4
+            // 5
             attributes.zIndex = zIndex(forRow: row, column: col)
         }
     }
@@ -296,10 +287,11 @@ private func updateStickyItemsPositions() {
 {% endhighlight %}
 
 Here is step by step explanation of the logic flow.
-1. Iterate over all rows and columns in the grid.
-2. Here an assumption is made that attributes have already been cached in `allAttributes`, thus the order in which the methods are called within `prepare()` is highly important. 
-3. Positions of sticky items are updated with collection view offset. By doing this we pin sticky items to the edges of the collection view. 
-4. Besides updating the positions, we must ensure that sticky items are always placed above the rest of the cells. The new helper method `zIndex(forRow:column:)` will be implement for this purpose.
+1. We want to updates sticky items each time the `preload()` is called.
+2. Iterate over all rows and columns in the grid.
+3. Here an assumption is made that attributes have already been cached in `allAttributes`, thus the order in which the methods are called within `prepare()` is highly important. 
+4. Positions of sticky items are updated with collection view offset. By doing this we pin sticky items to the edges of the collection view. 
+5. Besides updating the positions, we must ensure that sticky items are always placed above the rest of the cells. The new helper method `zIndex(forRow:column:)` will be implement for this purpose.
 
 *Z-index (or Z-order)* is a common attribute in programming APIs that defines the stack order of specific element within UI hierarchy. When two elements overlap, their Z-index determined which one appears on the top of the other. In our case, we distinguish 3 kinds of Z-orders: 
 1. Sticky cells that are intersection of sticky rows and columns — are always on the top.
@@ -332,12 +324,109 @@ private enum ZOrder {
 
 Lastly, we want to set the actual number of sticky items from *ViewController*:
 
+{% highlight swift linenos %}
 
+@IBOutlet weak var gridLayout: StickyGridCollectionViewLayout! {
+    didSet {
+        gridLayout.stickyRowsCount = 1
+        gridLayout.stickyColumnsCount = 1
+    }
+}
+
+{% endhighlight %}
+
+Let's highlight sticky items to make visually different from the rest of the cells:
+
+{% highlight swift linenos %}
+
+func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.reuseID, for: indexPath) as? CollectionViewCell else {
+        return UICollectionViewCell()
+    }
+
+    cell.titleLabel.text = "\(indexPath)"
+    cell.backgroundColor = gridLayout.isItemSticky(at: indexPath) ? .groupTableViewBackground : .white
+
+    return cell
+}
+
+{% endhighlight %}
+
+The code will not compile, because we need to implement `isItemSticky(at:)`. Add the below code to `StickyGridCollectionViewLayout` class:
+
+{% highlight swift linenos %}
+
+func isItemSticky(at indexPath: IndexPath) -> Bool {
+    return indexPath.item < stickyColumnsCount || indexPath.section < stickyRowsCount
+}
+
+{% endhighlight %}
+
+With that done, you are ready to see your hard work in action! Run the app and play around with it, and you will see it working as intended:
+
+<p align="center">
+    <a href="{{ "/img/sticky-grid-collection-view/sticky-demo.gif" | absolute_url }}">
+        <img src="/img/sticky-grid-collection-view/sticky-demo.gif" width="350" alt="Sticky Grid Collection View: Tutorial - Final Demo"/>
+    </a>
+</p>
+
+The last small that is left is to replace the hard coded content size with the dynamic one. First, we create a new property in our layout subclass:
+
+```swift
+private var contentSize = CGSize.zero
+```
+
+The content size needs to be updated each time the layout changes, i.e. in `prepare()`:
+
+{% highlight swift linenos %}
+
+override func prepare() {
+    setupAttributes()
+    updateStickyItemsPositions()
+
+    let lastItemFrame = allAttributes.last?.last?.frame ?? .zero
+    contentSize = CGSize(width: lastItemFrame.maxX, height: lastItemFrame.maxY)
+}
+
+{% endhighlight %}
+
+Lastly, replace the hard coded content value with the new one:
+
+{% highlight swift linenos %}
+
+override var collectionViewContentSize: CGSize {
+    return contentSize
+}
+
+{% endhighlight %}
+
+You can play with the number of collection view cells and their sizes to see how the layout adapts.
+
+### Source Code
+
+Here you can find the links to the projects:
+- [final project][final-repo]
+- [starter project][starter-repo]
+
+Pull requests and issues are warmly welcome.
+
+### Summary
+
+Collection views are among most widely adopted user interface components in iOS. By separating presentation, positioning and event-handling responsibilities collection view posses very high level of flexibility.
+
+Collection view communicates closely with its layout to position cells within its bounds. 
+
+`UICollectionViewFlowLayout` is the default layout that arranges cell in a grid. It communicates with collection view delegate through `UICollectionViewDelegateFlowLayout` protocol.
+
+By subclassing and overriding the flow layout we came up with a collection view that has variable number of sticky rows and columns and supports scrolling in both horizontal and vertical directions.
+
+`StickyGridCollectionViewLayout` that we have built is highly customizable and can be plugged in via interface builder or programmatically.
 
 ---
 
-*I'd love to meet you in Twitter: [@V8tr](https://twitter.com/{{ site.author.twitter }}). And don't forget to share this article if you find it useful.*
+*I'd love to meet you in Twitter: [@V8tr](https://twitter.com/{{ site.author.twitter }}). I would highly appreciate you sharing this article if you find it useful.*
 
 ---
 
-[starter-repo]: https://github.com/V8tr/UITableViewCellAnimation-Article-Starter
+[starter-repo]: https://github.com/V8tr/CollectionViewGridLayout-Starter
+[final-repo]: https://github.com/V8tr/CollectionViewGridLayout-Final
