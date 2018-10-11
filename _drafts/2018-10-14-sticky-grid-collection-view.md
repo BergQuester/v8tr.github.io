@@ -2,7 +2,7 @@
 layout: post
 title: "Sticky Grid Collection View: Implementing From Scratch"
 permalink: /sticky-grid-collection-view/
-share-img: "/img/sticky-grid-collection-view-share.png"
+share-img: "/img/sticky-grid-collection-view/share.png"
 ---
 
 In this article you will learn how to implement collection that has sticky rows and columns, and supports both vertical and horizontal scrolling using Swift.
@@ -40,7 +40,7 @@ Let's begin with [downloading the starter project][starter-repo]. It will save y
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/starter.png" | absolute_url }}">
-        <img src="/img/sticky-grid-collection-view/starter.png" width="400" alt="Sticky Grid Collection View: Tutorial - Starter Project"/>
+        <img src="/img/sticky-grid-collection-view/starter.png" width="400" alt="Sticky Grid Collection View: Implementing From Scratch - Starter Project"/>
     </a>
 </p>
 
@@ -53,7 +53,7 @@ Here is how `StickyGridCollectionViewLayout` is set in interface builder:
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/starter-storyboard-grid-layout.png" | absolute_url }}">
-        <img src="/img/sticky-grid-collection-view/starter-storyboard-grid-layout.png" alt="Sticky Grid Collection View: Tutorial - Starter Project Setup"/>
+        <img src="/img/sticky-grid-collection-view/starter-storyboard-grid-layout.png" alt="Sticky Grid Collection View: Implementing From Scratch - Starter Project Setup"/>
     </a>
 </p>
 
@@ -75,7 +75,7 @@ Now run the project and play with the scroll. The result is next:
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/horizontal-and-vertical-scrolling.gif" | absolute_url }}">
-        <img src="/img/sticky-grid-collection-view/horizontal-and-vertical-scrolling.gif" width="350" alt="Sticky Grid Collection View: Tutorial - Collection view with both vertical and horizontal scrolling"/>
+        <img src="/img/sticky-grid-collection-view/horizontal-and-vertical-scrolling.gif" width="350" alt="Sticky Grid Collection View: Implementing From Scratch - Collection view with both vertical and horizontal scrolling"/>
     </a>
 </p>
 
@@ -210,7 +210,7 @@ Now you can run the app to see the result:
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/grid-positioning.gif" | absolute_url }}">
-        <img src="/img/sticky-grid-collection-view/grid-positioning.gif" width="350" alt="Sticky Grid Collection View: Tutorial - Collection view cells grid positioning"/>
+        <img src="/img/sticky-grid-collection-view/grid-positioning.gif" width="350" alt="Sticky Grid Collection View: Implementing From Scratch - Collection view cells grid positioning"/>
     </a>
 </p>
 
@@ -304,7 +304,7 @@ Here is step by step explanation of the logic flow.
 
 private func zIndex(forRow row: Int, column col: Int) -> Int {
     if row < stickyRowsCount && col < stickyColumnsCount {
-        return ZOrder.staticStikyItem
+        return ZOrder.staticStickyItem
     } else if row < stickyRowsCount || col < stickyColumnsCount {
         return ZOrder.stickyItem
     } else {
@@ -317,7 +317,7 @@ private func zIndex(forRow row: Int, column col: Int) -> Int {
 private enum ZOrder {
     static let commonItem = 0
 	static let stickyItem = 1
-	static let staticStikyItem = 2
+	static let staticStickyItem = 2
 }
 
 {% endhighlight %}
@@ -366,7 +366,7 @@ With that done, you are ready to see your hard work in action! Run the app and p
 
 <p align="center">
     <a href="{{ "/img/sticky-grid-collection-view/sticky-demo.gif" | absolute_url }}">
-        <img src="/img/sticky-grid-collection-view/sticky-demo.gif" width="350" alt="Sticky Grid Collection View: Tutorial - Final Demo"/>
+        <img src="/img/sticky-grid-collection-view/sticky-demo.gif" width="350" alt="Sticky Grid Collection View: Implementing From Scratch - Final Demo"/>
     </a>
 </p>
 
