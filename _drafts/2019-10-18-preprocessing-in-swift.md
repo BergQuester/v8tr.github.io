@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Understanding Swift Build System"
-permalink: /swift-build-system/
-share-img: "/img/swift-preprocessing/share.png"
+title: "Understanding Swift Preprocessing"
+permalink: /preprocessing-in-swift/
+share-img: ""
 ---
 
 Every Swift program undergoes a number of steps before it can be run on your device. Let's take a look at one of such steps named build.
@@ -67,6 +67,48 @@ resolves inclusion for them and creates dependencies graph. Along with the graph
 <!-- Under the hood Xcode extensively uses [llbuild](https://github.com/apple/swift-llbuild) that accepts Swift, Objective-C, C and C++ files and resolves dependencies inclusion for them by creating a directed graph.
 
 *llbuild* is a low-level build system, used by Xcode. Along with dependencies graph, it creates metadata in llbuild-native format that is used on further stages of language processing system. -->
+
+<!-- The main goal of this step is to prepare the program in a way that it can be fed to a compiler. During this phase Xcode executes a number of tasks:
+- Preprocessing.
+- Resolve dependencies inclusion.
+- Handle incremental changes.
+-  -->
+
+<!-- In terms of Xcode this step is called **Build**. Whatever the name is, the main goal of preprocessor or build step is to transform your program in a way that it can be fed to a compiler.  -->
+
+<!-- It replaces macros with their definitions, discovers dependencies and resolves preprocessor directives. -->
+
+Despite Swift compiler does not have a preprocessor, it is partially compensated by Xcode build system by means of *Active Compilation Conditions*. An Xcode build setting `SWIFT_ACTIVE_COMPILATION_CONDITIONS` can contain custom values that Xcode will pass directly `swiftc` compiler as conditional compilation directives.
+
+The preprocessor directives can then be used in Swift project as follows:
+
+{% highlight swift linenos %}
+
+#if MY_CONDITION
+  let apiKey = "SOME_API_KEY"
+#else
+  let apiKey = "ANOTHER_API_KEY"
+#endif
+
+print("apiKey equals to \(apiKey)")
+
+{% endhighlight %}
+
+Here is what happens when `swiftc` is run with `MY_CONDITION` as a conditional compilation directive:
+
+```
+xcrun swiftc -D MY_CONDITION main.swift
+
+// Prints "apiKey equals to SOME_API_KEY"
+```
+
+#### Preprocessor Macros
+
+The sad truth is in Swift we are unable to use C-style macro, like we did in Objective-C. Next code will not compile in Swift for the reasons explained above:
+
+```C
+#define ANIMATION_DURATION 0.5 // Does not compile in Swift
+```
 
 ### Compiler
 
