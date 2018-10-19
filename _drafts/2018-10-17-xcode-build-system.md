@@ -67,15 +67,33 @@ The sad truth is that Swift compiler does not have preprocessor. It means that w
 
 Compiler consists our of 2 main parts: *front end* and *back end*.
 
-The **front end** part splits the source program into separate pieces without any semantic or type information and enforces a grammatical structure on them. Then the compiler uses this structure to produce an intermediate representation of the source program, named Swift Intermediate Language (SIL). It is used for further analysis and optimization of Swift code.
-
-It also manages the symbol table that collects information about the source program.
+The **front end** part splits the source program into separate pieces without any semantic or type information and enforces a grammatical structure on them. Then the compiler uses this structure to produce an intermediate representation of the source program, named Swift Intermediate Language (SIL). It is used for further analysis and optimization of Swift code. It also manages the symbol table that collects information about the source program.
 
 It is not possible to generate machine code directly from Swift Intermediate Language, thus SIL undergoes one more transformation into LLVM Intermediate Representation.
 
-During the **back end** phase, LLVM is fed with LLVM Intermediate Representation and generates machine code out of it.
+During the **back end** phase, LLVM transforms LLVM Intermediate Representation into assembly code.
 
 ### Assembler
+
+Assembler translates assembly code into relocatable machine code and produces object file as its output.
+
+Machine code is a numeric language that represents a set of instructions that can be executed directly by CPU. It is named relocatable, because no matter where that object file is in the address space, the instructions will be executed relatively to the file's position in memory.
+
+<!-- the addresses are relative and 
+
+The addresses of instructions of relocatable machine code is relative, 
+
+Assembler is a program that produces object files out of assembly code. Object file contains machine level instructions, information about hardware registers etc. The instructions are known as known relocatable machine code
+
+Assembler is a program that converts assembly code into machine code. The output of assembly is object file.
+
+The output of  relocatable machine code out of assembly code. -->
+
+### Linker
+
+Linker is a computer program that links and merges various object files together in order to make an executable file. All these files might have been compiled by separate assemblers. The major task of a linker is to search and locate referenced module/routines in a program and to determine the memory location where these codes will be loaded, making the program instruction to have absolute references.
+
+It is the job of the linker to take multiple object files and compound them into a single address space with absolute addressing.
 
 
 
