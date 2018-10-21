@@ -73,6 +73,8 @@ It is not possible to generate machine code directly from Swift Intermediate Lan
 
 During the **back end** phase, LLVM transforms LLVM Intermediate Representation into assembly code.
 
+**Cover that Xcode uses 2 compilers: clang and llvm.**
+
 ### Assembler
 
 Assembler translates assembly code into relocatable machine code and produces Mach-O file as its output. These object files are non-executable, they are just a collection of code and data.
