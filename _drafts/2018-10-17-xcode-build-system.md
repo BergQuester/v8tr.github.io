@@ -75,9 +75,13 @@ During the **back end** phase, LLVM transforms LLVM Intermediate Representation 
 
 ### Assembler
 
-Assembler translates assembly code into relocatable machine code and produces object file as its output.
+Assembler translates assembly code into relocatable machine code and produces Mach-O file as its output. These object files are non-executable, they are just a collection of code and data.
+
+Here goes explanation of Mach-O format https://en.wikipedia.org/wiki/Mach-O
 
 Machine code is a numeric language that represents a set of instructions that can be executed directly by CPU. It is named relocatable, because no matter where that object file is in the address space, the instructions will be executed relatively to the file's position in memory.
+
+
 
 <!-- the addresses are relative and 
 
@@ -95,7 +99,19 @@ Linker is a computer program that links and merges various object files together
 
 It is the job of the linker to take multiple object files and compound them into a single address space with absolute addressing.
 
+From video:
 
+The main purpose of this phase is to produce Mach-O executable that can be run on iOS or macOS system. 
+
+Linker takes two kinds of files as its input. These are object files that come out of *assembler* phase and libraries of different types (dynamic libraries - .dylib, .tbd, static archives - .a).
+
+An attentive reader might have noticed that both Assembler and Linker produce Mach-O files as their outputs. There must be some difference between them, right?
+
+The object files coming out of assembly phase are not finished yet. Some of them might contain missing pieces. This happens when one object file references another one. This kind of cross-reference is resolved as an "undefined symbols" and you might have seen this frightening error in Xcode output many times when compiling your project.
+
+It is the job of the linker to glue together object files into a single executable Mach-O with single address space and resolved references.
+
+Object files accepted by linker are not finished yet. We already covered that object files contain machine code that references functions in the address space. However that space is often outside of object file bounds, i.e. object files might cross-reference each other. Such fragments are resolved as "undefined symbols" and you might have seen this frightening error in Xcode output many times when compiling your project.
 
 ### Summary
 
