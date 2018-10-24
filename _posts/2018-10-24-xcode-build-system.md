@@ -94,7 +94,7 @@ The *machine code* and *Mach-O file* terms from the above definition require fur
 
 *Machine code* is a numeric language that represents a set of instructions that can be executed directly by CPU. It is named relocatable, because no matter where that object file is in the address space, the instructions will be executed relatively to that space.
 
-*Mach-O file* is a special file format for iOS and macOS operating systems that is used for object files, executables and libraries. It is a stream of bytes grouped in some meaningful chunks that will run on the ARM processor of an iOS device or the Intel processor on a Mac. If you want to dive
+*Mach-O file* is a special file format for iOS and macOS operating systems that is used for object files, executables and libraries. It is a stream of bytes grouped in some meaningful chunks that will run on the ARM processor of an iOS device or the Intel processor on a Mac.
 
 ### Linker
 
