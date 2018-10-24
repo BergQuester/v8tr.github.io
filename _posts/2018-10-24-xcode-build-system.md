@@ -113,7 +113,7 @@ Lastly, *loader* which is a part of operating system, brings a program into memo
 
 ### Summary
 
-It is difficult to overestimate the importance of *language processing systems* in software engineering. Instead of writing binary code of ones and zeros that hardware understands, we are free to pick almost any higher-level programming language, say *Swift* or *Objective-C*. The language processing system will do the rest to produce an executable program that can be run on iPhone, Mac or any other end device.
+It is difficult to underestimate the importance of *language processing systems* in software engineering. Instead of writing binary code of ones and zeros that hardware understands, we are free to pick almost any higher-level programming language, say *Swift* or *Objective-C*. The language processing system will do the rest to produce an executable program that can be run on iPhone, Mac or any other end device.
 
 As iOS and macOS developers we are using *Xcode Build System* on our daily basis. The main components of it are: *preprocessor*, *compiler*, *assembler*, *linker* and *loader*. *Xcode* uses different compilers for *Swift* and *Objective-C* languages, which are `swiftc` and `clang` correspondingly.
 
