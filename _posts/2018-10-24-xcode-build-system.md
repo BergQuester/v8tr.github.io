@@ -57,7 +57,7 @@ Considering that *Swift* compiler does not have a preprocessor, we are not allow
 
 ### Compiler
 
-*Compiler* is a program that maps a source program in one language into a semantically equivalent target program in another language. In other words, it transforms *Swift*,* Objective-C* and *C/C++* code into machine code without losing the former's meaning.
+*Compiler* is a program that maps a source program in one language into a semantically equivalent target program in another language. In other words, it transforms *Swift*, *Objective-C* and *C/C++* code into machine code without losing the former's meaning.
 
 *Xcode* uses two different compilers: one for Swift and the other for *Objective-C*, *Objective-C++* and *C/C++* files.
 
