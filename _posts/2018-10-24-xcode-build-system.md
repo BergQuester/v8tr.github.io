@@ -59,7 +59,7 @@ Considering that *Swift* compiler does not have a preprocessor, we are not allow
 
 *Compiler* is a program that maps a source program in one language into a semantically equivalent target program in another language. In other words, it transforms *Swift*, *Objective-C* and *C/C++* code into machine code without losing the former's meaning.
 
-*Xcode* uses two different compilers: one for Swift and the other for *Objective-C*, *Objective-C++* and *C/C++* files.
+*Xcode* uses two different compilers: one for *Swift* and the other for *Objective-C*, *Objective-C++* and *C/C++* files.
 
 `clang` is Apple's official compiler for the *C* languages family. It is open-sourced here: [swift-clang](https://github.com/apple/swift-clang).
 
@@ -78,7 +78,7 @@ Compiler consists out of 2 main parts: *front end* and *back end*.
 The *front end* part splits the source program into separate pieces without any semantic or type information and enforces a grammatical structure on them. Then the *compiler* uses this structure to produce an *intermediate representation* of the source program. It also creates and manages the *symbol table* that collects information about the source program.
 
 {: .box-note}
-*Symbol is name for a fragment of code or data.*
+*Symbol is a name for a fragment of code or data.*
 
 The *symbol table* stores names of variables, functions, classes, you name it, where each *symbol* is mapped to a certain piece of data.
 
