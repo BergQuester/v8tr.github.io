@@ -9,7 +9,7 @@ When developing iOS apps you rarely implement everything from the ground-up, bec
 
 ### Introduction
 
-Frameworks and libraries are everywhere: *UIKit*, *Foundation*, *WatchKit*, *GameKit*, you name it - all of these are from Apple standard library and chances high that you are using lots of them in your current project. I'd venture to guess that you are also familiar with *CocoaPods* and *Carthage* that help you manage third parties in your *Xcode* project.
+Frameworks and libraries are everywhere: *UIKit*, *Foundation*, *WatchKit*, *GameKit*, you name it - all of these are from Apple standard library and chances high that you are using lots of them in your current project. I'd venture to guess that you are also familiar with *CocoaPods* and *Carthage* that help you manage third parties in *Xcode* projects.
 
 Despite most of *iOS* and *macOS* developers deal with libraries and frameworks on daily basis and intuitively understand what they are, there is lack of understanding how they work under the hood and how they differ.
 
@@ -22,11 +22,27 @@ Throughout the article we'll answer that questions along with these ones:
 
 ### What is a Library?
 
-*Libraries* are files that define *symbols* that are not part of your *Xcode* target. The notion of *symbol* is fundamental to understand what libraries and frameworks are.
+*Libraries* are files that define pieces of code and data that are not part of your *Xcode* target. 
+
+The process of merging external libraries with app’s source code files is known as *linking*. The product of *linking* is a single executable file that can be run on a device, say iPhone or Mac.
+
+{: .box-note}
+Besides *linking*, every *Xcode* project undergoes 4 more phases. If you want to learn more about them, I suggest reading [Understanding Xcode Build System]({{ "/xcode-build-system/" | absolute_url }}).
+
+*Libraries* fall into *two* categories based on how they were linked to an app:
+- Static libraries `.a`
+- Dynamic libraries `.dylib`
+- Text Based Dylib Stubs `.tbd`
+
+Let's explore each type in more details.
+
+<!-- *Libraries* are files that define *symbols* that are not part of your *Xcode* target.
+
+The notion of *symbol* is fundamental to understand what libraries and frameworks are.
 
 In computer programming, a *symbol* is an identifier associated with a fragment of code or data. For example, every time you write `Array` in your code, *Swift* compiler substitutes it with a unique identifier known as a *symbol*.
 
-Relatively to an *Xcode* target, symbols might be *internal*, i.e. defined inside it, and *external*. Continuing our `Array` example, it is considered an external symbol since it borrowed from *Swift* framework.
+Relatively to an *Xcode* target, symbols might be *internal*, i.e. defined inside it, and *external*. Continuing our `Array` example, it is considered an external symbol since it is borrowed from *Swift* framework.
 
 The compiler stores *symbols* in a *symbol table* which is a data structure that makes it more convenient to hold a bunch of *symbols* and ensure their uniqueness.
 
@@ -36,9 +52,7 @@ If you want to learn more about *Swift* project compilation process, I suggest r
 Libraries can be one of three types:
 - Static library `.a`
 - Dynamic library `.dylib`
-- Text Based Dylib Stubs `.tbd`
-
-Let's explore each type in more details.
+- Text Based Dylib Stubs `.tbd` -->
 
 ### Static Library
 
@@ -54,50 +68,72 @@ Static libraries are ending with `.a` suffix and are created with archiver tool.
 - *Load commands*: Specify the logical structure of the file, like the location of the *symbol table*.
 - *Raw segment data*: Contains raw code and data.
 
-An attentive eye might have noticed that *Mach-O* files support one architecture only. Then how can a Swift app with lots of static libraries run on all devices and even the simulator?
+An attentive eye might have noticed that *Mach-O* files support single architecture. Then how can a Swift app with lots of static libraries run on all devices and even the simulator?
 
 The answer is `lipo` tool. It allows to package multiple single architecture libraries into a universal one, called *fat binary*, or vice-versa. Here you can [read more about `lipo`](https://ss64.com/osx/lipo.html).
 
 ### Dynamic Library
 
-https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/OverviewOfDynamicLibraries.html#//apple_ref/doc/uid/TP40001873-SW1
+*Dynamic libraries*, as opposed to the static ones, rather than being copied into single monolithic executable, are loaded into memory when they are actually needed. This could happen either at load time or at runtime. 
 
-So we have dynamic libraries, and those are Mach-O files that expose code and data fragments for executables to use. Those are distributed as part of the system.
+*Dynamic libraries* are usually shared between applications, therefore the system needs to make only one copy of the library.
 
+All iOS and macOS system libraries are dynamic, so that our apps are not bounded to specific copies of them and can benefit from the the improvements that Apple makes without shipping the new build.
 
 After discovering what *static library* and *dynamic library* is, let's see how they actually get incorporated into your app.
 
+### Comparing Static vs. Dynamic Libraries
 
-### Types of Linking
+Each type of library comes with own pros and cons.
 
-The process of merging external libraries with your app's source code files is known as *Linking*. The product of this phase is a single *Mach-O* executable file that can be run on a device, say iPhone or Mac.
+<table class="tg">
+  <tr>
+    <th></th>
+    <th>Static Library</th>
+    <th>Dynamic Library</th>
+  </tr>
+  <tr>
+    <td>Pros</td>
+    <td>
+      <ul>
+        <li>Libraries are guaranteed to be present in the app and have correct version.</li>
+        <li>No need to keep an app up to date with library updates.</li>
+        <li>Better performance of library calls.</li>
+      </ul>  
+    </td>
+    <td>- Can benefit from library improvements without app re-compile. Especially useful in case of system libraries.<br>- Takes less disk space, since it shares between applications.<br>- Faster startup time, as it is loaded on demand during runtime.<br>- Loaded by pieces: no need to load whole library if using just small piece.</td>
+  </tr>
+  <tr>
+    <td>Cons</td>
+    <td>- Inflated app size.<br>- Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries.<br>- Must copy whole library even if using single function.</td>
+    <td>- Can potentially break the program if anything changes in the library.<br>- Slower calls to library functions, as it is located outside application executable.</td>
+  </tr>
+</table>
 
-{: .box-note}
-Besides *linking*, every *Xcode* project undergoes 4 more phases. If you want to learn more about them, I suggest reading [Understanding Xcode Build System]({{ "/xcode-build-system/" | absolute_url }}).
+|      | Static Library                                                                                                                                                                                   | Dynamic Library                                                                                                                                                                                                                                                                                                     |
+|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Pros | Libraries are guaranteed to be present in the app and have correct version. No need to keep an app up to date with library updates. Better performance of library calls.                         | Can benefit from library improvements without app re-compile. Especially useful in case of system libraries. Takes less disk space, since it shares between applications. Faster startup time, as it is loaded on demand during runtime. Loaded by pieces: no need to load whole library if using just small piece. |
+| Cons | - Inflated app size. - Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries. - Must copy whole library even if using single function. | - Can potentially break the program if anything changes in the library. - Slower calls to library functions, as it is located outside application executable.                                                                                                                                                       |
 
-Two ways of linking libraries exist:
-- Static linking
-- Dynamic linking
-
-Each type of linking comes with its pros and cons. Understanding them will help you to make the right choice between static and dynamic libraries for your app.
-
-### Static Linking
-
-*Static linking* is the process of *Xcode* copying all code from static libraries into your app's executable. Therefore, static libraries become a part of your app executable.
-
-Pros:
+<!-- Static Pros:
 - Libraries are guaranteed to be present in the app and have correct version.
 - No need to keep an app up to date with library updates.
+- Better performance of library calls.
   
-Cons:
+Static Cons:
 - Inflated app size.
 - Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries.
-
-### Dynamic Linking
-
-https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/OverviewOfDynamicLibraries.html#//apple_ref/doc/uid/TP40001873-SW1
-
-https://en.wikipedia.org/wiki/Dynamic_linker
+- Must copy whole library even if using single function.
+  
+Dynamic Pros:
+- Can benefit from library improvements without app re-compile. Especially useful in case of system libraries.
+- Takes less disk space, since it shares between applications.
+- Faster startup time, as it is loaded on demand during runtime.
+- Loaded by pieces: no need to load whole library if using just small piece.
+  
+Dynamic Cons:
+- Can potentially break the program if anything changes in the library.
+- Slower calls to library functions, as it is located outside application executable. -->
 
 <!-- So it really is just an archive file. One thing worth noting is they also prenate dynamic linking so back in those days, all of the code would be consid-- would be distributed as archives. Because of that, you might not want to include all of the C library if you're using one function. So the behavior is if there's a symbol in a .o file, we would pull that whole .o file out of the archive.
 
@@ -120,6 +156,9 @@ So you may see them in your project, but you don't have to worry about them.
 And they only contain symbols.
  
 ### Summary
+
+Each type of linking comes with its pros and cons. Understanding them will help you to make the right choice between static and dynamic libraries for your app.
+
 
 ---
 
