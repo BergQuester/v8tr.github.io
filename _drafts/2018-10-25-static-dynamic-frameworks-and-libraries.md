@@ -86,34 +86,30 @@ After discovering what *static library* and *dynamic library* is, let's see how 
 
 Each type of library comes with own pros and cons.
 
-<table class="tg">
-  <tr>
-    <th></th>
-    <th>Static Library</th>
-    <th>Dynamic Library</th>
-  </tr>
-  <tr>
-    <td>Pros</td>
-    <td>
-      <ul>
-        <li>Libraries are guaranteed to be present in the app and have correct version.</li>
-        <li>No need to keep an app up to date with library updates.</li>
-        <li>Better performance of library calls.</li>
-      </ul>  
-    </td>
-    <td>- Can benefit from library improvements without app re-compile. Especially useful in case of system libraries.<br>- Takes less disk space, since it shares between applications.<br>- Faster startup time, as it is loaded on demand during runtime.<br>- Loaded by pieces: no need to load whole library if using just small piece.</td>
-  </tr>
-  <tr>
-    <td>Cons</td>
-    <td>- Inflated app size.<br>- Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries.<br>- Must copy whole library even if using single function.</td>
-    <td>- Can potentially break the program if anything changes in the library.<br>- Slower calls to library functions, as it is located outside application executable.</td>
-  </tr>
-</table>
+Static Libraries Pros and Cons:
 
-|      | Static Library                                                                                                                                                                                   | Dynamic Library                                                                                                                                                                                                                                                                                                     |
-|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Pros | Libraries are guaranteed to be present in the app and have correct version. No need to keep an app up to date with library updates. Better performance of library calls.                         | Can benefit from library improvements without app re-compile. Especially useful in case of system libraries. Takes less disk space, since it shares between applications. Faster startup time, as it is loaded on demand during runtime. Loaded by pieces: no need to load whole library if using just small piece. |
-| Cons | - Inflated app size. - Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries. - Must copy whole library even if using single function. | - Can potentially break the program if anything changes in the library. - Slower calls to library functions, as it is located outside application executable.                                                                                                                                                       |
+<table>
+<tr>
+    <td>Pros</td>
+    <td>Cons</td>
+</tr>
+<tr>
+    <td>
+        <ul>
+            <li>Libraries are guaranteed to be present in the app and have correct version.</li>
+            <li>No need to keep an app up to date with library updates.</li>
+            <li>Better performance of library calls.</li>
+        </ul>  
+    </td>
+    <td>
+        <ul>
+            <li>Inflated app size.</li>
+            <li>Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries.</li>
+            <li>Must copy whole library even if using single function.</li>
+        </ul>  
+    </td>
+</tr>
+</table>                                                                                                                                                  |
 
 <!-- Static Pros:
 - Libraries are guaranteed to be present in the app and have correct version.
