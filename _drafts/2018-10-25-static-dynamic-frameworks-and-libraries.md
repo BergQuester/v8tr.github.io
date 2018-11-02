@@ -9,7 +9,7 @@ When developing iOS apps you rarely implement everything from the ground-up, bec
 
 ### Introduction
 
-Frameworks and libraries are everywhere: *UIKit*, *Foundation*, *WatchKit*, *GameKit*, you name it - all of these are from Apple standard library and chances high that you are using lots of them in your current project. I'd venture to guess that you are also familiar with *CocoaPods* and *Carthage* that help you manage third parties in *Xcode* projects.
+Frameworks and libraries are everywhere: *UIKit*, *Foundation*, *WatchKit*, *GameKit*, you name it — all of these are from Apple standard library and chances high that you are using lots of them in your current project. I'd venture to guess that you are also familiar with *CocoaPods* and *Carthage* that help you manage third parties in *Xcode* projects.
 
 Despite most of *iOS* and *macOS* developers deal with libraries and frameworks on daily basis and intuitively understand what they are, there is lack of understanding how they work under the hood and how they differ.
 
@@ -22,14 +22,14 @@ Throughout the article we'll answer that questions along with these ones:
 
 ### What is a Library?
 
-*Libraries* are files that define pieces of code and data that are not part of your *Xcode* target. 
+*Libraries* are files that define pieces of code and data that are not a part of your *Xcode* target. 
 
 The process of merging external libraries with app’s source code files is known as *linking*. The product of *linking* is a single executable file that can be run on a device, say iPhone or Mac.
 
 {: .box-note}
-Besides *linking*, every *Xcode* project undergoes 4 more phases. If you want to learn more about them, I suggest reading [Understanding Xcode Build System]({{ "/xcode-build-system/" | absolute_url }}).
+Besides *linking*, every *Xcode* project undergoes 4 more phases to produce an executable application. In [Understanding Xcode Build System]({{ "/xcode-build-system/" | absolute_url }}) I will walk you through these steps.
 
-*Libraries* fall into *two* categories based on how they were linked to an app:
+*Libraries* fall into *two* categories based on how they are linked to an app:
 - Static libraries `.a`
 - Dynamic libraries `.dylib`
 - Text Based Dylib Stubs `.tbd`
@@ -58,7 +58,7 @@ Libraries can be one of three types:
 
 *Static libraries* are collections of *object files*. In its turn, *object file* is just a name for a file that comes out of a compiler and contains machine code.
 
-Static libraries are ending with `.a` suffix and are created with archiver tool. If it sounds very similar to *ZIP* archive, then it's exactly what it is. You can think of a static library as an archive of multiple *object files*. 
+Static libraries are ending with `.a` suffix and are created with an *archiver* tool. If it sounds very similar to a *ZIP* archive, then it's exactly what it is. You can think of a static library as an archive of multiple *object files*. 
 
 {: .box-note}
 `.a` is an old format originally used by UNIX and its `ar` tool. If you want to give it a deep dive, I suggest reading [the man page](https://linux.die.net/man/1/ar).
@@ -76,40 +76,81 @@ The answer is `lipo` tool. It allows to package multiple single architecture lib
 
 *Dynamic libraries*, as opposed to the static ones, rather than being copied into single monolithic executable, are loaded into memory when they are actually needed. This could happen either at load time or at runtime. 
 
-*Dynamic libraries* are usually shared between applications, therefore the system needs to make only one copy of the library.
+*Dynamic libraries* are usually shared between applications, therefore the system needs to store only one copy of the library and let different processes access it. This results in a slower performance, compared to the *static libraries*.
 
-All iOS and macOS system libraries are dynamic, so that our apps are not bounded to specific copies of them and can benefit from the the improvements that Apple makes without shipping the new build.
+All iOS and macOS system libraries are dynamic. Hence our apps will benefit from the future improvements that Apple makes to standard library frameworks without shipping new builds.
 
-After discovering what *static library* and *dynamic library* is, let's see how they actually get incorporated into your app.
+### Text Based Dylib Stubs
+
+When we link SDKs, like *UIKit* or *Foundation*, to iOS and macOS apps, we don't want to ship the entirety of them together with the app, because it would be too large. Linker is also strict about this and does not accept shared `.dylib` libraries to be linked against, but only `.tbd` ones. So what are those?
+
+*Text-based `.dylib` stub* is a text file that contains the names of the the methods from `.dylib` without their bodies which allows to significantly reduce `.tbd` size. Along with method names, it contains location of the corresponding `.dylib`, architecture, platform and some other metadata. Here is how a typical `.tbd` looks when opened in text editor:
+
+```plaintext
+--- !tapi-tbd-v3
+archs:           [ x86_64 ]
+uuids:           [ 'x86_64: 6FFAC142-415D-3AF0-BC09-336302F11934' ]
+platform:        macosx
+install-name:    /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libQuadrature.dylib
+objc-constraint: none
+exports:         
+  - archs:           [ x86_64 ]
+    allowable-clients: [ vecLib ]
+    symbols:         [ _quadrature_integrate ]
+...
+```
 
 ### Comparing Static vs. Dynamic Libraries
 
-Each type of library comes with own pros and cons.
+Let's summarize pros and cons of static and dynamic libraries.
 
-Static Libraries Pros and Cons:
-
+**Static libraries**
 <table>
-<tr>
-    <td>Pros</td>
-    <td>Cons</td>
-</tr>
-<tr>
-    <td>
-        <ul>
-            <li>Libraries are guaranteed to be present in the app and have correct version.</li>
-            <li>No need to keep an app up to date with library updates.</li>
-            <li>Better performance of library calls.</li>
-        </ul>  
-    </td>
-    <td>
-        <ul>
-            <li>Inflated app size.</li>
-            <li>Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries.</li>
-            <li>Must copy whole library even if using single function.</li>
-        </ul>  
-    </td>
-</tr>
-</table>                                                                                                                                                  |
+    <tr align="center">
+        <td>Pros</td>
+        <td>Cons</td>
+    </tr>
+    <tr>
+        <td>
+            <ul>
+                <li>Libraries are guaranteed to be present in the app and have correct version.</li>
+                <li>No need to keep an app up to date with library updates.</li>
+                <li>Better performance of library calls.</li>
+            </ul>  
+        </td>
+        <td>
+            <ul>
+                <li>Inflated app size.</li>
+                <li>Launch time degrades. It takes longer to launch app that has large executable file inflated by static libraries.</li>
+                <li>Must copy whole library even if using single function.</li>
+            </ul>  
+        </td>
+    </tr>
+</table>
+
+**Dynamic libraries** 
+<table>
+    <tr align="center">
+        <td>Pros</td>
+        <td>Cons</td>
+    </tr>
+    <tr>
+        <td>
+            <ul>
+                <li>Can benefit from library improvements without app re-compile. Especially useful in case of system libraries.</li>
+                <li>Takes less disk space, since it shares between applications.</li>
+                <li>Faster startup time, as it is loaded on demand during runtime.</li>
+                <li>Loaded by pieces: no need to load whole library if using just small piece.</li>
+            </ul>  
+        </td>
+        <td>
+            <ul>
+                <li>Can potentially break the program if anything changes in the library.</li>
+                <li>Slower calls to library functions, as it is located outside application executable.</li>
+            </ul>  
+        </td>
+    </tr>
+</table>
 
 <!-- Static Pros:
 - Libraries are guaranteed to be present in the app and have correct version.
@@ -131,25 +172,14 @@ Dynamic Cons:
 - Can potentially break the program if anything changes in the library.
 - Slower calls to library functions, as it is located outside application executable. -->
 
-<!-- So it really is just an archive file. One thing worth noting is they also prenate dynamic linking so back in those days, all of the code would be consid-- would be distributed as archives. Because of that, you might not want to include all of the C library if you're using one function. So the behavior is if there's a symbol in a .o file, we would pull that whole .o file out of the archive.
+<!-- So it really is just an archive file. One thing worth noting is they also prenate dynamic linking so back in those days, all of the code would be consider-- would be distributed as archives. Because of that, you might not want to include all of the C library if you're using one function. So the behavior is if there's a symbol in a .o file, we would pull that whole .o file out of the archive.
 
 But the other .o files would not be brought in. If you're referencing symbols between them, everything you need will be brought in. If you're using some sort of non-symbol behavior like a static initializer, or you're re-exporting them as part of your own dylib, you may need to explicitly use something like force load or all load to the linker to tell it bring in everything. Or these files, even though there's no linkage. So let's go through an example to try to tie this altogether. -->
 
-- how affects app startup time
+After discovering what *static library* and *dynamic library* is, let's see how they actually get incorporated into your app.
 
 ### What is a Framework?
 
-### Text Based Dylib Stubs
-
-There are also TBD files, or text-based dylib stubs. So what are those? Well, when we made the SDKs for iOS and macOS, we had all these dylibs with all these great functions like MapKit and WebKit that you may want to use. But we don't want to ship the entire copy of those with the SDK because it would be large. Ant the compiler and linker don't need. It's only needed to run the program.
-
-So instead we create what's called a stub dylib where we delete the bodies of all of the symbols and we just have the names. And then once we did that, we've made a textual representation of them that are easier for us to use.
-
-Currently, they are only used for distributing the SDKs to reduce size.
-
-So you may see them in your project, but you don't have to worry about them.
-
-And they only contain symbols.
  
 ### Summary
 
