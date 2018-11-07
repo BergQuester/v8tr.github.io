@@ -69,7 +69,7 @@ The answer is `lipo` tool. It allows to package multiple single architecture lib
 
 All iOS and macOS system libraries are dynamic. Hence our apps will benefit from the future improvements that Apple makes to standard library frameworks without creating and shipping new builds.
 
-### Text Based Dylib Stubs
+### Text Based .dylib Stubs
 
 When we link system libraries, such as *UIKit* or *Foundation*, we don't want to copy their entirety into the app, because it would be too large. Linker is also strict about this and does not accept shared `.dylib` libraries to be linked against, but only `.tbd` ones. So what are those?
 
