@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Libraries and Frameworks in Xcode: Beyond the Basics"
+title: "Static and Dynamic Libraries and Frameworks in iOS"
 permalink: /static-dynamic-frameworks-and-libraries/
 share-img: "/img/static-dynamic-frameworks-and-libraries-share.png"
 ---
