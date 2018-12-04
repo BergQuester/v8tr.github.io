@@ -37,14 +37,15 @@ What might have seemed like a small task at first glance, gradually evolves into
 
 ### Table View vs. Table View Controller
 
-Table view controllers were designed to be used when interface consists from a table view and nothing else. Thus, they are 
+Naturally, when adding table to a screen you have two options: a table view or a table view controller, where the former is the most common choice. However, by using `UITableViewController` you can save yourself a lot of efforts, since it provides lots of useful features ready to use, namely:
+- Clears cell selection every time table view appears on a screen.
+- Flashes scroll indicator when table view ends displaying.
+- Puts table in edit mode (exits the edit mode) by tapping Edit (Done) buttons. It also provides keyboard avoidance when in edit mode.
+- Provides support for `NSFetchedResultsController` that simplifies managing of *Core Data* requests.
 
+The above means that if we opt in to use table view controllers instead of table views, we can already cut lots of boilerplate code. After agreeing on that, let's see how we can use them in a most efficient way. 
 
-We come up with an out-of-the-box solution to one of the stated problems by use of Table View Controllers.
-
-Usage of table view controllers over table views can help us resolve one from the above points without much efforts. Additionally, it offers some nice functionality for free.
-
-Apple [suggests](https://developer.apple.com/documentation/uikit/uitableviewcontroller) to use table view controllers when an interface consists from a table view and nothing else. We can easily overcome this by embedding them as children. Here is one of the ways to implement this:
+The first thing that should be noted about `UITableViewController` is that it works best when your screen consists from a table view and nothing else. However, we can easily overcome this by embedding it as a child view controller. Here is my personal favorite way of doing it:
 
 {% highlight swift linenos %}
 
@@ -56,6 +57,14 @@ func add(child: UIViewController, container: UIView, configure: (_ childView: UI
 }
 
 {% endhighlight %}
+
+### Reusable Table View Delegate and Data Source
+
+The purpose of table view data source is to tell the table view how many sections and rows per section it has, and then provide the data to display. Table view delegate methods primarily lend themselves to renspond to user interaction with the table.
+
+Most of us must have already memorized the signatures of these methods - so frequently we write them. Even the simplest table view with dynamic content must contain at least two of these methods - one for cell creation and the other for the number of rows in section.
+
+Our next step towards is to abstract away these two protocols into a reusable solution.
 
 ---
 
