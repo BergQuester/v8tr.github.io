@@ -7,11 +7,9 @@ share-img: ""
 
 ### Problem Statement
 
-If you recall your first acquaintance with iOS or macOS development, chances high that it was table view that you first learned. Indeed, tables are probably among the most widely adopted UI components in Cocoa and `UITableView` or `NSTableView` is the key control when it comes to their implementation.
+If you recall your first acquaintance with iOS or macOS development, chances high that it was table view that you first stumbled upon. Indeed, tables are among the most widely used UI components in Cocoa and they are usually implemented by means of `UITableView` or `NSTableView`.
 
-When looking through you current project's code base, how many table views can you count? Imagine yourself working on a e-commerce app. Then the below picture might be the case for you:
-
-<br/>
+When looking through you current project's code base, how many table views can you count? Having lots of view controllers utilizing them one way or another is a commonplace in *Swift* projects. The below picture for a hypothetical app shows the interaction between some if its view controllers:
 
 <p align="center">
     <a href="{{ "img/declarative-table-view-controllers/table-view-duplication.png" | absolute_url }}">
@@ -19,29 +17,32 @@ When looking through you current project's code base, how many table views can y
     </a>
 </p>
 
-<br/>
+Every iOS and macOS developer knows that connecting table view inevitably brings some boilerplate code. It takes at least two methods to setup the simplest table view with dynamic data: the one that creates and configures cell and the other one for the number of rows in section.
 
-Sad but true, each of the above classes implements table view delegate and data source methods, registers cells. It might be dealing with keyboard, including keyboard avoidance, custom gestures and explicit handling of return key presses. Furthermore, each class manages their table views as outlets or programmatically. Even more, such code is usually written in imperative manner and does not feel *swifty*. Table view are also difficult to test in isolation, since table data is too coupled with its presentation. It is also difficult to understand the structure of table view, since data flow is divided between so many methods.
+Taking aside the obvious drawback of conforming to data source methods again and again, let's think about some non-obvious problems with the standard approach to managing table views:
+- Table view delegate and data source methods are often located far from each other or even in different files. This makes it difficult to follow the data and logic flow.
+- Cells registration becomes coupled with view controller, since the knowledge of which table view cell classes are used and whether they are initialized from nib or from class is leaked.
+- Leaves lots of room for mistake if data source methods become inconsistent between each other.
+- These methods are written in imperative manner which does not feel *Swifty*.
 
-What might have seemed like a small task at first glance, gradually evolves into technical dept and eats development time and efforts. In present article lets discuss what can we do better about it and focus on following aspects of the problem:
+What might have seemed like a trivial task at a first glance, gradually evolves into technical dept and eats development time and efforts.
 
-- Remove duplication of table view delegate and data source methods.
+After we realized the problem, it's time to state criteria to our solution:
+- Make table view data source declarative and data-driven.
+- Reduce boilerplate code, related to managing table views and their data sourcs.
+- Decouple cells registration from view controllers and table views.
+
+<!-- - Remove duplication of table view delegate and data source methods.
 - Use declarative approach rather than imperative which is imposed by standard Cocoa API.
-- Extract boilerplate such as cells registration and keyboard handling. 
-
-<!-- - Table views code usually duplicated
-- Diagram with multiple screens that use table view and duplicate data source, delegate methods
-- Step forward: plugin controllers + remove boilerplate delegate and data source methods
-- Benefits: investigate benefits of using table view controller over table view
-- Introduce custom solution   -->
+- Extract boilerplate such as cells registration and keyboard handling.  -->
 
 ### Table View vs. Table View Controller
 
-Naturally, when adding table to a screen you have two options: a table view or a table view controller, where the former is the most common choice. However, by using `UITableViewController` you can save yourself a lot of efforts, since it provides lots of useful features ready to use, namely:
-- Clears cell selection every time table view appears on a screen.
-- Flashes scroll indicator when table view ends displaying.
-- Puts table in edit mode (exits the edit mode) by tapping Edit (Done) buttons. It also provides keyboard avoidance when in edit mode.
-- Provides support for `NSFetchedResultsController` that simplifies managing of *Core Data* requests.
+Naturally, when adding table to a screen you have two options: a table view or a table view controller, where the former is the most common choice. However, an immediate benefit can be obtained if we opt in to use table view controller instead. Let's which functionality it provides ready-to-use:
+- Clear cell selection every time table view appears on a screen.
+- Flash scroll indicator when table view ends displaying.
+- Put table in edit mode (exit the edit mode) by tapping Edit (Done) buttons. It also provides keyboard avoidance when in edit mode.
+- Provide support for `NSFetchedResultsController` that simplifies managing of *Core Data* requests.
 
 The above means that if we opt in to use table view controllers instead of table views, we can already cut lots of boilerplate code. After agreeing on that, let's see how we can use them in a most efficient way. 
 
