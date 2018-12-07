@@ -17,36 +17,31 @@ When looking through you current project's code base, how many table views can y
     </a>
 </p>
 
-Every iOS and macOS developer knows that connecting table view inevitably brings some boilerplate code. It takes at least two methods to setup the simplest table view with dynamic data: the one that creates and configures cell and the other one for the number of rows in section.
+Every iOS and macOS developer knows that attaching table view to a new view controller inevitably brings some boilerplate code. It takes at least two methods to setup the simplest table view with dynamic data: the one that creates and configures cells and the other one for the number of rows in section.
 
-Taking aside the obvious drawback of conforming to data source methods again and again, let's think about some non-obvious problems with the standard approach to managing table views:
-- Table view delegate and data source methods are often located far from each other or even in different files. This makes it difficult to follow the data and logic flow.
-- Cells registration becomes coupled with view controller, since the knowledge of which table view cell classes are used and whether they are initialized from nib or from class is leaked.
-- Leaves lots of room for mistake if data source methods become inconsistent between each other.
-- These methods are written in imperative manner which does not feel *Swifty*.
+Taking aside the obvious drawback of conforming to the same data source methods again and again, let's think about some non-obvious problems with the standard approach to managing table views:
+- It is difficult to follow table view delegate and data source methods, since in source code editor they often appear in different order, far from each other or even in different files. Thus, it often requires manual debugging to follow the flow of control.
+- View controllers that manage table views become coupled with table view cells through their registration and configuration. The knowledge about how table view cell is instantiated - either from nib of from class - leaks to view controller. It breaks the dependency inversion principle, since module of the higher level (view controller) becomes dependent on the module of lower level (table view cell).
+- Leaves lots of room for mistake, since data source methods must be consistent with each other. For example, if methods `numberOfRows(inSection:)`, `numberOfSections(in:)` and `tableView(_,cellForRowAt:)` become inconsistent, it will result in an unwanted behavior or even crash.
+- These methods are written in an imperative manner which does not feel *Swifty*.
 
-What might have seemed like a trivial task at a first glance, gradually evolves into technical dept and eats development time and efforts.
+All in all, what might have seemed like a trivial task at a first glance, gradually evolves into technical dept and eats development time and efforts.
 
-After we realized the problem, it's time to state criteria to our solution:
-- Make table view data source declarative and data-driven.
-- Reduce boilerplate code, related to managing table views and their data sourcs.
-- Decouple cells registration from view controllers and table views.
-
-<!-- - Remove duplication of table view delegate and data source methods.
-- Use declarative approach rather than imperative which is imposed by standard Cocoa API.
-- Extract boilerplate such as cells registration and keyboard handling.  -->
+After defining the problem, let's implement our own data source on top of `UITableViewDataSource` that satisfies following criteria:
+- Is data-driven.
+- Exposes declarative API.
+- Reduces boilerplate code, imposed by standard approach to managing table views and their data sources.
+- Decouples cells registration from view controllers and table views.
 
 ### Table View vs. Table View Controller
 
-Naturally, when adding table to a screen you have two options: a table view or a table view controller, where the former is the most common choice. However, an immediate benefit can be obtained if we opt in to use table view controller instead. Let's which functionality it provides ready-to-use:
+The first step towards our goal is opt in to use `UITableViewController` instead of plain table view. It already specializes in managing the latter and works best when interface consists from a table view and nothing else. It also comes with some useful features ready-to-use:
 - Clear cell selection every time table view appears on a screen.
 - Flash scroll indicator when table view ends displaying.
 - Put table in edit mode (exit the edit mode) by tapping Edit (Done) buttons. It also provides keyboard avoidance when in edit mode.
 - Provide support for `NSFetchedResultsController` that simplifies managing of *Core Data* requests.
 
-The above means that if we opt in to use table view controllers instead of table views, we can already cut lots of boilerplate code. After agreeing on that, let's see how we can use them in a most efficient way. 
-
-The first thing that should be noted about `UITableViewController` is that it works best when your screen consists from a table view and nothing else. However, we can easily overcome this by embedding it as a child view controller. Here is my personal favorite way of doing it:
+For interfaces which are more complex that just a table view, it requires some extra setup. In such cases `UITableViewController` could be embedded as a child view controller. Here is my personal favorite way of doing it:
 
 {% highlight swift linenos %}
 
@@ -59,19 +54,21 @@ func add(child: UIViewController, container: UIView, configure: (_ childView: UI
 
 {% endhighlight %}
 
-The `configure` closure is natural place to setup constraints, like pin table view to superview edges. The `container` is often primary view of parent view controller.
+The `configure` closure is natural place to setup constraints, like pin table view to superview edges. The `container` is often the primary view of the parent view controller. You will see how this method applied in practice a few paragraphs next.
 
-### Reusable Table View Delegate and Data Source
+Let's follow this article to see how a table view controller can be used in conjunction with a data-driven data source in a most efficient way. 
 
-The purpose of table view data source is to tell the table how many sections and rows per section it has, and then provide the data to display. In their turn, delegate methods primarily lend themselves to handle user interaction with the table.
+### Implementing Data-Driven Data Source
 
-Most of us must have already memorized the signatures of these methods -- so frequently we implement them. Even the simplest table view with dynamic content must contain at least two of these methods - one for cell creation and the other for the number of rows in section.
+The purpose of table view data source is to tell the table how many sections and rows per section it has, and then provide the data to display. In their turn, the delegate methods primarily lend themselves to handle user interaction with the table.
 
-The next step towards cutting table view boilerplate code is to abstract away the aforementioned protocols into a reusable and extendable solution that can be easily attached to any table view and tested in isolation. Furthermore, it must utilize table view controller rather than a plain table view.
+Most of us must have already memorized the signatures of these methods -- so frequently we implement them. As already been said, we need at least two of those to implement even the simplest table view with dynamic content.
 
-#### Step 1: Section model
+The next step is to abstract away `UITableViewDelegate` protocol into a reusable and extendable solution that can be easily attached to any table view and tested in isolation. Furthermore, it must utilize table view controller rather than a plain table view.
 
-The first thing we do is create a basic data structure that will be backing table views.
+#### Step 1: Section Model
+
+The first thing we do is create a basic data structure that backs a single section within a table view.
 
 {% highlight swift linenos %}
 
@@ -81,7 +78,7 @@ struct Section<Item> {
 
 {% endhighlight %}
 
-#### Step 2: Data Source model
+#### Step 2: Data Source Model
 
 Next, let's define a data-driven data source that accepts `Section`s as its input and provides a number of convenience methods in top of them. 
 
@@ -106,11 +103,11 @@ struct DataSource<Item> {
 
 {% endhighlight %}
 
-The data-driven nature of data source allows to cut off `UITableViewDataSource` methods that define number of sections and number of rows in section.
+Now we could stop worrying that methods `numberOfRows(inSection:)`, `numberOfSections(in:)` and `tableView(_,cellForRowAt:)` might become inconsistent, since the data source derives them based on the sections model provided. Furthermore, it is completely unaware of `UIKit` and can be easily reused and tested in isolation.
 
 #### Step 3: Table Configurator
 
-The last thing we need is cells configuration. When cell is dequeued from table view, it has generic `UITableViewCell` type which is in most cases should be type casted to a concrete type. In our solution we will avoid this by associating `Item` data model with a cell class.
+The last thing we need is cells configuration. When a cell is dequeued from a table view, it has generic `UITableViewCell` type which is in most cases should be type casted to a concrete class. In our solution we will avoid this by means of associated types.
 
 {% highlight swift linenos %}
 
@@ -125,7 +122,7 @@ protocol ConfiguratorType {
 
 {% endhighlight %}
 
-The protocol defines 3 methods responsible for cells registration and configuration. Let's define an extension that dequeues and configures a cell from a table view.
+`ConfiguratorType` defines 3 methods responsible for cells registration and configuration. Let's define an extension that dequeues and configures a cell from a table view.
 
 {% highlight swift linenos %}
 
@@ -140,7 +137,9 @@ extension ConfiguratorType {
 
 {% endhighlight %}
 
-The main reason for making `ConfiguratorType` a protocol rather than a concrete type is support of different kinds of cells within single table view. Let's focus on implementation for the homogenous table views first. We'll create another configurator later in this article. 
+`ConfiguratorType` is defined as a protocol to allow separate implementation for table views that have single kind of cells registered and different kinds of cells correspondingly.
+
+Fow now let's focus on implementation for the homogenous table views. We'll create another configurator later in this article. 
 
 {% highlight swift linenos %}
 
@@ -171,11 +170,14 @@ struct Configurator<Item, Cell: UITableViewCell>: ConfiguratorType {
 
 {% endhighlight %}
 
-The configurator is initialized with a closure that configures table view cell with a given item. It also enforces a common convention on table view cell reusable identifiers and nibs to match the name of corresponding cell class.
+The configurator is initialized with a closure that configures a cell with a given item. 
 
-Method `registerCells(in:)` is one of particular interest. It registers cells by nib (if exists) or by class, encapsulating the knowledge of how table view cell initialized. 
+{: .box-note}
+*The configurator enforces a naming convention on table view cells to have their reusable identifiers and nib names to match the name of the class.*
 
-`Configurator` allows to cut lots of boilerplate code related to table view cells configuration and registration:
+Method `registerCells(in:)` is one of particular interest. It registers cells by nib (if exists) or by class, encapsulating the knowledge of how table view cell is initialized. 
+
+`Configurator` allows to cut even more boilerplate code related to table view cells configuration and registration:
 - Automatically register cells in a table view.
 - Avoid type casing of dequeued table view cells.
 - Associate table view cell with its model.
@@ -184,7 +186,7 @@ Now we are ready to combine `DataSource`, `Configurator` and `UITableViewControl
 
 ### Putting It Altogether
 
-Finally, let's create a table view controller driven by `DataSource` and `Configurator` that we just defined. 
+Finally, let's create a table view controller driven by `DataSource` and `Configurator`. 
 
 {% highlight swift linenos %}
 
@@ -220,7 +222,7 @@ class PluginTableViewController<Item, Cell: UITableViewCell>: UITableViewControl
 
 {% endhighlight %}
 
-For the demonstration purpose `PluginTableViewController` is restricted to core methods, although it can be easily extended with the full scope of table view data source methods.
+For the purpose of this article `PluginTableViewController` is restricted to 3 methods, although it can be easily extended with the full scope of table view data source methods.
 
 To see how it plays in action, let's attach it to a view controller.
 
@@ -251,9 +253,9 @@ class ViewController: UIViewController {
 
 {% endhighlight %}
 
-That's it, just 12 lines in `setupTable()` method. The code is declarative and easy-to-understand, compared to default table view data source methods. It is easy to follow, since everything is contained in a single method, instead of being spread between a number of methods or even files.
+That's it, just 12 lines in `setupTable()` method. The code is declarative and easy-to-understand, compared to default table view data source methods. It satisfies the criteria defined at the beginning and does not possess the drawbacks of standard approach to managing table views.
 
-As a bonus, let's examine a more complex case with a table view that contains cells of different type, defined both in a nib and a class.
+As a bonus, let's examine a more complex case with different kinds of cells in a single table views, where cells are initialized both from nib and class.
 
 ### Table View with Heterogenous Cells
 
@@ -345,7 +347,7 @@ Although the code has increased from 12 lines to 19, it is still expressible and
 
 *If this article helped you, tweet it forward.*
 
-"https://twitter.com/intent/tweet?text={{ page.title | url_encode }}+{{ site.url }}{{ page.url }} via @{{ site.author.twitter }}"
+<!-- "https://twitter.com/intent/tweet?text={{ page.title | url_encode }}+{{ site.url }}{{ page.url }} via @{{ site.author.twitter }}" -->
 
 *I'd love to meet you in Twitter: [@V8tr](https://twitter.com/{{ site.author.twitter }}). I would highly appreciate you sharing this article if you find it useful.*
 
