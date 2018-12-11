@@ -1,36 +1,33 @@
 ---
 layout: post
-title: "Declarative table view controller or how to stop repeating table view delegate and data source boilerplate"
-permalink: /declarative-table-view-controllers/
+title: "Data-Driven Table Views"
+permalink: /data-drive-table-views/
 share-img: ""
 ---
 
-The standard approach to table view management and data source implementation has a number of flaws, including hard to understand flow of control, cumbersome syntax, error-prone, violation of dependency inversion principle.
+The standard approach to managing and creating table views has a number of flaws: repeated boilerplate code, tangled flow of control, violation of dependency inversion principle. In this article let's address these issues and design a data-driven, reusable and declarative table view component.
 
 ### Problem Statement
 
 When looking through you current project's code base, how many table views can you count? Having lots of view controllers utilizing them one way or another is a commonplace in *Swift* projects.
 
-Every *iOS* and *macOS* developer knows that attaching table view to a new view controller inevitably brings some boilerplate code. It takes at least two methods to setup the simplest table view with dynamic data: the one that creates and configures cells and the other one for the number of rows in section.
+Every *iOS* and *macOS* developer knows that attaching table view to a new view controller inevitably brings some boilerplate code. It takes at least two methods to setup the simplest table view with dynamic data: one for cells configuration and the other for the number of rows in section.
 
-Taking aside the obvious drawback of repeated code of table view data source methods, let's think about some non-obvious problems:
-1. It is difficult to follow the flow of control of table view data source and delegate methods, since they are often placed in different order, are far from each other or even located in different files.
-2. The knowledge about which cells are attached to a table view and how cells are instantiated (nib or class) leaks to corresponding view controllers. It violates the [dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle), since module of the higher level (view controller) becomes dependent on the module of lower level (table view cell).
-3. Leaves lots of room for mistake, since data source methods must be consistent with each other. For example, if `numberOfRows(inSection:)`, `numberOfSections(in:)` and `tableView(_,cellForRowAt:)` are inconsistent, it results in an unwanted behavior or even crash.
-4. When a cell is dequeued from a table view, it has generic `UITableViewCell` type which is in most cases should be type casted to a concrete class.
-5. The whole table view data source protocol implementation is imperative which does not feel *Swifty*.
+Let's think about which problem does the standard approach to managing table views with their data sources have:
+1. Repeated boilerplate code: data source and delegate methods, cells registration, keyboard avoidance, `NSFetchedResultsController` setup etc.
+2. It is difficult to follow the flow of control of table view data source and delegate methods, since they are often placed in different order, are far from each other or even located in different files.
+3. The knowledge about which cells are attached to a table view and how cells are instantiated (nib or class) leaks to corresponding view controllers. It violates the [dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle), since module of the higher level (view controller) becomes dependent on the module of lower level (table view cell).
+4. Leaves lots of room for mistake, since data source methods must be consistent with each other. For example, if `numberOfRows(inSection:)`, `numberOfSections(in:)` and `tableView(_,cellForRowAt:)` are inconsistent, it results in an unwanted behavior or even crash.
+5. When a cell is dequeued from a table view, it has generic `UITableViewCell` type which usually should be type casted to a concrete class.
+6. Table view data source protocol implementation is imperative which does not feel *Swifty*.
 
 Eventually, what at first glance might have seemed like a trivial task, gradually evolves into technical dept and eats development time and efforts.
 
-After defining the problem, let's implement our own data source on top of `UITableViewDataSource` that satisfies following criteria:
+After defining the problem, let's implement our own table view component on top of `UITableViewController` that satisfies following criteria:
 - Reduces boilerplate code, imposed by standard approach to managing table views and their data sources.
 - Consistent.
 - Has declarative API.
 - Decouples cells registration from view controllers and table views.
-
-#### Preconditions
-
-The assumption is made that you are familiar with table views and their setup. If not, I suggest to read [Table View Programming Guide for iOS](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/TableView_iPhone/CreateConfigureTableView/CreateConfigureTableView.html) and then return to this article.
 
 ### Table View vs. Table View Controller
 
@@ -40,7 +37,7 @@ The first step towards our goal is opt in to use `UITableViewController`. It spe
 - Put table in edit mode (exit the edit mode) by tapping Edit (Done) buttons. It also provides keyboard avoidance when in edit mode.
 - Provide support for `NSFetchedResultsController` that simplifies managing of *Core Data* requests.
 
-Table view controllers work best when interface consists from a table view and nothing else. However it can be easily overcome by adding `UITableViewController` as a child view controller. Here is my favorite way of doing it:
+Table view controllers work best when interface consists from a table view and nothing else. However it can be easily overcome by embedding `UITableViewController` as a child. Here is my favorite way of doing it:
 
 {% highlight swift linenos %}
 
