@@ -332,6 +332,10 @@ func setupTable() {
 
 Although the code has increased from 12 lines to 19, it is still expressive and easy-to-understand.
 
+### Source Code
+
+If you are interested in seeing the full source code for this article, go ahead and [download the sample project from GitHub](https://github.com/V8tr/PluginTableViewController).
+
 ### Summary
 
 The common approach to table view management and data source implementation has a number of flaws, such as: hard to understand flow of control, cumbersome syntax, error-prone, violation of dependency inversion principle.
