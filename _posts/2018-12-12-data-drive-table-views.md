@@ -72,7 +72,7 @@ struct Section<Item> {
 
 #### Step 2: Data Source Model
 
-Next, let's define a data-driven data source that accepts `Section`s as its input and provides a number of convenience methods in top of them. 
+Next, let's define a data-driven data source that accepts `Section`s as its input and provides a number of convenience methods on top of them. 
 
 {% highlight swift linenos %}
 
