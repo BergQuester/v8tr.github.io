@@ -2,7 +2,7 @@
 layout: post
 title: "Data-Driven Table Views"
 permalink: /data-drive-table-views/
-share-img: ""
+share-img: "/img/data-drive-table-views-share.png"
 ---
 
 The standard approach to managing and creating table views has a number of flaws: repeated boilerplate code, tangled flow of control, violation of dependency inversion principle. In this article let's address these issues and design a data-driven, reusable and declarative table view component.
