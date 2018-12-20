@@ -29,7 +29,7 @@ Since `array` does not have an element under *index* 3, the above code leads to 
 
 <p align="center">
     <a href="{{ "img/out-of-bounds-share.png" | absolute_url }}">
-        <img src="/img/out-of-bounds-share.png" alt="Handling Out of Bounds Exception the Swift Way - Index ouf of range"/>
+        <img src="/img/out-of-bounds-share.png" alt="Handling Index Out of Range (Index Out of Bounds) Exception the Swift Way"/>
     </a>
 </p>
 
