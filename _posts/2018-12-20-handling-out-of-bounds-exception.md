@@ -2,7 +2,7 @@
 layout: post
 title: "Handling Index Out of Range Exception the Swift Way"
 permalink: /handling-out-of-bounds-exception/
-share-img: "/img/out-of-bounds-share.png"
+share-img: "/img/handling-out-of-bounds-exception-share.png"
 ---
 
 In this article you will learn a practical technique of how to treat index out of range exception in Swift arrays and other collections.
@@ -28,8 +28,8 @@ print(array[3]) // Fatal error: Index out of range
 Since `array` does not have an element under *index* 3, the above code leads to the *index out of range exception* and crash. It can be visualized as follows:
 
 <p align="center">
-    <a href="{{ "img/out-of-bounds-share.png" | absolute_url }}">
-        <img src="/img/out-of-bounds-share.png" alt="Handling Index Out of Range (Index Out of Bounds) Exception the Swift Way"/>
+    <a href="{{ "img/handling-out-of-bounds-exception-icon.png" | absolute_url }}">
+        <img src="/img/handling-out-of-bounds-exception-icon.png" alt="Handling Index Out of Range (Index Out of Bounds) Exception the Swift Way"/>
     </a>
 </p>
 
