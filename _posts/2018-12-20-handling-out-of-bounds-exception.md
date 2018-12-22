@@ -11,7 +11,7 @@ In this article you will learn a practical technique of how to treat index out o
 
 The *array* is probably the most widely used data structure in Swift. It organizes data in a way that each component can be picked at random and is quickly accessible. To be able to mark an individual element, an *index* is introduced. Index must be an integer between *0* and *n-1*, where *n* is the number of elements and the *size* of the array.
 
-If *index* does not satisfy the aforementioned condition, the renown *out of bounds* or *index out of range* exception is raised and the program crashes. I would conjecture that it is among the most frequent error causes in Swift programs.
+If *index* does not satisfy the aforementioned condition, the notorious *out of bounds* or *index out of range* exception is raised and the program crashes. I would conjecture that it is among the most frequent error causes in Swift programs.
 
 In this article we will see how to safeguard Swift arrays and other collections to eliminate this kind of error.
 
