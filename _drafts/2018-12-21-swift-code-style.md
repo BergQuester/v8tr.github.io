@@ -89,13 +89,15 @@ At the time I am writing this article, it already has 137 closed pull requests w
 
 Link: https://github.com/raywenderlich/swift-style-guide
 
-#### 4. LinkedIn https://github.com/linkedin/swift-style-guide
+#### 4. LinkedIn
 
 LinkedIn does great job at open sourcing their internal components and Swift ones are not an exception. Their *Swift style guide* has existed for over 3 years and incorporated lots of improvement from both open source community and LinkedIn team. 
 
 LinkedIn Swift guide is brief, concise and well-structured. Wherever it helps understanding the point, a short theoretical explanations are given. The examples are always self-explanatory and clearly demonstrate the point.
 
 I especially like the documentation and error handling sections. Besides solely stating the conventions, they provide best programming practices and even might serve as a tutorials on the subject.
+
+Link: https://github.com/linkedin/swift-style-guide
 
 ### Swift Code Linter SwiftLint
 
