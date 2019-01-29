@@ -8,7 +8,7 @@ share-img: "/img/swift-code-style-share.png"
 When joining a new project or reading an open source code, you must have noticed that some projects are uniformly organized and well-structured, while others are messy and tangled? If we summarize the factors that yields such effect over the code base, we come across the notion of *code convention*.
 
 Let's discover:
-- What are the purposes of code conventions?
+- What are code conventions?
 - Why their adoption can result in huge benefits for your project?
 - What is SwiftLint?
 - And which Swift code styles to use?
