@@ -11,7 +11,7 @@ Let's discover:
 - What are code conventions?
 - How their adoption can result in huge benefits for your project?
 - What is SwiftLint?
-- And which Swift code styles to use?
+- And which Swift code styles to pick?
 
 ### Defining Swift Code Convention
 
