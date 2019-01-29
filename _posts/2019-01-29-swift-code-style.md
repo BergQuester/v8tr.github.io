@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Swift Code Style"
+title: "Missing Guide on Swift Code Style"
 permalink: /swift-code-style/
-share-img: "/img/data-drive-table-views-share.png"
+share-img: "/img/swift-code-style-share.png"
 ---
 
 ### Problem Statement
@@ -47,13 +47,11 @@ Due to such a huge impact, *coding conventions* are usually adopted by IT organi
 
 Designing a code style from scratch is a non-trivial task and requires consolidated efforts. Luckily, as Swift developers we don't have to reinvent the wheel and can utilize multiple existing *Swift style guides*.
 
-Let's explore the most prominent Swift coding styles which explain a great way to learn best language practices and are candidates to become a standard for your next project.
+Let's explore the most prominent Swift coding styles in more detail.
 
 ### Exploring Swift Code Styles
 
-The definition of *good code style* is subjective and my personal recommendation is to elaborate on multiple ones and shape them according to your project needs. The below list is here to help.
-
-Personally, I have used each of the code styles below at least in one production project and must admit that there much to learn from each of them.
+The definition of *good code style* is subjective and my personal recommendation is to elaborate on multiple styles and shape them according to your project needs. The below list is here to help.
 
 #### 1. Swift.org 
 
@@ -63,11 +61,11 @@ The guide focuses on foundational aspects of Swift API design which is followed 
 
 On its own, *Swift.org* code style is not enough to provide a comprehensive set of rules, but it makes a great addition to the other guides listed below.
 
-Link: https://swift.org/documentation/api-design-guidelines/
+Link: [Swift.org code style](https://swift.org/documentation/api-design-guidelines/)
 
 #### 2. Google
 
-You don't normally come across 'Google' and 'Swift' in one sentence, but not this time. Google undoubtedly understands the importance of code conventions and creates the guides for every major open-source projects, as stated in [Google Style Guides](http://google.github.io/styleguide/). My guess is that we should thank [TensorFlow](https://www.tensorflow.org/swift/) for this Swift guide.
+You don't normally come across 'Google' and 'Swift' in one sentence, but not this time. Google undoubtedly understands the importance of code conventions and creates conventions for every major open-source projects, as stated in [Google Style Guides](http://google.github.io/styleguide/). My guess is that we should thank [TensorFlow](https://www.tensorflow.org/swift/) for this Swift guide.
 
 This Swift code style impresses with its comprehensiveness. It covers so many aspect that simply listing them here would make this article twice as long.
 
@@ -75,43 +73,49 @@ What is really valuable about this guide is that *every* point is well founded b
 
 After reading and understanding this guide you will find yourself a better programmer in general as well as add a bunch of Swift tricks into your pocket.
 
-Link: https://google.github.io/swift
+Link: [Google Swift code style](https://google.github.io/swift)
 
-#### 3. Ray Wenderlich's Guide
+#### 3. Ray Wenderlich
 
 The team behind *raywenderlich.com* is well-known in iOS community and does not need a special introduction. Same as Ray's articles do, the guide is written in a clear and understandable manner and is especially suitable for Swift newcomers
 
 This guide undoubtedly reaches the stated goals of being clear, consistent and brief. Each rule is followed by a complete explanation, reasoning and a set of examples with dos and don'ts.
 
-What I love about this guide, is that goes beyond Swift syntax and code formatting and explains good programming practices, such as avoidance unused code, minimization of imports, explains the difference between value and reference types, the concepts of lazy initialization, access control, early returns and much more.
+What I love about this guide, is that goes beyond Swift syntax and code formatting and explains good programming practices, such as avoidance of unused code, explains the difference between value and reference types, the concepts of lazy initialization, access control, early returns and much more.
 
-At the time I am writing this article, it already has 137 closed pull requests which demonstrates that the guide is heavily shaped by community.
+At the time I am writing this article, it already has 137 closed pull requests which demonstrates that the guide is heavily supported by community.
 
-Link: https://github.com/raywenderlich/swift-style-guide
+Link: [Ray Wenderlich Swift code style](https://github.com/raywenderlich/swift-style-guide)
 
 #### 4. LinkedIn
 
 LinkedIn does great job at open sourcing their internal components and Swift ones are not an exception. Their *Swift style guide* has existed for over 3 years and incorporated lots of improvement from both open source community and LinkedIn team. 
 
-LinkedIn Swift guide is brief, concise and well-structured. Wherever it helps understanding the point, a short theoretical explanations are given. The examples are always self-explanatory and clearly demonstrate the point.
+LinkedIn Swift guide is brief, concise and well-structured. Short theoretical explanations are often provided to better understand the reasoning behind certain rules. The examples are always self-explanatory and clearly demonstrate the point.
 
-I especially like the documentation and error handling sections. Besides solely stating the conventions, they provide best programming practices and even might serve as a tutorials on the subject.
+The guide primarily focuses on code formatting and I highly recommend to use it in combination with other Swift code styles from this list.
 
-Link: https://github.com/linkedin/swift-style-guide
+Link: [LinkedIn Swift code style](https://github.com/linkedin/swift-style-guide)
 
 ### Swift Code Linter SwiftLint
 
-We are all humans and deliberately or not, we all make mistakes. Thus, it is not enough to document or verbally agree on *Swift coding conventions*. To minimized the number of mistakes, the rules must be enforced by a *linter*.
+We are all humans and deliberately or not, we all make mistakes. Thus, it is not enough to document or verbally agree on *Swift coding conventions*. To minimized the number of mistakes, the rules must be enforced by an automated tool, known as *linter*.
 
 *Linter* is a static code analyzer that finds programming errors, bugs, formatting errors, and potentially harmful constructs. 
 
-*SwiftLint* is the most widely used Swift code analyzer which can be configured based on custom rules. If not using already, I highly recommend checking [SwiftLint](https://github.com/realm/SwiftLint) and start using it in your Swift projects.
+*SwiftLint* is the most widely used Swift code analyzer which can be configured based on custom rules. If you are not using it already, I highly recommend checking [SwiftLint](https://github.com/realm/SwiftLint) and start using it in your Swift projects as soon as possible.
+
+The most important thing to understand about *SwiftLint* is that it does not enforce a 'single true style', but helps to be consistent within a project.
 
 ### Summary
 
-Thus, every effort that improves readability contributes to programming productivity a lot and we always want to be as much productive as possible.
+Uniform code conventions contribute to programming productivity a lot and we always want to be as productive as possible. 
 
-Remember Good style is subjective and should be left on your and your team's consideration.
+The list with most notable Swift coding styles is a great source of Swift best practices and a starting point to elaborate on your own set of conventions.
+
+Good Swift code style is subjective and should be left upon you and your team's consideration. Once it is approved and documented, such style becomes a standard and must be consistent across the project to improve readability which results in numerous benefits.
+
+SwiftLint is a widely adopted tool in Swift community which helps to enforce coding conventions. It helps to avoid human mistakes early and can be a valuable additions to your project's tools stack.
 
 ---
 
