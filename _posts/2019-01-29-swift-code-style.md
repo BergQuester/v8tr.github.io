@@ -9,7 +9,7 @@ When joining a new project or reading an open source code, you must have noticed
 
 Let's discover:
 - What are code conventions?
-- Why their adoption can result in huge benefits for your project?
+- How their adoption can result in huge benefits for your project?
 - What is SwiftLint?
 - And which Swift code styles to use?
 
