@@ -10,6 +10,7 @@ When joining a new project or reading an open source code, you must have noticed
 Let's discover:
 - What are the purposes of code conventions?
 - Why their adoption can result in huge benefits for your project?
+- What is SwiftLint?
 - And which Swift code styles to use?
 
 ### Defining Swift Code Convention
