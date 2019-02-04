@@ -11,6 +11,7 @@ When working with collection views, chances high that you have spent considerabl
 
 Considering that iOS and macOS are becoming more and more complex, dynamic fonts and internationalization are must have features for every app. To support these features, going "all-dynamic user interface" strategy is almost always the best choice.
 
+<<<<<<< HEAD
 While dynamic sizing for table view cells is used extensively, the exactly same feature for collection views is unjustly left unnoticed. Being around [since iOS 8](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize), `UICollectionViewCells` self-sizing is still not as widely adopted as it could be. This might be partially explained by numerous non-obvious pitfalls which arise when trying to implement collection view cells with dynamic size and lack of tutorials covering these pitfall in detail.
 
 <!-- Collection views are undoubtedly among most widely used and at the same time most flexible controls in iOS and macOS development. The default flow layout allows for numerous customizations fitting most projects' needs, and if it is not enough, literally any cells positioning and configuration can be implemented by providing your own layout. -->
@@ -29,13 +30,21 @@ There are two ways to cut the cake:
 The former solution is usually more compelling as it allows to setup sizing by means of the auto layout engine without writing a single line of code. 
 
 
+=======
+Dynamic sizing for table view cells is used extensively, while the exactly same feature for collection views is unjustly left unnoticed. Being around [since iOS 8](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize), `UICollectionViewCells` self-sizing is still not as widely adopted as it could be. This might be partially explained by numerous non-obvious pitfalls which arise when trying to implement collection view cells with dynamic size and lack of tutorials covering these pitfall in detail.
+
+>>>>>>> 57ee77c5a56e375524bdb341944289c3cb507426
 In present article let's implement `UICollectionView` with custom cells which size themselves dynamically to fit their content.
 
 ### Starter Project
 
 **DONT FORGET TO INSERT CORRECT LINK TO STARTER PROJECT**
 
+<<<<<<< HEAD
 Let's begin with a fresh project. In order not to spend your time on writing boilerplate code and project setup, since it is something you've done hundreds of times before, I've got you covered and created a starter project.
+=======
+Let's begin coding in a fresh project. In order not to spend your time on writing boilerplate code and project setup, since it is something you've done hundreds of times before, I've got you covered and created a starter project.
+>>>>>>> 57ee77c5a56e375524bdb341944289c3cb507426
 
 To ensure that we are on the same page and in order to get straight to the point, grab [this starter project](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize) and briefly glance through the files.
 
@@ -49,9 +58,13 @@ Here are the most important highlights:
    
 ### Creating Custom Collection View Cell
 
+<<<<<<< HEAD
 Let's create a simple `UICollectionViewCell` subclass: nothing fancy, just a label outlet. 
 
 First, create a new file `CollectionCell.swift` with the following code:
+=======
+Let's create a simple `UICollectionViewCell` subclass: nothing fancy, just a single label with text. First, create a new file `CollectionCell.swift` with the following code:
+>>>>>>> 57ee77c5a56e375524bdb341944289c3cb507426
 
 ```swift
 class CollectionCell: UICollectionViewCell {
