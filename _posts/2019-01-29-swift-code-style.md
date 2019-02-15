@@ -96,6 +96,20 @@ The guide primarily focuses on code formatting and I highly recommend to use it 
 
 Link: [LinkedIn Swift code style](https://github.com/linkedin/swift-style-guide)
 
+#### 5. Airbnb 
+
+Airbnb team is well-known for their valuable contribution to iOS community. At the time I am writing this article, *Airbnb Swift Style Guide* is just 1 week old what makes it the freshest in this list.
+
+From the very beginning, the guide sets the right context by explaining *why* you need a code style and I completely agree with each point.
+
+The guide is a pleasure to read: it is well-structured and the rules are precisely explained. Where it makes sense, each point is accompanied with examples of dos and dont's and theoretical context. Almost each rule is made lintable with *SwiftLint* - a static analyzer tool that will be discussed few paragraphs below.
+
+I especially like *Patterns* section where Airbnb gives practical Swift advices which I highly recommend to check. For example, it prescripts to use immutable values instead of mutable and provides tips on enums definition. My favorite is the handling of unexpected conditions where the usage of assertions, preconditions and fatal errors is explained in great detail.
+
+The guide even provides Xcode editor settings to satisfy the rules from the *Formatting* section which can be easily applied be means of a script.
+
+Link: [Airbnb Swift Style Guide](https://github.com/airbnb/swift)
+
 ### Swift Code Linter SwiftLint
 
 We are all humans and deliberately or not, we all make mistakes. Thus, it is not enough to document or verbally agree on *Swift coding conventions*. To minimized the number of mistakes, the rules must be enforced by an automated tool, known as *linter*.
