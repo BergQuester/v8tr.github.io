@@ -164,6 +164,14 @@ private enum Constants {
 
 The above code does trivial configurations to the cells. The constants are extracted to a enum to make the intention more clear.
 
+Run the project:
+
+<p align="center">
+    <a href="{{ "img/collection-view-cells-dynamic-height/demo-1.png" | absolute_url }}">
+        <img src="/img/collection-view-cells-dynamic-height/demo-1.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+    </a>
+</p>
+
 ---
 
 *If you enjoyed reading this article, tweet it forward and subscribe: [@V8tr](https://twitter.com/{{ site.author.twitter }}).*
