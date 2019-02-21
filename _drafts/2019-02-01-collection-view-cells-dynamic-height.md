@@ -109,11 +109,11 @@ The result looks next:
     </a>
 </p>
 
-### Configure Dynamic Width
+### Enabling Horizontal Self Sizing
 
-Here goes the non-obvious pitfall: by default collection view cell content view does not have auto layout enabled which needs some tweaks in order for self-sizing to work.
+Here goes the non-obvious pitfall: by default cell content view prevents self-sizing, given that it does not have auto layout enabled.
 
-To fix this, we pin content view in awakeFromNib method. Open `CollectionCell.swift` and paste the code:
+To address that, we need to explicitly pin content view to the edges of the cell. Open `CollectionCell.swift` and paste the following code which does exactly that:
 
 ```swift
 override func awakeFromNib() {
@@ -130,7 +130,9 @@ override func awakeFromNib() {
  }
 ```
 
-As stated at the beginning of the tutorial, `ViewController` is wired up as delegate and data source of the collection view. This causes the app to crash, because protocol methods are not implemented yet. Enter below code at the bottom of `ViewController.swift`.
+As it was mentioned at the beginning of the tutorial, `ViewController` is wired up as delegate and data source of the collection view by means of a storyboard. If you have launched the app, you must have noticed an exception indicating this. 
+
+The time has come to fix the crash and implement collection view data source and delegate method. We add cells configuration along the way:
 
 ```swift
 
@@ -162,15 +164,55 @@ private enum Constants {
 }
 ```
 
-The above code does trivial configurations to the cells. The constants are extracted to a enum to make the intention more clear.
-
-Run the project:
+Now launch the project and inspect the resulting cells. Here is what you are supposed to see:
 
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/demo-1.png" | absolute_url }}">
         <img src="/img/collection-view-cells-dynamic-height/demo-1.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
     </a>
 </p>
+
+First 4 cells look fine, while the rest do not fit the screen. This reveals the need to constraint the cells horizontally to let them grow into multiple lines.
+
+### Enabling Vertical Self-Sizing
+
+This part is the trickiest among all and should be done in two steps.
+
+1\. Enable multi-line label. Open `Main.storyboard` > select title label > in *Attributes Inspector* set *number of lines* to `0` and *line Break* to `Word Wrap`. Here is how it looks:
+
+<p align="center">
+    <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-4.png" | absolute_url }}">
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-4.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+    </a>
+</p>
+
+2\. Add extra width constraint to the cell which will prevent cells from growing beyond screen bounds. Given that the label has been set as multi-line in the previous step, cells will grow vertically when the width limit is reached. Let's do this in two steps.
+
+2.1\. The below code adds width auto layout constraint to `CollectionCell.swift` and hides it behind a `maxWidth` property. 
+
+```swift
+ // Note: must be strong
+ @IBOutlet private var maxWidthConstraint: NSLayoutConstraint! {
+     didSet {
+         maxWidthConstraint.isActive = false
+     }
+ }
+ 
+ var maxWidth: CGFloat? = nil {
+     didSet {
+         guard let maxWidth = maxWidth else {
+             return
+         }
+         maxWidthConstraint.isActive = true
+         maxWidthConstraint.constant = maxWidth
+     }
+ }
+```
+By default the constraint is inactive and thus should be set to *strong reference* so that it is not released from memory. Once `maxWidth` is set to *non-nil* value, the constraint is activated and width value is applied to the constraint. Such design makes the intention more clear and encapsulates the implementation details.
+
+2.2\. Add constraint in Interface Builder and connect it to `maxWidthConstraint` outlet.
+
+
 
 ---
 
