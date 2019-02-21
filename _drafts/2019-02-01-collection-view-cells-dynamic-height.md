@@ -164,11 +164,13 @@ private enum Constants {
 }
 ```
 
+The `Constants` enum is a nice way to organize constants. You can disregard `spacing` for now - we'll get back to it few paragraphs below.
+
 Now launch the project and inspect the resulting cells. Here is what you are supposed to see:
 
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/demo-1.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/demo-1.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/demo-1.png" width="450" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
@@ -188,7 +190,7 @@ This part is the trickiest among all and should be done in two steps.
 
 2\. Add extra width constraint to the cell which will prevent cells from growing beyond screen bounds. Given that the label has been set as multi-line in the previous step, cells will grow vertically when the width limit is reached. Let's do this in two steps.
 
-2.1\. The below code adds width auto layout constraint to `CollectionCell.swift` and hides it behind a `maxWidth` property. 
+2.1\. The below code adds auto layout width constraint to `CollectionCell.swift` and hides it behind a `maxWidth` property. 
 
 ```swift
  // Note: must be strong
@@ -210,9 +212,61 @@ This part is the trickiest among all and should be done in two steps.
 ```
 By default the constraint is inactive and thus should be set to *strong reference* so that it is not released from memory. Once `maxWidth` is set to *non-nil* value, the constraint is activated and width value is applied to the constraint. Such design makes the intention more clear and encapsulates the implementation details.
 
-2.2\. Add constraint in Interface Builder and connect it to `maxWidthConstraint` outlet.
+2.2\. Add auto layout width constraint to the label. The constant value should be `less than or equal X`, where `X` is anything above zero -- in my case it's 50. Here is how the constraint looks:
+
+<p align="center">
+    <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-6.png" | absolute_url }}">
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-6.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+    </a>
+</p>
 
 
+2.3\. Connect the constraint to the `maxWidthConstraint` outlet.
+
+<p align="center">
+    <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-5.png" | absolute_url }}">
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-5.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+    </a>
+</p>
+
+3\. Lastly, limit cells width to the bounds of the screen, so that the text can grow vertically into multiple lines. Open `ViewController.swift` and add next line to `collectionView(:cellForItemAt:)` method:
+
+```swift
+cell.maxWidth = collectionView.bounds.width - Constants.spacing
+```
+
+Now launch the project to see how the layout has changed. It is supposed to look next:
+
+<p align="center">
+    <a href="{{ "img/collection-view-cells-dynamic-height/demo-2.png" | absolute_url }}">
+        <img src="/img/collection-view-cells-dynamic-height/demo-2.png" width="450" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+    </a>
+</p>
+
+### Checklist
+
+In this tutorial we draw lots of attention to details, as there are plenty of places where things might get wrong, which resulted in quite a wordy article.
+
+A brief checklist is here to help summarize the steps which should to enable collection view cells self-sizing:
+
+1. Identify dynamic elements withing collection view cell which should grow.
+2. Setup auto layout constraints in a such way, that dynamic elements are pinned to all edges of the content view either directly or indirectly, ex. when wrapped in containers like `UIView` or `UIStackView`.
+3. Enable auto layout for cell content view and pin it to the edges of the cell.
+4. Add extra width constraint with *'less than equal'* relation which limits cell from growing horizontally beyond screen bounds.
+5. Make sure that dynamic UI elements can grow vertically when content increases. Some examples are: make `UILabel` multi-line, disable scrolling for `UITextView` etc.
+6. Set cell maximal width from `collectionView(:cellForItemAt:)`.
+
+### Source Code
+
+You can find [final project here][final-repo]. And here is [starter project][starter-repo].
+
+### Summary
+
+Collection view cells can be sized either programmatically or via Interface Builder. The latter strategy is way easier and allows to design complex dynamic user interface without a single line of code.
+
+Cells self-sizing by means of auto layout is connected with a number of pitfalls which might keep you busy for a couple of hours, if not days. 
+
+The present step-by-step tutorial goes in great detail about every such issue and provides a checklist with a high-level summary of the steps to enable collection view cells self-sizing.
 
 ---
 
