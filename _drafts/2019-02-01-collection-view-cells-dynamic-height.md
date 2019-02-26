@@ -70,7 +70,7 @@ Second, setup cell prototype in `Main.storyboard`. This step leaves room for mis
     </a>
 </p>
    
-2\. Add a label and pin it to the edges of the cell. The good practice is to set title's text to something meaningful, e.g. *"[Title]"*.
+2\. Add a label and pin it to the edges of the cell. The good practice is to set title's text to something meaningful, e.g. *"[Title]"*. Also center align label text.
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-2.png" | absolute_url }}">
         <img src="/img/collection-view-cells-dynamic-height/cell-setup-2.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
@@ -174,7 +174,9 @@ Now launch the project and inspect the resulting cells. Here is what you are sup
     </a>
 </p>
 
-First 4 cells look fine, while the rest do not fit the screen. This reveals the need to constraint the cells horizontally to let them grow into multiple lines.
+First 4 cells look fine, while the rest do not fit the screen. 
+
+You'll notice numerous debugger warnings, saying that "The item width must be less than the width of the UICollectionView ...". This reveals the need to constraint the cells horizontally to let them grow into multiple lines.
 
 ### Enabling Vertical Self-Sizing
 
@@ -188,9 +190,9 @@ This part is the trickiest among all and should be done in two steps.
     </a>
 </p>
 
-2\. Add extra width constraint to the cell which will prevent cells from growing beyond screen bounds. Given that the label has been set as multi-line in the previous step, cells will grow vertically when the width limit is reached. Let's do this in two steps.
+2\. Constrain cell width, allowing the content to grow vertically. The steps are below.
 
-2.1\. The below code adds auto layout width constraint to `CollectionCell.swift` and hides it behind a `maxWidth` property. 
+2.1\. To dynamically limit cell width, let's store auto layout constraint into a property. The constraint itself is hidden behind another property `maxWidth`.
 
 ```swift
  // Note: must be strong
@@ -273,3 +275,6 @@ The present step-by-step tutorial goes in great detail about every such issue an
 *If you enjoyed reading this article, tweet it forward and subscribe: [@V8tr](https://twitter.com/{{ site.author.twitter }}).*
 
 ---
+
+[starter-repo]: https://github.com/V8tr/CollectionViewSelfSizing-Starter
+[final-repo]: https://github.com/V8tr/CollectionViewSelfSizing-Final
