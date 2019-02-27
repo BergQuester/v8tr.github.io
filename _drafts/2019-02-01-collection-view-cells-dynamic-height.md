@@ -1,59 +1,49 @@
 ---
 layout: post
-title: "Dynamic Collection View Cells Sizing: Step by Step Tutorial"
-permalink: /collection-view-cells-dynamic-height/
+title: "Collection View Cells Self-Sizing: Step by Step Tutorial"
+permalink: /collection-view-cells-self-sizing/
 share-img: ""
 ---
 
-When working with collection views, chances high that you have spent considerable amount of time sizing cells programmatically. In this article you will learn how UICollectionViewCells can dynamically adjust their size based on their content.
+When working with collection views, chances high that you have spent considerable amount of time sizing cells programmatically. In this article you will learn how collection view cells can dynamically adjust their size based on their content.
 
 ### Problem Statement
 
-Considering that iOS and macOS are becoming more and more complex, dynamic fonts and internationalization are must have features for every app. To support these features, going "all-dynamic user interface" strategy is almost always the best choice.
+Quality expectations for iOS and macOS apps are continuously being raised, making such features as dynamic fonts and internationalization a must; static app content is rarely seen as well. The strategy of making user interface all-dynamic is the standard by default. 
 
-While dynamic sizing for table view cells is used extensively, the exactly same feature for collection views is unjustly left unnoticed. Being around [since iOS 8](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize), `UICollectionViewCells` self-sizing is still not as widely adopted as it could be. This might be partially explained by numerous non-obvious pitfalls which arise when trying to implement collection view cells with dynamic size and lack of tutorials covering these pitfall in detail.
+Table and collection views are among the most fundamental user interface components. While table view cells self-sizing has been elaborated numerous times and is widely adopted in community, the exact same feature for collection views is unjustly left unnoticed, despite being around [since iOS 8](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize). The present article addresses presents a detailed step-by-step guide on how to implement self-sizing collection view cells in iOS from scratch.
 
-With regards to collection view cells sizing three strategies exist:
-- Layout Property - `UICollectionViewFlowLayout.itemSize`
-- Delegate - `collectionView(layout:sizeForItemAt:)`
-- Cell - self-sizing cells
+### Define Collection View Cells Self-Sizing
 
-*Self-sizing cells strategy* is usually the most preferable among all, since it allows to encapsulate the layout details inside a cell instead of leaking to view controller code.
+*Self-sizing* is a way of adjusting cells size within collection view layout. Collection view cells could be sized in three ways:
+- Layout Property — `UICollectionViewFlowLayout.itemSize`.
+- Delegate — `collectionView(layout:sizeForItemAt:)`.
+- Cell — self-sizing cells.
 
-There are two ways to cut the cake:
-- Autolayout sizing: add constraints to `cell.contentView`.
-- Manual-sizing code: Override `sizeThatFits`.
-
-The former solution is usually more compelling as it allows to setup sizing by means of the auto layout engine without writing a single line of code. 
-
-Dynamic sizing for table view cells is used extensively, while the exactly same feature for collection views is unjustly left unnoticed. Being around [since iOS 8](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize), `UICollectionViewCells` self-sizing is still not as widely adopted as it could be. This might be partially explained by numerous non-obvious pitfalls which arise when trying to implement collection view cells with dynamic size and lack of tutorials covering these pitfall in detail.
-
-In present article let's implement `UICollectionView` with custom cells which size themselves dynamically to fit their content.
+Use of *constraints* on the collection view cell content view, or override `sizeThatFits:` are two strategies of implementing *collection view cells self-sizing*. The former allows to setup sizing without (almost) a single line of code, making it more compelling.
 
 ### Starter Project
 
-**DONT FORGET TO INSERT CORRECT LINK TO STARTER PROJECT**
+The specifics of step-by-step tutorial imply certain amount of tedious preparations. I've got you covered and created a starter project; go ahead and [grab it from Github][starter-repo].
 
-Let's begin with a fresh project. In order not to spend your time on writing boilerplate code and project setup, since it is something you've done hundreds of times before, I've got you covered and created a starter project.
-
-Let's begin coding in a fresh project. In order not to spend your time on writing boilerplate code and project setup, since it is something you've done dozens of times before, I've got you covered and created a starter project.
-
-To ensure that we are on the same page and in order to get straight to the point, grab [this starter project](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617709-estimateditemsize) and briefly glance through the files.
-
-Here are few things to note from the starter project:
-1. `ViewController` is an empty view controller subclass with an attached collection view.
-2. If you run the project, it will crash, because collection view data source and delegate are wired up inside a storyboard, but not implemented. We'll fix that later.
-3. `Item` is a model class that backs collection view cells.
-4. `ViewController` holds an array of `items` with placeholder texts which will drive collection view cells rendering.
+To ensure that we are on the same page, review the following highlights from the starter project:
+1. `ViewController` is the entry point of the the sample application. It already has a collection view attached in `Main.storyboard` and is configured as its delegate and data source. Note that the app crashes at launch, since collection view delegate and data source are not yet implemented.
+2. `Item` is a model class that backs collection view cells. `ViewController` has a bunch of items that will be rendered as cells later on.
    
 {: .box-note}
-*Wondering why this is it important to have models for collection view cells even for a small tutorial like this? Then you can read my recent article about [data-driven table view](({{ "/data-drive-table-views/" | absolute_url }})) where it is explained in detail.*
-   
-### Creating Custom Collection View Cell
+*Wondering why to bother creating `Item` models? Then you'll find my recent article on [data-driven table views](({{ "/data-drive-table-views/" | absolute_url }})) useful.*
 
-Let's implement a simple `UICollectionViewCell` subclass with a single label.
+Through the rest of the article we'll create custom collection view cell with self-sizing enabled. The final result looks next:
 
-First, create a new file `CollectionCell.swift` with the following code:
+<p align="center">
+    <a href="{{ "img/collection-view-cells-dynamic-height/demo-2.png" | absolute_url }}">
+        <img src="/img/collection-view-cells-dynamic-height/demo-2.png" width="450" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
+    </a>
+</p>
+
+### Create Custom Collection View Cell
+
+Create a new file `CollectionCell.swift` with the following code; don't forget to import `UIKit` framework at the beginning of the file:
 
 ```swift
 class CollectionCell: UICollectionViewCell {
@@ -61,59 +51,56 @@ class CollectionCell: UICollectionViewCell {
 }
 ```
 
-Second, setup cell prototype in `Main.storyboard`. This step leaves room for mistake, hence detailed explanation of the process:
-
-1\. Go to `Main.storyboard` and select `ViewController`. It already has a collection view with a cell prototype added. Set the cell's class **and** reuse identifier to `CollectionCell`. The result looks next:
+The outlet has been coded, but not connected to the storyboard. Open `Main.storyboard`, then `ViewController` > Collection view > Cell Prototype. Set cell's class **and** reuse identifier to `CollectionCell`, similar to the below:
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-1.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/cell-setup-1.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-1.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
    
-2\. Add a label and pin it to the edges of the cell. The good practice is to set title's text to something meaningful, e.g. *"[Title]"*. Also center align label text.
+Drag a label and pin it to the edges of the cell by means of auto layout. The good practice is to set title's text to something meaningful, e.g. *"[Title]"*, to make it's purpose clear; also center align label text.
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-2.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/cell-setup-2.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-2.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-3\. Connect the label with the property `titleLabel` which was defined in `CollectionCell.swift` earlier.
+Connect the label from the storyboard with the property `titleLabel`:
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-3.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/cell-setup-3.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-3.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-### Configure UICollectionViewFlowLayout
+### Configure Collection View Flow Layout
 
-Dynamic cells sizing is a feature of `UICollectionViewFlowLayout`. In order to support it, the layout's `estimatedItemSize` property must be set to a non-zero value. It is an equivalent for estimated row height in table views.
+Dynamic cells sizing is an opt-in feature of `UICollectionViewFlowLayout`, which could be enabled by setting `estimatedItemSize` property to a non-zero value.
 
-When the estimated size is set, the flow layout computes a first approximation of cells arrangement, and then re-calculates it when the updated attributes are received. Hence it will boost the performance if estimated size is close to the actual one.
+Once estimated size has been set, the flow layout computes a first approximation of cells arrangement. The layout is re-calculates when the updated attributes are received. Hence it boosts performance if estimated size is close to the actual one.
 
 {: .box-note}
-*If you would like to learn which steps views undergo before being drawn on the screen, I recommend reading [my article on the subject](({{ "/data-drive-table-views/" | absolute_url }})).*
+*To learn more on the topic check [View Auto Layout Life Cycle](({{ "/view-auto-layout-life-cycle/" | absolute_url }})), also true for collection and table view cells.*
 
-Getting back to the code, let's configure the layout:
-
-1. Drag `collectionLayout` from the storyboard and create a new property.
-2. Supply automatic size in `didSet` method:
+Back to the sandbox project. Drag `collectionLayout` from the storyboard and create a new property `collectionLayout`. Implement `didSet` method and set automatic size there:
 
 ```swift
-collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+@IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {
+    didSet {
+        collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+    }
+}
 ```
 
 The result looks next:
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/layout-setup-1.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/layout-setup-1.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/layout-setup-1.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-### Enabling Horizontal Self Sizing
+### Enable Horizontal Self Sizing
 
-Here goes the non-obvious pitfall: by default cell content view prevents self-sizing, given that it does not have auto layout enabled.
-
-To address that, we need to explicitly pin content view to the edges of the cell. Open `CollectionCell.swift` and paste the following code which does exactly that:
+Counterintuitively, collection view content view prevents cell self-sizing, given that it does not have auto layout enabled. Explicitly enable auto layout and pin content view to the edges of the cell to address that. Add the below code to `CollectionCell`:
 
 ```swift
 override func awakeFromNib() {
@@ -130,9 +117,7 @@ override func awakeFromNib() {
  }
 ```
 
-As it was mentioned at the beginning of the tutorial, `ViewController` is wired up as delegate and data source of the collection view by means of a storyboard. If you have launched the app, you must have noticed an exception indicating this. 
-
-The time has come to fix the crash and implement collection view data source and delegate method. We add cells configuration along the way:
+The time has come to fix application crash and implement collection view data source and delegate method. Alongside we configure collection view cells by setting border and title label text:
 
 ```swift
 
@@ -164,35 +149,31 @@ private enum Constants {
 }
 ```
 
-The `Constants` enum is a nice way to organize constants. You can disregard `spacing` for now - we'll get back to it few paragraphs below.
+The `Constants` enum is a nice way to organize constants. You can disregard `spacing` for now, as we'll get back to it few paragraphs below.
 
-Now launch the project and inspect the resulting cells. Here is what you are supposed to see:
+Now launch and inspect the project. Here is how it is supposed to look:
 
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/demo-1.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/demo-1.png" width="450" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/demo-1.png" width="450" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-First 4 cells look fine, while the rest do not fit the screen. 
+The above 4 cells look fine, while the rest do not fit the screen. You'll notice numerous debugger warnings, saying that *"The item width must be less than the width of the UICollectionView ..."*. This reveals the need to constraint cells horizontally and force them to grow in height.
 
-You'll notice numerous debugger warnings, saying that "The item width must be less than the width of the UICollectionView ...". This reveals the need to constraint the cells horizontally to let them grow into multiple lines.
+### Enable Vertical Self-Sizing
 
-### Enabling Vertical Self-Sizing
+Enabling vertical self-sizing is a two-step process. Firstly, `titleLabel` need to be multi-line to support vertical growing. Secondly, the cell should be limited horizontally with auto layout width constraint.
 
-This part is the trickiest among all and should be done in two steps.
-
-1\. Enable multi-line label. Open `Main.storyboard` > select title label > in *Attributes Inspector* set *number of lines* to `0` and *line Break* to `Word Wrap`. Here is how it looks:
+1\. Open `Main.storyboard` > Select label > in *Attributes Inspector* set *number of lines* to `0` and *Line Break* to `Word Wrap`. The related settings are highlighted below:
 
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-4.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/cell-setup-4.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-4.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-2\. Constrain cell width, allowing the content to grow vertically. The steps are below.
-
-2.1\. To dynamically limit cell width, let's store auto layout constraint into a property. The constraint itself is hidden behind another property `maxWidth`.
+2\. Create `maxWidthConstraint` property for auto layout constraint; this allows to modify constraint dynamically. The constraint itself is hidden behind another property `maxWidth` for encapsulation purpose.
 
 ```swift
  // Note: must be strong
@@ -212,50 +193,46 @@ This part is the trickiest among all and should be done in two steps.
      }
  }
 ```
-By default the constraint is inactive and thus should be set to *strong reference* so that it is not released from memory. Once `maxWidth` is set to *non-nil* value, the constraint is activated and width value is applied to the constraint. Such design makes the intention more clear and encapsulates the implementation details.
+The constraint is immediately set to inactive, thus a *strong reference* to it must be kept to prevent from releasing. Once `maxWidth` is set to *non-nil* value, the constraint is activated and width is applied. Such design makes the intent more clear and encapsulates the implementation detail.
 
-2.2\. Add auto layout width constraint to the label. The constant value should be `less than or equal X`, where `X` is anything above zero -- in my case it's 50. Here is how the constraint looks:
-
+Add width constraint to the label with relation `less than or equal X`, where `X` is anything above zero,`50` in my case. The constraint is depicted below:
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-6.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/cell-setup-6.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-6.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-
-2.3\. Connect the constraint to the `maxWidthConstraint` outlet.
-
+Connect the constraint with the `maxWidthConstraint` outlet.
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/cell-setup-5.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/cell-setup-5.png" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/cell-setup-5.png" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-3\. Lastly, limit cells width to the bounds of the screen, so that the text can grow vertically into multiple lines. Open `ViewController.swift` and add next line to `collectionView(:cellForItemAt:)` method:
+Lastly, limit cells width to screen bounds, so that the text can grow vertically when horizontal limit is reached. Open `ViewController.swift` and add next line to `collectionView(:cellForItemAt:)` method:
 
 ```swift
 cell.maxWidth = collectionView.bounds.width - Constants.spacing
 ```
 
 Now launch the project to see how the layout has changed. It is supposed to look next:
-
 <p align="center">
     <a href="{{ "img/collection-view-cells-dynamic-height/demo-2.png" | absolute_url }}">
-        <img src="/img/collection-view-cells-dynamic-height/demo-2.png" width="450" alt="Dynamic Collection View Cells Sizing: Step by Step Tutorial"/>
+        <img src="/img/collection-view-cells-dynamic-height/demo-2.png" width="450" alt="Collection View Cells Self-Sizing: Step by Step Tutorial"/>
     </a>
 </p>
 
-### Checklist
+That's it, well done on completing the tutorial. Below is a checklist to help you fulfill the work faster next time you need to implement collection view cells self-sizing.
 
-In this tutorial we draw lots of attention to details, as there are plenty of places where things might get wrong, which resulted in quite a wordy article.
+### Collection View Cell Self-Sizing Checklist
 
-A brief checklist is here to help summarize the steps which should to enable collection view cells self-sizing:
+Here is brief summary of the steps we've implemented throughout this article:
 
 1. Identify dynamic elements withing collection view cell which should grow.
 2. Setup auto layout constraints in a such way, that dynamic elements are pinned to all edges of the content view either directly or indirectly, ex. when wrapped in containers like `UIView` or `UIStackView`.
 3. Enable auto layout for cell content view and pin it to the edges of the cell.
-4. Add extra width constraint with *'less than equal'* relation which limits cell from growing horizontally beyond screen bounds.
-5. Make sure that dynamic UI elements can grow vertically when content increases. Some examples are: make `UILabel` multi-line, disable scrolling for `UITextView` etc.
+4. Add extra width constraint with `less than or equal` relation, which limits cell from growing horizontally beyond screen bounds.
+5. Make sure that dynamic UI elements can grow vertically when content increases. Some examples are: make `UILabel` multi-line, disable scrolling for `UITextView`.
 6. Set cell maximal width from `collectionView(:cellForItemAt:)`.
 
 ### Source Code
@@ -264,11 +241,9 @@ You can find [final project here][final-repo]. And here is [starter project][sta
 
 ### Summary
 
-Collection view cells can be sized either programmatically or via Interface Builder. The latter strategy is way easier and allows to design complex dynamic user interface without a single line of code.
+Collection view cells self-sizing could be implemented either programmatically via `sizeThatFits:` or by means of auto layout. The latter is way easier, since it allows to design complex dynamic user interfaces in visual editor, without a single line of code.
 
-Cells self-sizing by means of auto layout is connected with a number of pitfalls which might keep you busy for a couple of hours, if not days. 
-
-The present step-by-step tutorial goes in great detail about every such issue and provides a checklist with a high-level summary of the steps to enable collection view cells self-sizing.
+Collection view cells self-sizing with auto layout conceals a number of pitfalls, which might keep you busy for a couple of hours, if not days. Current step-by-step tutorial highlights such issues and provides a checklist with high-level summary of the required steps to enable collection view cells self-sizing.
 
 ---
 
