@@ -2,7 +2,7 @@
 layout: post
 title: "Collection View Cells Self-Sizing: Step by Step Tutorial"
 permalink: /collection-view-cells-self-sizing/
-share-img: ""
+share-img: "/img/collection-view-cells-dynamic-height/share.png"
 ---
 
 When working with collection views, chances high that you have spent considerable amount of time sizing cells programmatically. In this article you will learn how collection view cells can dynamically adjust their size based on their content.
