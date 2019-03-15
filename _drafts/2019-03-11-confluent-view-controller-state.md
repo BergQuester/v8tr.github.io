@@ -1,15 +1,25 @@
 ---
 layout: post
-title: "Confluent View Controller State"
-permalink: /collection-view-cells-self-sizing/
+title: "Eliminating Degenerate View Controller States"
+permalink: /degenerate-view-controller-states/
 share-img: ""
 ---
 
 ### Problem Statement
 
-When we talk about objects, we often refer to the **state** of the objects to mean the **combination of all the data** in the fields of the objects. 
+When we talk about objects, we often refer to the **state** of the objects to mean the **combination of all the data** in the fields of the objects. In other words, each possible combination of Swift `struct` or `class` properties makes up a new state. Hence, the *combinatorial number of states grows with factorial complexity*. For a typical view controller with `4` properties `24` states are derived, most of which are meaningless. Let's call such states **degenerate** and learn how they can be identified and avoided.
 
-Consider structure of typical view controller with several UI elements:
+<!-- Let's take a closer look at the problem and learn:
+1. How to identify degenerate states.
+2. How to make valid states explicit. -->
+
+### Identifying Degenerate View Controller States
+
+Imagine that you are implementing a view controller that loads data from the network and based on the response does one of the following:
+1. Populates table view with data. If there is no data to show, an empty state message is displayed.
+2. Shows error label in case of network error.
+   
+Such view controller is defined as follows:
 
 ```swift
 class ViewController {
@@ -22,25 +32,264 @@ class ViewController {
 }
 ```
 
-Semantically each property has 2 states:
+From the user experience standpoint, each property has two distinct states or behaviors:
 1. `tableView` — showing or not showing data.
 2. `errorLabel` — shown or hidden.
 3. `emptyStateLabel` — shown or hidden.
 4. `activityIndicator` — shown and animating or hidden and stopped.
 
-Based on the aforementioned definition of *state*, the *combinatorial number* of states grows with *factorial complexity*. That is, the total number of states makes up **24**. At the same time, only the below 4 are meaningful:
-1. *Displaying data*. This automatically means that neither error nor empty state label are shown and activity indicator has stopped animating.
+Arguably, more states could be added to the list; namely: shown and stopped activity indicator, or shown error label without the error message. This highly depends on particular application business logic, user experience, domain area. Not to overcomplicate the example, here and next we are accepting states from the list.
+
+Four states are enough to completely describe view controller's data and logic flow:
+1. *Displaying data*
 2. *Is loading data*
 3. *Is showing error*
 4. *Empty state*
 
-What about the remaining **20** states? They do not have any semantical meaning, although are syntactical legit. Consider a state: table view displays data, while error is shown and activity indicator is animating. View controller states similar to this one are confluent or degenerate. Even in our simple case, it results in *20* more places to make a mistake, *20* more code paths to cover with tests and overall complicates data and logic flows.
+What about the remaining **20** states, derived from *combinatorial combination of properties*, as per our definition of state? It's completely possible to have a case where table view displays data, while error message is shown. This one and the remaining 19 states are degenerate and should be avoided, since they result in *20* more places to make a mistake, *20* more code paths to cover with tests and dramatically complicate data and logic flows.
 
-In this article let's focus on making meaningful states explicit and get rid of the confluent view controller states.
+### View Controller as a Finite State Machine
 
-### Defining Final State Machine
+**Finite state machine (FSM)** is an abstract model that can be in exactly one of a finite number of states at any given time. The FSM can change from one state to another in response to some external inputs; such change is called a transition. An FSM is described by:
+- List of states.
+- Initial state.
+- Conditions for each state transition.
 
-Final State Machine (FMS)
+To better understand Finite State Machine nature, consider a subway turnstile, governed by a simple FSM. The round rectangles are states; there are only two of them: locked and unlocked. To unlock a turnstile, a person can drop a coin. The arrows are called transitions, since they describe how FSM changes between states [[1]](https://cleancoders.com/episode/clean-code-episode-28/show). The label on a transition has two parts: the name of the event that triggered the transition, and the action to be performed.
+
+<p align="center">
+    <a href="{{ "img/fsm-turnstile.svg" | absolute_url }}">
+        <img src="/img/fsm-turnstile.svg" alt="Eliminating Degenerate View Controller States"/>
+    </a>
+</p>
+
+The view controller we defined earlier falls under the definition of Finite State Machine and its life cycle is described on the figure below:
+
+<p align="center">
+    <a href="{{ "img/fsm-view-controller.svg" | absolute_url }}">
+        <img src="/img/fsm-view-controller.svg" alt="Eliminating Degenerate View Controller States"/>
+    </a>
+</p>
+
+Here square brackets denote conditions required to trigger a specific transition. The black circle shows initial state, meaning that loading starts immediately after view controller's view had been loaded.
+
+### Implementing View Controller State
+
+Once the states and transitions had been defined, it's a trivial task to translate them into code. There are a number of ways to cut the cake, where one of the most common is `switch / case` statement. The states from the FSM figure are implemented as follows:
+
+```swift
+extension ViewController {
+    enum State {
+        case loading
+        case showingData([Item])
+        case empty
+        case error(Error)
+    }   
+}
+```
+
+Here `Item` is an imaginary piece of data loaded from the network. Data loading is initiated right in `viewDidLoad` method by means of `ItemService` (which implementation is out of the scope of the present article). Nested `switch / case` statement fully handles state transitions:
+
+```swift
+protocol ItemService {
+    func loadItems(completion: @escaping (Result<[Item]>) -> Void)
+}
+
+class ViewController: UIViewController {
+    @IBOutlet var tableView: UITableView!
+    @IBOutlet var errorLabel: UILabel!
+    @IBOutlet var emptyStateLabel: UILabel!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+
+    private var items: [Item] = []
+
+    var itemService: ItemService!
+
+    private var state: State = .empty {
+        didSet {
+            hideAll()
+            
+            switch state {
+            case .empty:
+                emptyStateLabel.isHidden = false
+            case .error(let error):
+                errorLabel.isHidden = false
+                errorLabel.text = error.localizedDescription
+            case .loading:
+                activityIndicator.isHidden = false
+                activityIndicator.startAnimating()
+            case .showingData(let items):
+                self.items = items
+                tableView.isHidden = false
+                tableView.reloadData()
+            }
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadData()
+    }
+    
+    private func loadData() {
+        state = .loading
+        
+        itemService.loadItems { [weak self] result in
+            switch result {
+            case .success(let items) where items.isEmpty:
+                self?.state = .empty
+            case .success(let items):
+                self?.state = .showingData(items)
+            case .failure(let error):
+                self?.state = .error(error)
+            }
+        }
+    }
+    
+    private func hideAll() {
+        tableView.isHidden = true
+        errorLabel.isHidden = true
+        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
+        emptyStateLabel.isHidden = true
+    }
+}
+```
+All four states are made explicit by extracting `State` to a distinct type and handling the transitions in `switch` statement. Data and logic flows are crystal clear and the code is straightforward to test. Although the code does not compile, it gives a precise idea of how the final solution looks.
+
+### Implementing Finite State Machine via State Pattern
+
+*State design pattern* is another viable implementation of *Finite State Machine*. The core idea of the pattern is to have subclass per state, where each class known how to execute a state.
+
+DIAGRAM HERE
+
+```swift
+class State {
+    
+    weak var viewController: ViewController!
+    
+    init(viewController: ViewController) {
+        self.viewController = viewController
+    }
+    
+    static func state(_ state: Kind, viewController: ViewController) -> State {
+        switch state {
+        case .showingData(let items):
+            return ShowingDataState(items: items, viewController: viewController)
+        case .loading:
+            return LoadingState(viewController: viewController)
+        case .empty:
+            return EmptyState(viewController: viewController)
+        case .error(let error):
+            return ErrorState(error: error, viewController: viewController)
+        }
+    }
+    
+    func enter() {
+        viewController.tableView.isHidden = true
+        viewController.errorLabel.isHidden = true
+        viewController.activityIndicator.isHidden = true
+        viewController.activityIndicator.stopAnimating()
+        viewController.emptyStateLabel.isHidden = true
+    }
+}
+
+extension State {
+    
+    enum Kind {
+        case loading
+        case showingData([Item])
+        case empty
+        case error(Error)
+    }
+}
+
+final class ShowingDataState: State {
+    
+    let items: [Item]
+    
+    init(items: [Item], viewController: ViewController) {
+        self.items = items
+        super.init(viewController: viewController)
+    }
+    
+    override func enter() {
+        super.enter()
+        viewController.items = items
+        viewController.tableView.isHidden = false
+        viewController.tableView.reloadData()
+    }
+}
+
+final class LoadingState: State {
+    
+    override func enter() {
+        super.enter()
+        viewController.emptyStateLabel.isHidden = false
+    }
+}
+
+final class EmptyState: State {
+    
+    override func enter() {
+        super.enter()
+        viewController.emptyStateLabel.isHidden = false
+    }
+}
+
+final class ErrorState: State {
+    
+    let error: Error
+    
+    init(error: Error, viewController: ViewController) {
+        self.error = error
+        super.init(viewController: viewController)
+    }
+    
+    override func enter() {
+        super.enter()
+        viewController.errorLabel.isHidden = false
+        viewController.errorLabel.text = error.localizedDescription
+    }
+}
+
+class ViewController: UIViewController {
+    @IBOutlet var tableView: UITableView!
+    @IBOutlet var errorLabel: UILabel!
+    @IBOutlet var emptyStateLabel: UILabel!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    
+    var items: [Item] = []
+    
+    var itemService: ItemService!
+    
+    lazy var state = State.state(.empty, viewController: self)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadData()
+    }
+    
+    private func loadData() {
+        state = .state(.loading, viewController: self)
+        
+        itemService.loadItems { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let items) where items.isEmpty:
+                self.state = .state(.empty, viewController: self)
+            case .success(let items):
+                self.state = .state(.showingData(items), viewController: self)
+            case .failure(let error):
+                self.state = .state(.error(error), viewController: self)
+            }
+            
+            self.state.enter()
+        }
+    }
+}
+```
 
 ---
 
