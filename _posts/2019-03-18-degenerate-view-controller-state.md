@@ -2,16 +2,14 @@
 layout: post
 title: "Eliminating Degenerate View Controller States"
 permalink: /degenerate-view-controller-states/
-share-img: ""
+share-img: "/img/degenerate-view-controller-states-share.png"
 ---
+
+The concept of object state is so fundamental that anyone hardly thinks of its definition. In present article let's define what is an object state, which states are called degenerate; how they can be identified and avoided.
 
 ### Problem Statement
 
 When we talk about objects, we often refer to the **state** of the objects to mean the **combination of all the data** in the fields of the objects. In other words, each possible combination of Swift `struct` or `class` properties makes up a new state. Hence, the *combinatorial number of states grows with factorial complexity*. For a typical view controller with `4` properties `24` states are derived, most of which are meaningless. Let's call such states **degenerate** and learn how they can be identified and avoided.
-
-<!-- Let's take a closer look at the problem and learn:
-1. How to identify degenerate states.
-2. How to make valid states explicit. -->
 
 ### Identifying Degenerate View Controller States
 
@@ -38,7 +36,7 @@ From the user experience standpoint, each property has two distinct states or be
 3. `emptyStateLabel` — shown or hidden.
 4. `activityIndicator` — shown and animating or hidden and stopped.
 
-Arguably, more states could be added to the list; namely: shown and stopped activity indicator, or shown error label without the error message. This highly depends on particular application business logic, user experience, domain area. Not to overcomplicate the example, here and next we are accepting states from the list.
+Arguably, more states could be added to the list; namely: shown and stopped activity indicator, or shown error label without the error message. This highly depends on particular application business logic, user experience, domain area. Not to overcomplicate the example, here and next we assume that the list is comprehensive.
 
 Four states are enough to completely describe view controller's data and logic flow:
 1. *Displaying data*
@@ -88,7 +86,7 @@ extension ViewController {
 }
 ```
 
-Here `Item` is an imaginary piece of data loaded from the network. Data loading is initiated right in `viewDidLoad` method by means of `ItemService` (which implementation is out of the scope of the present article). Nested `switch / case` statement fully handles state transitions:
+Here `Item` represents an some entity loaded from the network. Data loading is initiated right in `viewDidLoad` method by means of `ItemService` (which implementation is out of the scope of the present article). Nested `switch / case` statement fully handles state transitions:
 
 ```swift
 protocol ItemService {
@@ -155,13 +153,21 @@ class ViewController: UIViewController {
     }
 }
 ```
-All four states are made explicit by extracting `State` to a distinct type and handling the transitions in `switch` statement. Data and logic flows are crystal clear and the code is straightforward to test. Although the code does not compile, it gives a precise idea of how the final solution looks.
+All four meaningful states are made explicit by being extracting to a distinct type; the transitions are handled in `switch` statement. Data and logic flows are crystal clear and the code is straightforward to read and test. The code makes it impossible to apply degenerate state to the view controller, providing easy and understandable way of setting only the meaningful ones.
 
 ### Implementing Finite State Machine via State Pattern
 
-*State design pattern* is another viable implementation of *Finite State Machine*. The core idea of the pattern is to have subclass per state, where each class known how to execute a state.
+*State design pattern* is another viable implementation of *Finite State Machine*. The core idea is to have a subclass per state, each knowing how to apply itself. The below figure demonstrates the classes structure:
 
-DIAGRAM HERE
+<p align="center">
+    <a href="{{ "img/fsm-state-pattern.svg" | absolute_url }}">
+        <img src="/img/fsm-state-pattern.svg" alt="Eliminating Degenerate View Controller States"/>
+    </a>
+</p>
+
+Despite looking daunting at a first spot, the pattern allows to extract state handling code from `ViewController`, being beneficial on large-scale solutions. Let's rework our example to see how Finite State Machine works when state design pattern applied.
+
+First, implement the root `State` class. Static `state(_,viewController:)` is a factory method, which creates one of `State` subclasses based on the supplied `State.Kind`. Method `enter()` is the one that handles state-specific behavior and supposed to be override in subclasses.
 
 ```swift
 class State {
@@ -203,7 +209,10 @@ extension State {
         case error(Error)
     }
 }
+```
+Next, implement state classes, each knowing how to execute itself.
 
+```swift
 final class ShowingDataState: State {
     
     let items: [Item]
@@ -252,7 +261,11 @@ final class ErrorState: State {
         viewController.errorLabel.text = error.localizedDescription
     }
 }
+```
 
+`ViewController` should be updated as well to use the factory method:
+
+```swift
 class ViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet var errorLabel: UILabel!
@@ -290,6 +303,14 @@ class ViewController: UIViewController {
     }
 }
 ```
+
+The view controller sits quietly and let's concrete states apply their own policies upon it. It comes not without a price: we had to leak encapsulation and make `items` property public. Such tradeoff is common when implementing *state design pattern* and is usually acceptable.
+
+### Conclusion
+
+*State of object* means the combination of all the data in the fields of the object. The number of such combinations increases with factorial complexity, hence gets out of control very quickly. Most of such states are degenerate and must be disallowed on the code level.
+
+Identifying meaningful states and making them explicit by implementing *finite state machine* is the main way of dealing with degenerate object states. The use of `switch / case` operators and *state design pattern* are the most notable ways of *FSM* implementation. Generally, the former suits best for simple cases, while the latter is recommended for large-scale and complex solutions, since it allows to extract state handling policies into specialized classes.
 
 ---
 
