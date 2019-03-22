@@ -86,7 +86,7 @@ extension ViewController {
 }
 ```
 
-Here `Item` represents an some entity loaded from the network. Data loading is initiated right in `viewDidLoad` method by means of `ItemService` (which implementation is out of the scope of the present article). Nested `switch / case` statement fully handles state transitions:
+Here `Item` represents an entity loaded from the network. Data loading is initiated right in `viewDidLoad` method by means of `ItemService` (which implementation is out of the scope of the present article). Nested `switch / case` statement fully handles state transitions:
 
 ```swift
 protocol ItemService {
