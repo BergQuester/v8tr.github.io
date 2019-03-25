@@ -305,7 +305,7 @@ class ViewController: UIViewController {
 }
 ```
 
-The view controller sits quietly and let's concrete states apply their own policies upon it. It comes not without a price: we had to leak encapsulation and make `items` property public. Such tradeoff is common when implementing *state design pattern* and is usually acceptable.
+The view controller sits quietly and lets concrete states apply their own policies upon it. It comes not without a price: we had to leak encapsulation and make `items` property public. Such tradeoff is common when implementing *state design pattern* and is usually acceptable.
 
 ### Conclusion
 
