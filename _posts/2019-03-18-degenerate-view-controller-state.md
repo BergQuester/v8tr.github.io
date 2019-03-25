@@ -285,6 +285,7 @@ class ViewController: UIViewController {
     
     private func loadData() {
         state = .state(.loading, viewController: self)
+        state.enter()
         
         itemService.loadItems { [weak self] result in
             guard let self = self else { return }
