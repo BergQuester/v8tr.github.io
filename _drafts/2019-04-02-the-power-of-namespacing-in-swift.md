@@ -67,6 +67,7 @@ After going through the basics, let's move on to more complex cases.
 ### Type-Specific Namespacing in Swift
 
 
+
 ---
 
 *If you enjoyed reading this article, tweet it forward and subscribe: [@V8tr](https://twitter.com/{{ site.author.twitter }}).*
