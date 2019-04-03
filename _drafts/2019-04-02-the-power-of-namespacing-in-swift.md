@@ -14,7 +14,7 @@ Although Swift has no language features for full-fledge name spacing, its lack i
 - Prevents name collision.
 - Provides [encapsulation](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)).
 
-### Namespacing in Swift
+### Implicit Namespacing in Swift
 
 *Namespacing* is implicit in Swift, meaning that all types, variables (etc) are automatically scoped by the module, which, in its turn, corresponds to Xcode target.
 
@@ -25,17 +25,30 @@ let zeroOrOne = Int.random(in: 0...1)
 print(zeroOrOne) // Prints 0 or 1
 ```
 
-Here `Int` is a part of Swift standard library, which has external scope. Let's see what happens in case of name collision:
+Here `Int` is a part of Swift standard library, which has external scope. 
+
+### Excplicit Namespacing in Swift
+
+Let's see what happens in case of name collision, when local type `Int` is defined:
 
 ```swift
 struct Int {}
+
 let zeroOrOne = Int.random(in: 0...1) // error: type 'Int' has no member 'random'
 ```
-<!-- By default, Swift makes current module namespace default. Hence, when custom `Int` type is declared, it shadows the system one: -->
 
-In second scenario, Swift shadows the system integer type by the custom one. If name collision occurs, current namespace is prioritized over the external one.
+System integer type is shadowed by the local one, when the collision occurs. To resolve the ambiguity, the namespace must be explicitly specified:
 
-Another case is collision of two external names. Say, `FrameworkA` and `FrameworkB` exist, both having `Int` type declared:
+```swift
+struct Int {}
+
+let zeroOrOne = Swift.Int.random(in: 0...1)
+let myInt = Article_Namespacing.Int.init()
+```
+
+`Swift` is the *namespace* for all foundation types and primitives, including `Int` [[1]](https://github.com/apple/swift-corelibs-foundation). `Article_Namespacing` is global *namespace* of current Xcode target.
+
+Another possible case is collision of names from two external frameworks. Say, `FrameworkA` and `FrameworkB` both declare their own `Int` types, as depicted below:
 
 <p align="center">
     <a href="{{ "/img/the-power-of-namespacing-in-swift/name-collision.png" | absolute_url }}">
@@ -43,7 +56,7 @@ Another case is collision of two external names. Say, `FrameworkA` and `Framewor
     </a>
 </p>
 
-What happens if both of them are imported into current target?
+What happens if both of them are imported and accessed from current Xcode target?
 
 ```swift
 import FrameworkA
@@ -52,7 +65,7 @@ import FrameworkB
 print(Int.init()) // Oops, error: Ambiguous use of 'init()'
 ```
 
-To resolve the ambiguity, a name space must be specified:
+To resolve the ambiguity, a name space must be explicitly specified:
 
 ```swift
 import FrameworkA
@@ -62,11 +75,20 @@ print(FrameworkA.Int.init()) // Prints: FrameworkA
 print(FrameworkB.Int.init()) // Prints: FrameworkB
 ```
 
-After going through the basics, let's move on to more complex cases.
+Taking into account that imports are the only language feature providing namespacing, let's see more advanced usage scenarios.
 
-### Type-Specific Namespacing in Swift
+### Import Declaration Grammar
 
+Modules have hierarchial structure and could be composed of sub-modules [[2]](https://clang.llvm.org/docs/Modules.html#introduction). It is possible to limit imported namespace to sub-modules:
 
+```swift
+import UIKit.NSAttributedString
+```
+
+{: .box-note}
+*`UIKit.NSAttributedString` sub-module imports the entire `UIKit`, and additionally `Foundation`, hence such import will not benefit*
+
+https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#grammar_import-path-identifier
 
 ---
 
