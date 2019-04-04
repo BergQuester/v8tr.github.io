@@ -5,9 +5,10 @@ permalink: /the-power-of-namespacing-in-swift/
 share-img: ""
 ---
 
-Although Swift has no language features for full-fledge name spacing, its lack is compensated by multiple techniques which lend themselves to improving code structure. Let's take a look at different ways of implementing name spacing in Swift. 
+Namespacing is a powerful feature to improve code structure. Although being limited in Swift, it can be compensated with pseudo-namespaces. Let's take a look at how it works in Swift by default and how it can be simulated.
 
 ### Defining Namespace
+
 
 **Namespace** is a named region of program used to group variable, types and methods. Namespacing has following benefits:
 - Allows to improve code structure by organizing the elements, which otherwise would have global scope, into the local scopes. 
@@ -24,12 +25,11 @@ Most of the time no module prefixes are needed to access a type from outer scope
 let zeroOrOne = Int.random(in: 0...1)
 print(zeroOrOne) // Prints 0 or 1
 ```
+Although `Int` is declared externally, the scope is figured implicitly.
 
-Here `Int` is a part of Swift standard library, which has external scope. 
+### Explicit Namespacing in Swift
 
-### Excplicit Namespacing in Swift
-
-Let's see what happens in case of name collision, when local type `Int` is defined:
+In case of name collision, system integer type is shadowed by the local one:
 
 ```swift
 struct Int {}
@@ -37,7 +37,7 @@ struct Int {}
 let zeroOrOne = Int.random(in: 0...1) // error: type 'Int' has no member 'random'
 ```
 
-System integer type is shadowed by the local one, when the collision occurs. To resolve the ambiguity, the namespace must be explicitly specified:
+To resolve the ambiguity, the namespace must be explicitly specified:
 
 ```swift
 struct Int {}
@@ -56,7 +56,7 @@ Another possible case is collision of names from two external frameworks. Say, `
     </a>
 </p>
 
-What happens if both of them are imported and accessed from current Xcode target?
+The ambiguity cannot be resolved automatically:
 
 ```swift
 import FrameworkA
@@ -65,7 +65,7 @@ import FrameworkB
 print(Int.init()) // Oops, error: Ambiguous use of 'init()'
 ```
 
-To resolve the ambiguity, a name space must be explicitly specified:
+It is resolved by explicitly specifying namespaces:
 
 ```swift
 import FrameworkA
@@ -75,20 +75,129 @@ print(FrameworkA.Int.init()) // Prints: FrameworkA
 print(FrameworkB.Int.init()) // Prints: FrameworkB
 ```
 
-Taking into account that imports are the only language feature providing namespacing, let's see more advanced usage scenarios.
+Import statement has multiple lesser-known traits, which are worth to be discussed.
 
-### Import Declaration Grammar
+### Import Statement Grammar
 
-Modules have hierarchial structure and could be composed of sub-modules [[2]](https://clang.llvm.org/docs/Modules.html#introduction). It is possible to limit imported namespace to sub-modules:
+**Import by sub-module**. Modules have hierarchial structure and could be composed of sub-modules [[2]](https://clang.llvm.org/docs/Modules.html#introduction). It is possible to limit imported namespace to sub-modules:
 
 ```swift
 import UIKit.NSAttributedString
+
+func foo() -> UIView { // All good
+    return UIView()
+}
 ```
 
 {: .box-note}
-*`UIKit.NSAttributedString` sub-module imports the entire `UIKit`, and additionally `Foundation`, hence such import will not benefit*
+*`UIKit.NSAttributedString` imports the entire `UIKit`, and additionally `Foundation`, hence will not bring any benefits.*
 
-https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#grammar_import-path-identifier
+**Import by symbol.** Only the imported symbol (and not the module that declares it) is made available in the current scope:
+
+```swift
+import class UIKit.NSAttributedString
+
+func foo() -> UIView { // error: Use of undeclared type 'UIView'
+    return UIView()
+}
+```
+
+Full import statement grammar is [available at swift.org](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#grammar_import-path-identifier).
+
+### Namespacing Techniques
+
+The implicit per-module namespacing is often not enough to express complex code structures and provide better naming. Here is when `enum`s come to the rescue.
+
+**Why enum?** Unlike structs, enums do not have synthesized initializers; unlike classes they do not allow for subclassing, which makes enums a perfect candidate to simulate a namespace. Let's see real-world usage scenarios.
+
+**Better-organized constants**. Different ways to specify constants exist: global variables, properties, config files. To group constants in a consistent and easy-to-understand way, without polluting other scopes, a namespace can be created:
+
+```swift
+class ItemListViewController {
+    ...
+}
+
+extension ItemListViewController {
+
+    enum Constants {
+        static let itemsPerPage = 7
+        static let headerHeight: CGFloat = 60
+    }
+}
+```
+
+Imagine the constants are put into global scope. What their names could be? I guess, these names are close enough to reality: 
+
+```swift
+let itemListViewControllerItemsPerPage = 7
+let itemListViewControllerHeaderHeight: CGFloat = 60
+```
+
+Those are difficult to read and type. No more cumbersome names. Compare with: 
+
+```swift
+ItemListViewController.Constants.itemsPerPage
+ItemListViewController.Constants.headerHeight
+```
+
+**Factories**. The creation of objects often contains complex mapping, validations, special cases handling. Furthermore, many overloaded methods may exist for different scenarios. Namespaced factories provide handy way of keeping things together without polluting external scope:
+
+```swift
+struct Item {
+    ...
+}
+
+extension Item {
+
+    enum Factory {
+        static func make(from anotherItem: AnotherItem) -> Item {
+            // Complex computations to map AnotherItem into Item
+            return Item(...)
+        }
+    }
+}
+```
+
+Usage:
+
+```swift
+let anotherItem = AnotherItem()
+let item = Item.Factory.make(from: anotherItem)
+```
+
+**Grouping by usage area**. Network layer often needs specialized models for requests and responses, which are not used anywhere else, hence are good candidates to be grouped into a namespace:
+
+```swift
+enum API {
+
+    enum Request {
+
+        struct UpdateItem {
+            let id: Int
+            let title: String
+            let description: String
+        }
+    }
+
+    enum Response {
+
+        struct ItemList {
+            let items: [Item]
+            let page: Int
+            let pageSize: Int
+        }
+    }
+}
+```
+Such code is self-documented; global scope is not polluted with `Request` name, since it is ambiguous without a context.
+
+### Summary
+
+The importance of good code structure is difficult to overestimate. Namespacing improves code structure by grouping relevant elements into local scopes and makes code self-documented.
+
+Swift has limited built-in support for namespacing, which can be compensated by placing elements into `enum`s as pseudo-namespaces.
+
+The [article on Swift Code Style]({{ "/swift-code-style/" | absolute_url }}) might be of particular interest if looking for more ways to improve code quality.
 
 ---
 
