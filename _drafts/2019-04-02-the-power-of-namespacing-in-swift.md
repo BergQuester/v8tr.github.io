@@ -2,13 +2,12 @@
 layout: post
 title: "The Power of Namespacing in Swift"
 permalink: /the-power-of-namespacing-in-swift/
-share-img: ""
+share-img: "/img/the-power-of-namespacing-in-swift/share.png"
 ---
 
 Namespacing is a powerful feature to improve code structure. Although being limited in Swift, it can be compensated with pseudo-namespaces. Let's take a look at how it works in Swift by default and how it can be simulated.
 
 ### Defining Namespace
-
 
 **Namespace** is a named region of program used to group variable, types and methods. Namespacing has following benefits:
 - Allows to improve code structure by organizing the elements, which otherwise would have global scope, into the local scopes. 
