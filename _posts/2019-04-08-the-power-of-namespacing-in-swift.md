@@ -98,11 +98,11 @@ Note the `class` keyword here; other possible options as well as full import sta
 
 ### Namespacing Techniques
 
-The implicit per-module namespacing is often not enough to express complex code structures. The solution is to create pseudo-namespaces by means of `enum`s.
+The implicit per-module namespacing is often not enough to express complex code structures. The solution is to create pseudo-namespaces by means of nested `enum`s.
 
 **Why enum?** Unlike structs, enums do not have synthesized initializers; unlike classes they do not allow for subclassing, which makes them a perfect candidate to simulate a namespace. Let's see the practical examples.
 
-**Better-organized constants**. Different ways to specify constants exist: global variables, properties, config files. Namespace groups constants in a readable, understandable and consistent way, without polluting outer scope. View controllers often have user-interface-related constraints, expressible via namespaced constants:
+**Better-organized constants**. Different ways to specify constants exist: global variables, properties, config files. Namespace groups constants in a readable, understandable and consistent way, without polluting outer scope. The below example groups constants of a view controller into a namespace:
 
 ```swift
 class ItemListViewController {
@@ -185,7 +185,7 @@ Such code is self-documented; global scope is not polluted with `Request` name, 
 
 The importance of good code structure is difficult to overestimate. Namespacing improves code structure by grouping relevant elements into local scopes and makes code self-documented.
 
-Swift has limited built-in support for namespacing, which can be compensated by placing elements into `enum`s as pseudo-namespaces.
+Swift has limited built-in support for namespacing, which can be compensated by the use of nested types as pseudo-namespaces.
 
 The [article on Swift Code Style]({{ "/swift-code-style/" | absolute_url }}) might be of particular interest if looking for more ways to improve code quality.
 
