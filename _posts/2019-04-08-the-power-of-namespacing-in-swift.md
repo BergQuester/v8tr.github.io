@@ -194,5 +194,3 @@ The [article on Swift Code Style]({{ "/swift-code-style/" | absolute_url }}) mig
 *If you enjoyed reading this article, tweet it forward and subscribe: [@V8tr](https://twitter.com/{{ site.author.twitter }}).*
 
 ---
-
-[code-injection-article]: http://www.vadimbulavin.com/code-injection-swift/
