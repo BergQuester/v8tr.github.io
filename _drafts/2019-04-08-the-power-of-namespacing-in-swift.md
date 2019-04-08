@@ -5,7 +5,7 @@ permalink: /the-power-of-namespacing-in-swift/
 share-img: "/img/the-power-of-namespacing-in-swift/share.png"
 ---
 
-Namespacing is a powerful feature to improve code structure. Although being limited in Swift, it can be compensated with pseudo-namespaces. Let's take a look at how it works in Swift by default and how it can be simulated.
+Namespacing is a powerful feature that improves code structure. Although being limited in Swift, it can be compensated with pseudo-namespaces. Let's take a look at how it works in Swift by default and how it can be simulated.
 
 ### Defining Namespace
 
