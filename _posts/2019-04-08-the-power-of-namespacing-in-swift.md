@@ -94,7 +94,7 @@ func foo() -> UIView { // error: Use of undeclared type 'UIView'
 }
 ```
 
-Note the `class` keyword here; `struct` and `enum` are among the possible options. Full import statement grammar is [available at swift.org](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#grammar_import-path-identifier).
+Note the `class` keyword here; other possible options as well as full import statement grammar is [available at swift.org](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#grammar_import-path-identifier).
 
 ### Namespacing Techniques
 
